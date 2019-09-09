@@ -24,7 +24,7 @@ public class DriveTrain extends Component {
     }
 
     @Override
-    protected void registerHardware(HardwareMap hwMap) {
+    public void registerHardware(HardwareMap hwMap) {
         super.registerHardware(hwMap);
 
         drive_lf    = hwMap.get(DcMotor.class, "drive_lf");
@@ -32,9 +32,7 @@ public class DriveTrain extends Component {
         drive_lb    = hwMap.get(DcMotor.class, "drive_lb");
         drive_rb    = hwMap.get(DcMotor.class, "drive_rb");
 
-
         imu         = hwMap.get(BNO055IMU.class, "drive_imu");
-
     }
 
     @Override
