@@ -16,11 +16,6 @@ public class Component {
     // The robot that we are a part of
     Robot robot;
 
-
-    public Component() {
-
-    }
-
     // Trying to stray away from using the constructors at all in child classes
     public Component(Robot robot) {
         this.robot = robot;

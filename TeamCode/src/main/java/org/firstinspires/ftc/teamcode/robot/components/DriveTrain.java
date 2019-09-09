@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 
 // Drive Train component
 // Includes: Drive Motors, IMU
@@ -21,6 +22,10 @@ public class DriveTrain extends Component {
 
     {
         name = "Drive Train";
+    }
+
+    public DriveTrain(Robot robot) {
+        super(robot);
     }
 
     @Override
