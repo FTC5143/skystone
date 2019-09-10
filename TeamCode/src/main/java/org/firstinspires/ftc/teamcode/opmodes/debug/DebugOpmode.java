@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 @TeleOp(name="Debug Teleop", group="driver control")
-@Disabled
+//@Disabled
 public class DebugOpmode extends OpMode{
 
     Robot robot;

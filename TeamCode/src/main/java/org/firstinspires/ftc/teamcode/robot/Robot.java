@@ -27,6 +27,7 @@ public class Robot {
         driveTrain = new DriveTrain(this);
     }
 
+    // Should be called on every OpMode loop(). Sequentially updates all components
     public void update() {
         for (Component component : components) {
             component.update(opmode);

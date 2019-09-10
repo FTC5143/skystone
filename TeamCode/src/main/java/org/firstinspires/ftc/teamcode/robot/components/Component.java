@@ -27,10 +27,12 @@ public class Component {
 
     }
 
+    // Called every time the robot update method is called
     public void update(OpMode opmode) {
         updateTelemetry(opmode.telemetry);
     }
 
+    // Called on every update. Modify statusString here to update telemetry on the phone
     protected void updateTelemetry(Telemetry telemetry) {
         telemetry.addData("CMP "+name, statusString);
     }
