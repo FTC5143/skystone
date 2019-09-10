@@ -4,11 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.robot.components.Component;
-import org.firstinspires.ftc.teamcode.robot.components.DriveTrain;
-import org.firstinspires.ftc.teamcode.robot.components.Feeder;
+import org.firstinspires.ftc.teamcode.robot.components.debug.DriveTrain;
+import org.firstinspires.ftc.teamcode.robot.components.debug.Feeder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Robot {
 

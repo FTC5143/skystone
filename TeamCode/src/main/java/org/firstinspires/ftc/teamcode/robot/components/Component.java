@@ -8,13 +8,13 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 
 public class Component {
     // The name of the Component, used in telemetry
-    String name = "Component";
+    protected String name = "Component";
 
     // The string that appears in telemetry
-    String statusString;
+    protected String statusString;
 
     // The robot that we are a part of
-    Robot robot;
+    protected Robot robot;
 
     // Trying to stray away from using the constructors at all in child classes
     public Component(Robot robot) {
