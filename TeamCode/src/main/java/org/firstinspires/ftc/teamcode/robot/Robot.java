@@ -11,20 +11,20 @@ import java.util.ArrayList;
 
 public class Robot {
 
-    HardwareMap hwMap;
+    HardwareMap hwmap;
     OpMode opmode;
 
     ArrayList<Component> components = new ArrayList<>();
 
-    DriveTrain driveTrain;
+    DriveTrain drive_train;
     Feeder feeder;
 
     public Robot(OpMode opmode) {
         this.opmode = opmode;
-        this.hwMap  = opmode.hardwareMap;
+        this.hwmap  = opmode.hardwareMap;
 
-        feeder = new Feeder(this);
-        driveTrain = new DriveTrain(this);
+        feeder      = new Feeder(this);
+        drive_train = new DriveTrain(this);
     }
 
     // Should be called on every OpMode loop(). Sequentially updates all components
@@ -35,7 +35,7 @@ public class Robot {
     }
 
     public void registerComponent(Component component) {
-        component.registerHardware(hwMap);
+        component.registerHardware(hwmap);
         components.add(component);
     }
 }

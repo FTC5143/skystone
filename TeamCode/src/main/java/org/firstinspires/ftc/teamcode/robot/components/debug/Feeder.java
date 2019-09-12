@@ -13,11 +13,11 @@ import org.firstinspires.ftc.teamcode.robot.components.Component;
 
 public class Feeder extends Component {
     //// MOTORS ////
-    DcMotor leftSpinner;    // The left feeder wheel on the take-in device
-    DcMotor rightSpinner;   // The right feeder wheel on the take-in device
+    DcMotor left_spinner;    // The left feeder wheel on the take-in device
+    DcMotor right_spinner;   // The right feeder wheel on the take-in device
 
     //// SENSORS ////
-    TouchSensor blockDetector; // The touch sensor to detect a block in the chamber
+    TouchSensor block_detector; // The touch sensor to detect a block in the chamber
 
     {
         name = "Feeder";
@@ -28,20 +28,20 @@ public class Feeder extends Component {
     }
 
     @Override
-    public void registerHardware(HardwareMap hwMap) {
-        super.registerHardware(hwMap);
+    public void registerHardware(HardwareMap hwmap) {
+        super.registerHardware(hwmap);
 
         //// MOTORS ////
-        hwMap.get(DcMotor.class, "left_spinner");
-        hwMap.get(DcMotor.class, "right_spinner");
+        left_spinner    = hwmap.get(DcMotor.class, "left_spinner");
+        right_spinner   = hwmap.get(DcMotor.class, "right_spinner");
 
         //// SENSORS ////
-        hwMap.get(TouchSensor.class, "block_detector");
+        block_detector  = hwmap.get(TouchSensor.class, "block_detector");
     }
 
     @Override
     protected void updateTelemetry(Telemetry telemetry) {
-        statusString = "LS: "+leftSpinner.getPower()+" | RS: "+rightSpinner.getPower()+" | BD: "+blockDetector.isPressed();
+        statusString = "LS: "+left_spinner.getPower()+" | RS: "+right_spinner.getPower()+" | BD: "+block_detector.isPressed();
         super.updateTelemetry(telemetry);
     }
 }

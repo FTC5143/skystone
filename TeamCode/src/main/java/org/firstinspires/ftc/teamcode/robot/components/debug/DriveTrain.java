@@ -30,15 +30,17 @@ public class DriveTrain extends Component {
     }
 
     @Override
-    public void registerHardware(HardwareMap hwMap) {
-        super.registerHardware(hwMap);
+    public void registerHardware(HardwareMap hwmap) {
+        super.registerHardware(hwmap);
 
-        drive_lf    = hwMap.get(DcMotor.class, "drive_lf");
-        drive_rf    = hwMap.get(DcMotor.class, "drive_rf");
-        drive_lb    = hwMap.get(DcMotor.class, "drive_lb");
-        drive_rb    = hwMap.get(DcMotor.class, "drive_rb");
+        //// MOTORS ////
+        drive_lf    = hwmap.get(DcMotor.class, "drive_lf");
+        drive_rf    = hwmap.get(DcMotor.class, "drive_rf");
+        drive_lb    = hwmap.get(DcMotor.class, "drive_lb");
+        drive_rb    = hwmap.get(DcMotor.class, "drive_rb");
 
-        imu         = hwMap.get(BNO055IMU.class, "drive_imu");
+        //// SENSORS ////
+        imu         = hwmap.get(BNO055IMU.class, "drive_imu");
     }
 
     @Override

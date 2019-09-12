@@ -23,7 +23,7 @@ public class Component {
     }
 
     // Where all hardware used in the component is registered to its respective variable
-    public void registerHardware(HardwareMap hwMap) {
+    public void registerHardware(HardwareMap hwmap) {
 
     }
 
