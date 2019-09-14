@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.components.debug;
+package org.firstinspires.ftc.teamcode.robot.components.Componentjunkyard;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
