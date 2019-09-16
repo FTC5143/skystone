@@ -6,24 +6,24 @@ This is the 2019-2020 repository for FTC team 5143. This readme, once completed,
 
 ### Components:
 
-name of class should be upper camel case<br/>
-name = "" should be upper camel case with spaces<br/>
-Motor names are written in snake case<br/>
-instances of HardwareMap are named hwmap<br/>
-instances of Robot an Telemetry are named robot and telemetry, respectively.<br/>
+- name of class should be upper camel case
+- `name = ""` should be upper camel case with spaces
+- `Motor` names are written in snake case
+- instances of `HardwareMap` are named `hwmap`
+- instances of `Robot` and `Telemetry` are named `robot` and `telemetry`, respectively
 
 ### OpModes:
 
-I don't currently know enogh about how OpModes work to write a guide<br/>
+I don't currently know enogh about how OpModes work to write a guide
 
 
 # TODO
-- [ ] Drive correction<br/>
-- [ ] Build-an-Autonomous<br/>
-- [ ] autoStacking<br/>
-- [ ] Output component (when designed) <br/>
-- [ ] Skystone recognition<br/>
-- [ ] Auto foundation pushing<br/>
+- [ ] Drive correction
+- [ ] Build-an-Autonomous
+- [ ] autoStacking
+- [ ] Output component (when designed)
+- [ ] Skystone recognition
+- [ ] Auto foundation pushing
 
 ### README TODO:
 - [ ] Add guide to telemetry
