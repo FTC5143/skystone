@@ -29,15 +29,15 @@ This is the 2019-2020 repository for FTC team 5143. This readme, once completed,
 - `variable_name`
 - `CONSTANT_NAME`
 
-```
+```java
 public class ThisIs {
     public static main(String[] args) {
         if (The.Bracket) {
-            Format
+            Format;
          } else if (1 == 1) {
-            You Should
+            You Should;
         } else {
-            Use
+            Use;
         }
     }
 }
@@ -51,27 +51,27 @@ public class ThisIs {
 
 ### Commenting
 
-```
+```java
 //// MOTORS ////
-DcMotor some_motor
+DcMotor some_motor;
 
 //// SERVOS ////
-Servo some_servo
+Servo some_servo;
 
 //// SENSORS ////
-ColorSensor some_sensor
+ColorSensor some_sensor;
 ```
 
-```
+```java
 // description
 // of component
 // here
 
 public class Extender extends Component {
-    ...
+    ...;
     // method description here
     public void extend() {
-        ...
+        ...;
     }
 }
 ```
