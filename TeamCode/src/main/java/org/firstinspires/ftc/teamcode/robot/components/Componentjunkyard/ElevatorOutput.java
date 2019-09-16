@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
 
-public class ElevatorOuttake extends Component {
+public class ElevatorOutput extends Component {
 
     /*
     elevator lifts stone and extender up
@@ -23,10 +23,10 @@ public class ElevatorOuttake extends Component {
     private Servo grabber;
 
     {
-        name = "ElevatorOuttake";
+        name = "Elevator Output";
     }
 
-    public ElevatorOuttake (Robot robot)
+    public ElevatorOutput(Robot robot)
     {
         super(robot);
     }
