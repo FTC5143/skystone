@@ -24,10 +24,10 @@ This is the 2019-2020 repository for FTC team 5143. This readme, once completed,
 
 ### General
 
-- `ClassName`
-- `methodName()`
-- `variable_name`
-- `CONSTANT_NAME`
+- `public ClassName {}`
+- `public void methodName() {}`
+- `public int variable_name = 5143`
+- `public final int CONSTANT_NAME = 5143`
 
 ```java
 public class ThisIs {
