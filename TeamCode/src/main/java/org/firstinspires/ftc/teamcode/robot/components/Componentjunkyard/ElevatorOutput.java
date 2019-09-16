@@ -7,15 +7,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
 
-public class ElevatorOutput extends Component {
+// Elevator lifts the stone and edxtender up
+// Extender extends over the twoer, and the grabber releases the stone
 
-    /*
-    elevator lifts stone and extender up
-    extender extends over the tower
-    grabber releases stone
-    *\
-     */
-    /// MOTORS ////
+public class ElevatorOutput extends Component {
+    
+    //// MOTORS ////
     private DcMotor elevator;
 
     //// SERVOS ////
@@ -44,6 +41,4 @@ public class ElevatorOutput extends Component {
         grabber      = hwmap.get(Servo.class, "grabber");
 
     }
-
-
 }
