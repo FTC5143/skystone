@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
-public class Component {
+public abstract class Component {
     // The name of the Component, used in telemetry
     protected String name = "Component";
 
@@ -30,6 +30,16 @@ public class Component {
     // Called every time the robot update method is called
     public void update(OpMode opmode) {
         updateTelemetry(opmode.telemetry);
+    }
+
+    // Called when robot.startup() is called, whcih should be called when an opmode is started
+    public void startup() {
+
+    }
+
+    // Called when robot.shutdown() is called, which should be called when an opmode is stopped
+    public void shutdown() {
+
     }
 
     // Called on every update. Modify statusString here to update telemetry on the phone

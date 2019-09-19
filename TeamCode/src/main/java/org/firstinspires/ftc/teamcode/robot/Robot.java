@@ -16,8 +16,8 @@ public class Robot {
 
     ArrayList<Component> components = new ArrayList<>();
 
-    DriveTrain drive_train;
-    Feeder feeder;
+    public DriveTrain drive_train;
+    public Feeder feeder;
 
     public Robot(OpMode opmode) {
         this.opmode = opmode;
@@ -27,7 +27,18 @@ public class Robot {
         drive_train = new DriveTrain(this);
     }
 
-    // Should be called on every OpMode loop(). Sequentially updates all components
+    public void startup() {
+        for (Component component : components) {
+            component.startup();
+        }
+    }
+
+    public void shutdown() {
+        for (Component component : components) {
+            component.shutdown();
+        }
+    }
+
     public void update() {
         for (Component component : components) {
             component.update(opmode);
