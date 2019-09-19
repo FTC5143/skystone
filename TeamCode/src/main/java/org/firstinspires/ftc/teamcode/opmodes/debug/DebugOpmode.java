@@ -18,7 +18,5 @@ public class DebugOpmode extends CmpOpMode {
     @Override
     public void loop() {
         super.loop();
-
-        robot.drive_train.gamepadInput(gamepad1);
     }
 }
