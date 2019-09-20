@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+@Disabled
 public abstract class CmpOpMode extends OpMode {
 
     protected Robot robot;

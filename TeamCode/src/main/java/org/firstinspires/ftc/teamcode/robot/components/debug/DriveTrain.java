@@ -48,7 +48,7 @@ public class DriveTrain extends Component {
         drive_rb    = hwmap.get(DcMotor.class, "drive_rb");
 
         //// SENSORS ////
-        imu         = hwmap.get(BNO055IMU.class, "drive_imu");
+        imu         = hwmap.get(BNO055IMU.class, "imu");
     }
 
     @Override
@@ -75,7 +75,12 @@ public class DriveTrain extends Component {
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
-        mechanumDrive(opmode.gamepad1.left_stick_x, opmode.gamepad1.left_stick_y, opmode.gamepad2.right_stick_x);
+        mechanumDrive(opmode.gamepad1.left_stick_x, opmode.gamepad1.left_stick_y, opmode.gamepad1.right_stick_x);
+
+        if (opmode.gamepad1.x) {drive_lf.setPower(0.0);}
+        if (opmode.gamepad1.y) {drive_rf.setPower(0.0);}
+        if (opmode.gamepad1.a) {drive_lb.setPower(0.0);}
+        if (opmode.gamepad1.b) {drive_rb.setPower(0.0);}
     }
 
     public void mechanumDrive(double lx, double ly, double rx) {
@@ -84,9 +89,9 @@ public class DriveTrain extends Component {
         double angle = Math.atan2(ly, lx) - Math.PI / 4;
 
         drive_lf.setPower(r * Math.cos(angle) + rx);
-        drive_rf.setPower(r * Math.sin(angle) - rx);
+        drive_rf.setPower(-(r * Math.sin(angle) - rx));
         drive_lb.setPower(r * Math.sin(angle) + rx);
-        drive_rb.setPower(r * Math.cos(angle) - rx);
+        drive_rb.setPower(-(r * Math.cos(angle) - rx));
     }
 
     public void stop() {

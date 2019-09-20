@@ -17,13 +17,12 @@ public class Robot {
     ArrayList<Component> components = new ArrayList<>();
 
     public DriveTrain drive_train;
-    public Feeder feeder;
+    //public Feeder feeder;
 
     public Robot(OpMode opmode) {
         this.opmode = opmode;
         this.hwmap  = opmode.hardwareMap;
 
-        feeder      = new Feeder(this);
         drive_train = new DriveTrain(this);
     }
 
