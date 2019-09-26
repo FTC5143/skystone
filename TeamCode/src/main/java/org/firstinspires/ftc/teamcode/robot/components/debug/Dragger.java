@@ -37,4 +37,14 @@ public class Dragger extends Component {
         statusString = "LG: "+TELEMETRY_DECIMAL.format(left_dragger.getPosition())+" | RG: "+TELEMETRY_DECIMAL.format(right_dragger.getPosition());
         super.updateTelemetry(telemetry);
     }
+
+    public void grab() {
+        left_dragger.setPosition(1);
+        right_dragger.setPosition(1);
+    }
+
+    public void release() {
+        left_dragger.setPosition(0);
+        right_dragger.setPosition(0);
+    }
 }
