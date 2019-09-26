@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+import java.text.DecimalFormat;
+
 public abstract class Component {
     // The name of the Component, used in telemetry
     protected String name = "Component";
@@ -15,6 +17,8 @@ public abstract class Component {
 
     // The robot that we are a part of
     protected Robot robot;
+
+    protected final DecimalFormat TELEMETRY_DECIMAL = new DecimalFormat("##.00");
 
     // Trying to stray away from using the constructors at all in child classes
     public Component(Robot robot) {

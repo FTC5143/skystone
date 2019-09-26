@@ -49,11 +49,18 @@ public class DriveTrain extends Component {
 
         //// SENSORS ////
         imu         = hwmap.get(BNO055IMU.class, "imu");
+        imu.initialize(new BNO055IMU.Parameters());
     }
 
     @Override
     protected void updateTelemetry(Telemetry telemetry) {
-        statusString = "LF: "+drive_lf.getPower()+" | RF: "+drive_rf.getPower()+" | LB: "+drive_lb.getPower()+" | RB: "+drive_rb.getPower();
+        statusString = "";
+        statusString += "LF: "+TELEMETRY_DECIMAL.format(drive_lf.getPower());
+        statusString += " RF: "+TELEMETRY_DECIMAL.format(drive_rf.getPower());
+        statusString += " LB: "+TELEMETRY_DECIMAL.format(drive_lb.getPower());
+        statusString += " RB: "+TELEMETRY_DECIMAL.format(drive_rb.getPower());
+        statusString += " IMU: "+imu.getAngularOrientation().toString()+", "+imu.getPosition().toString()+", "+imu.isGyroCalibrated();
+
         super.updateTelemetry(telemetry);
     }
 
@@ -77,21 +84,21 @@ public class DriveTrain extends Component {
         super.update(opmode);
         mechanumDrive(opmode.gamepad1.left_stick_x, opmode.gamepad1.left_stick_y, opmode.gamepad1.right_stick_x);
 
-        if (opmode.gamepad1.x) {drive_lf.setPower(0.0);}
-        if (opmode.gamepad1.y) {drive_rf.setPower(0.0);}
-        if (opmode.gamepad1.a) {drive_lb.setPower(0.0);}
-        if (opmode.gamepad1.b) {drive_rb.setPower(0.0);}
+        if (opmode.gamepad1.x) {drive_lf.setPower(1.0);}
+        if (opmode.gamepad1.y) {drive_rf.setPower(1.0);}
+        if (opmode.gamepad1.a) {drive_lb.setPower(1.0);}
+        if (opmode.gamepad1.b) {drive_rb.setPower(1.0);}
     }
 
     public void mechanumDrive(double lx, double ly, double rx) {
-        double r = Math.hypot(lx, ly);
+        double l_diag =  lx - ly + rx;
+        double r_diag = -lx - ly + rx;
 
-        double angle = Math.atan2(ly, lx) - Math.PI / 4;
-
-        drive_lf.setPower(r * Math.cos(angle) + rx);
-        drive_rf.setPower(-(r * Math.sin(angle) - rx));
-        drive_lb.setPower(r * Math.sin(angle) + rx);
-        drive_rb.setPower(-(r * Math.cos(angle) - rx));
+        // I hate myself for writing it out like this but I also was too lazy to figure out a better way
+        drive_lf.setPower(-(lx - ly + rx));
+        drive_rf.setPower(-lx - ly - rx);
+        drive_lb.setPower(-(-lx - ly + rx));
+        drive_rb.setPower(lx - ly - rx);
     }
 
     public void stop() {
