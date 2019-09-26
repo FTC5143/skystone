@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.robot.components.Componentjunkyard;
+package org.firstinspires.ftc.teamcode.robot.components.unused;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
 
 // Elevator lifts the stone and edxtender up

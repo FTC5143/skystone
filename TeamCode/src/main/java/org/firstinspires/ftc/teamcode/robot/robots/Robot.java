@@ -1,11 +1,8 @@
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.robot.robots;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.robot.components.Component;
-import org.firstinspires.ftc.teamcode.robot.components.debug.DriveTrain;
-import org.firstinspires.ftc.teamcode.robot.components.debug.Feeder;
 
 import java.util.ArrayList;
 
@@ -16,14 +13,11 @@ public class Robot {
 
     ArrayList<Component> components = new ArrayList<>();
 
-    public DriveTrain drive_train;
-    //public Feeder feeder;
+    public String name;
 
     public Robot(OpMode opmode) {
         this.opmode = opmode;
         this.hwmap  = opmode.hardwareMap;
-
-        drive_train = new DriveTrain(this);
     }
 
     public void startup() {
