@@ -52,14 +52,13 @@ public class DriveTrain extends Component {
 
     @Override
     protected void updateTelemetry(Telemetry telemetry) {
-        statusString = "";
-        statusString += "LF: "+TELEMETRY_DECIMAL.format(drive_lf.getPower());
-        statusString += " RF: "+TELEMETRY_DECIMAL.format(drive_rf.getPower());
-        statusString += " LB: "+TELEMETRY_DECIMAL.format(drive_lb.getPower());
-        statusString += " RB: "+TELEMETRY_DECIMAL.format(drive_rb.getPower());
-        statusString += " IMU: "+imu.getAngularOrientation().toString()+", "+imu.getPosition().toString()+", "+imu.isGyroCalibrated();
-
         super.updateTelemetry(telemetry);
+
+        telemetry.addData("LF: ",TELEMETRY_DECIMAL.format(drive_lf.getPower()));
+        telemetry.addData("RF: ",TELEMETRY_DECIMAL.format(drive_rf.getPower()));
+        telemetry.addData("LB: ",TELEMETRY_DECIMAL.format(drive_lb.getPower()));
+        telemetry.addData("RB: ",TELEMETRY_DECIMAL.format(drive_rb.getPower()));
+        telemetry.addData(" IMU: ",imu.getAngularOrientation().toString()+", "+imu.getPosition().toString()+", "+imu.isGyroCalibrated());
     }
 
     @Override

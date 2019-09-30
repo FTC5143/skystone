@@ -9,11 +9,15 @@ import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 import java.text.DecimalFormat;
 
 public abstract class Component {
+
+    protected final static int STATUS_OFFLINE = 0;
+    protected final static int STATUS_ONLINE = 1;
+
     // The name of the Component, used in telemetry
     protected String name = "Component";
 
     // The string that appears in telemetry
-    protected String statusString;
+    protected int status = STATUS_OFFLINE;
 
     // The robot that we are a part of
     protected Robot robot;
@@ -36,18 +40,18 @@ public abstract class Component {
         updateTelemetry(opmode.telemetry);
     }
 
-    // Called when robot.startup() is called, whcih should be called when an opmode is started
+    // Called when robot.startup() is called, which should be called when an opmode is started
     public void startup() {
-
+        status = STATUS_ONLINE;
     }
 
     // Called when robot.shutdown() is called, which should be called when an opmode is stopped
     public void shutdown() {
-
+        status = STATUS_OFFLINE;
     }
 
     // Called on every update. Modify statusString here to update telemetry on the phone
     protected void updateTelemetry(Telemetry telemetry) {
-        telemetry.addData("CMP "+name, statusString);
+        telemetry.addData("[CMP "+name+"]", status == STATUS_ONLINE ? "ONLINE": "OFFLINE");
     }
 }

@@ -34,8 +34,10 @@ public class Dragger extends Component {
 
     @Override
     protected void updateTelemetry(Telemetry telemetry) {
-        statusString = "LG: "+TELEMETRY_DECIMAL.format(left_dragger.getPosition())+" | RG: "+TELEMETRY_DECIMAL.format(right_dragger.getPosition());
         super.updateTelemetry(telemetry);
+
+        telemetry.addData("LG", TELEMETRY_DECIMAL.format(left_dragger.getPosition()));
+        telemetry.addData("RG", TELEMETRY_DECIMAL.format(right_dragger.getPosition()));
     }
 
     public void grab() {

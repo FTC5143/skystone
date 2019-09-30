@@ -41,7 +41,10 @@ public class Feeder extends Component {
 
     @Override
     protected void updateTelemetry(Telemetry telemetry) {
-        statusString = "LS: "+left_spinner.getPower()+" | RS: "+right_spinner.getPower()+" | BD: "+block_detector.isPressed();
         super.updateTelemetry(telemetry);
+
+        telemetry.addData("LS",left_spinner.getPower());
+        telemetry.addData("RS",right_spinner.getPower());
+        telemetry.addData("BD",block_detector.isPressed());
     }
 }
