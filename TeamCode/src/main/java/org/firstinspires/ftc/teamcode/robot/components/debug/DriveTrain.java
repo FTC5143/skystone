@@ -63,6 +63,8 @@ public class DriveTrain extends Component {
 
     @Override
     public void startup() {
+        super.startup();
+
         drive_lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive_rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive_lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot.robots.SoftwareRobot;
 
-@TeleOp(name="Debug Teleop", group="driver control")
+import java.util.Arrays;
+
+@TeleOp(name="TensorFlow Stones", group="driver control")
 //@Disabled
-public class DebugOpmode extends OpMode {
+public class TensorFlowOpMode extends OpMode {
 
     SoftwareRobot robot;
 
@@ -22,8 +24,7 @@ public class DebugOpmode extends OpMode {
     public void loop() {
         robot.update();
 
-        telemetry.addData("IS IT A SKYSTONE", robot.sensor_debug.isSkystone());
-
+        telemetry.addData("STONES", Arrays.toString(robot.phone_camera.findBlocks().toArray()));
     }
 
     @Override
