@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Robot {
 
     HardwareMap hwmap;
-    OpMode opmode;
+    public OpMode opmode;
 
     ArrayList<Component> components = new ArrayList<>();
 
