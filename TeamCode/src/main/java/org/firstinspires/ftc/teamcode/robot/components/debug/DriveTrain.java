@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
+import org.firstinspires.ftc.teamcode.util.LynxOptimizedI2cFactory;
 
 import java.util.ArrayList;
 
@@ -28,8 +30,12 @@ public class DriveTrain extends Component {
     private DcMotor drive_lb;   // Left-Back drive motor
     private DcMotor drive_rb;   // Right-Back drive motor
 
+    //// LYNX ////
+    private LynxModule lynx_module;
+
     //// SENSORS ////
     private BNO055IMU imu;      // Internal REV IMU, which we might use to drive straight
+
 
     {
         name = "Drive Train";
@@ -49,8 +55,11 @@ public class DriveTrain extends Component {
         drive_lb    = hwmap.get(DcMotor.class, "drive_lb");
         drive_rb    = hwmap.get(DcMotor.class, "drive_rb");
 
+        //// LYNX ////
+        lynx_module = hwmap.get(LynxModule.class, "Rev expansion hub 1");
+
         //// SENSORS ////
-        imu         = hwmap.get(BNO055IMU.class, "imu");
+        imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(lynx_module, 0);
         imu.initialize(new BNO055IMU.Parameters());
     }
 
