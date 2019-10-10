@@ -17,14 +17,14 @@ public class Robot {
 
     public String name;
 
-    public Robot(OpMode opmode) {
-        this.opmode = opmode;
-        this.hwmap  = opmode.hardwareMap;
-    }
+    public Robot(OpMode opmode) { // FIRST THIS IS *YOUR* FAULT IT HAS TO BE THIS WAY AND I HATE IT AND YOU SHOULD BE ASHAMED
+        if (opmode instanceof LinearOpMode) {
+            this.lopmode = (LinearOpMode) opmode;
+        } else {
+            this.opmode = opmode;
+        }
 
-    public Robot(LinearOpMode lopmode) { // THIS IS *YOUR* FAULT FIRST, IT'S *YOUR* FAULT I HAVE TO DO IT THIS WAY
-        this.lopmode    = lopmode;
-        this.hwmap      = lopmode.hardwareMap;
+        this.hwmap  = opmode.hardwareMap;
     }
 
     public void startup() {
