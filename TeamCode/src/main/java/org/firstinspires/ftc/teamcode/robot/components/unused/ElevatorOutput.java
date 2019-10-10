@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.components.Component;
 
 // Elevator lifts the stone and edxtender up
 // Extender extends over the twoer, and the grabber releases the stone
+// fix the typos; do you even know how to spell?
 
 public class ElevatorOutput extends Component {
     
