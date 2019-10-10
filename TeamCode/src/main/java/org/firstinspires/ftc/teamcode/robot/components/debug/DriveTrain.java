@@ -16,13 +16,12 @@ import java.util.ArrayList;
 
 // Drive Train component
 // Includes: Drive Motors, IMU
+// I hate it also
 
 public class DriveTrain extends Component {
 
 
     final static double WHEEL_DIAMETER = 4.0;
-
-    ArrayList<DcMotor> motors;
 
     //// MOTORS ////
     private DcMotor drive_lf;   // Left-Front drive motor
@@ -56,10 +55,11 @@ public class DriveTrain extends Component {
         drive_rb    = hwmap.get(DcMotor.class, "drive_rb");
 
         //// LYNX ////
-        lynx_module = hwmap.get(LynxModule.class, "Rev expansion hub 1");
+        //lynx_module = hwmap.get(LynxModule.class, "Rev expansion hub 1");
 
         //// SENSORS ////
-        imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(lynx_module, 0);
+        //imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(lynx_module, 0);
+        imu         = hwmap.get(BNO055IMU.class, "imu");
         imu.initialize(new BNO055IMU.Parameters());
     }
 
@@ -128,15 +128,19 @@ public class DriveTrain extends Component {
         drive_rb.setMode(mode);
     }
 
-    private void set_power(double speed) {
-        drive_lf.setPower(speed);
-        drive_rf.setPower(speed);
-        drive_lb.setPower(speed);
-        drive_rb.setPower(speed);
+    private void set_power(double lf, double rf, double lb, double rb) {
+        drive_lf.setPower(lf);
+        drive_rf.setPower(rf);
+        drive_lb.setPower(lb);
+        drive_rb.setPower(rb);
+    }
+
+    private void set_power(double power) {
+        set_power(power, power, power ,power);
     }
 
     private boolean is_busy() {
-        return drive_lf.isBusy() && drive_rf.isBusy() && drive_lb.isBusy() && drive_rb.isBusy();
+        return drive_lf.isBusy() || drive_rf.isBusy() || drive_lb.isBusy() || drive_rb.isBusy();
     }
 
     public void encoder_drive(double x, double y, double a, double distance, double speed) {
@@ -144,17 +148,17 @@ public class DriveTrain extends Component {
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         set_mode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        double lf =  (x - y + a) * distance;
-        double rf = (-x - y - a) * distance;
-        double lb = (-x - y + a) * distance;
-        double rb =  (x - y - a) * distance;
+        double lf =  (x - y + a);
+        double rf = (-x - y - a);
+        double lb = (-x - y + a);
+        double rb =  (x - y - a);
 
-        drive_lf.setTargetPosition((int)lf);
-        drive_rf.setTargetPosition((int)rf);
-        drive_lb.setTargetPosition((int)lb);
-        drive_rb.setTargetPosition((int)rb);
+        drive_lf.setTargetPosition((int)(lf*distance));
+        drive_rf.setTargetPosition((int)(rf*distance));
+        drive_lb.setTargetPosition((int)(lb*distance));
+        drive_rb.setTargetPosition((int)(rb*distance));
 
-        set_power(speed);
+        set_power(lf, rf, lb, rb);
 
         while (is_busy() && robot.lopmode.opModeIsActive()){
             robot.lopmode.idle();
