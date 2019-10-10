@@ -146,7 +146,6 @@ public class DriveTrain extends Component {
     public void encoder_drive(double x, double y, double a, double distance, double speed) {
 
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        set_mode(DcMotor.RunMode.RUN_TO_POSITION);
 
         double lf =  (x - y + a);
         double rf = (-x - y - a);
@@ -157,6 +156,9 @@ public class DriveTrain extends Component {
         drive_rf.setTargetPosition((int)(rf*distance));
         drive_lb.setTargetPosition((int)(lb*distance));
         drive_rb.setTargetPosition((int)(rb*distance));
+
+        set_mode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         set_power(lf, rf, lb, rb);
 

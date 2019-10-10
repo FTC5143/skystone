@@ -19,15 +19,15 @@ public class AutoOpModeLinear extends LinearOpMode {
         robot.startup();
         waitForStart();
         while (opModeIsActive()) {
-            robot.drive_train.encoder_drive(10, 0, 0, 1000, 1);
-            robot.drive_train.encoder_drive(0, 10, 0, 1000, 1);
-            robot.drive_train.encoder_drive(-10, 0, 0, 1000, 1);
-            robot.drive_train.encoder_drive(0, -10, 0, 1000, 1);
+            robot.drive_train.encoder_drive(10, 0, 0, 100, 1);
+            robot.drive_train.encoder_drive(0, 10, 0, 100, 1);
+            robot.drive_train.encoder_drive(-10, 0, 0, 100, 1);
+            robot.drive_train.encoder_drive(0, -10, 0, 100, 1);
 
-            robot.drive_train.encoder_drive(10, 10, 0, 1000, 1);
-            robot.drive_train.encoder_drive(-10, 10, 0, 1000, 1);
-            robot.drive_train.encoder_drive(-10, -10, 0, 1000, 1);
-            robot.drive_train.encoder_drive(10, -10, 0, 1000, 1);
+            robot.drive_train.encoder_drive(10, 10, 0, 100, 1);
+            robot.drive_train.encoder_drive(-10, 10, 0, 100, 1);
+            robot.drive_train.encoder_drive(-10, -10, 0, 100, 1);
+            robot.drive_train.encoder_drive(10, -10, 0, 100, 1);
         }
         robot.shutdown();
     }
