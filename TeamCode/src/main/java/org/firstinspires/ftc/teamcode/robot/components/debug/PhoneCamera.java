@@ -22,9 +22,9 @@ public class PhoneCamera extends Component {
 
 
     private static final String VUFORIA_KEY = "AckXrr//////AAAAmaDBkb1xNkx0ru8YM4IE6J5E9LuPxKCWHq/SbgTltCRV7gAqSa7Hx3QK/klvy8AHSBTRdKjgzLOXcKrLmD2up9yd7j0thOSW6zeLw901mUdpqCJHP4uIFT57Nu94ermDVSe0a/l2PtOBSw2C2rSJevczyf4QuD/al9wATQ63yICvPKFhAduN3rZrFsyn4TJQYV97JqWAaURJ3FJTt7+xo43/A0zZxDwedBpQ8y3IxuX6STUClcMSlDWiwfjaKPlZA4TYq7e1GN02gNilVN0CYkPvJixPs+eKQW5ziQz8gujuIw0x6dfsaKMHZnU+jOdlpHt8v9hQX8CdCzui9mEB35VYOCl8LMUp3aE0c8pPOEep";
-    //why all the gibberish? stupid useless code
+
     private VuforiaLocalizer vuforia;
-    //what is a vuforia?
+
     private TFObjectDetector tfod;
 
 

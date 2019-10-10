@@ -117,8 +117,7 @@ public class DriveTrain extends Component {
 
     public void mechanumDrive(double lx, double ly, double rx) {
 
-        // I hate myself for writing it out like this but I also was too lazy to figure out a better way\
-        //don't worry I hate you too - Brain
+        // I hate myself for writing it out like this but I also was too lazy to figure out a better way
         drive_lf.setPower(lx - ly + rx);
         drive_rf.setPower(-lx - ly - rx);
         drive_lb.setPower(-lx - ly + rx);

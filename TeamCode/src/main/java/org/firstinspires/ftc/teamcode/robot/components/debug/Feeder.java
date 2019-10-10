@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
