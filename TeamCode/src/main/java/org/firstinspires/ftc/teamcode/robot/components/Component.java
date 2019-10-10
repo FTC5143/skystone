@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.robot.components;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 
 import java.text.DecimalFormat;
 
