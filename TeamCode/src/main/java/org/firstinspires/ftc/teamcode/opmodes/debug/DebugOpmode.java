@@ -22,6 +22,8 @@ public class DebugOpmode extends OpMode {
     public void loop() {
         robot.update();
 
+        robot.drive_train.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
         telemetry.addData("IS IT A SKYSTONE", robot.sensor_debug.isSkystone());
 
     }

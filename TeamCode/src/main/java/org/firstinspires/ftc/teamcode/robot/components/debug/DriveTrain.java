@@ -106,13 +106,6 @@ public class DriveTrain extends Component {
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
-        mechanumDrive(opmode.gamepad1.left_stick_x, opmode.gamepad1.left_stick_y, opmode.gamepad1.right_stick_x);
-
-        int dir = opmode.gamepad1.back ? -1 : 1;
-        if (opmode.gamepad1.x) {drive_lf.setPower(dir);}
-        if (opmode.gamepad1.y) {drive_rf.setPower(dir);}
-        if (opmode.gamepad1.a) {drive_lb.setPower(dir);}
-        if (opmode.gamepad1.b) {drive_rb.setPower(dir);}
     }
 
     public void mechanumDrive(double lx, double ly, double rx) {
@@ -163,7 +156,11 @@ public class DriveTrain extends Component {
 
         set_power(speed);
 
-        while (is_busy()){}
+        while (is_busy() && robot.lopmode.opModeIsActive()){
+            robot.lopmode.idle();
+        }
+
+        set_power(0);
 
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         set_mode(DcMotor.RunMode.RUN_USING_ENCODER);

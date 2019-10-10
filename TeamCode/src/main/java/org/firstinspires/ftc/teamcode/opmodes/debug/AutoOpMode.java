@@ -20,7 +20,7 @@ public class AutoOpMode extends OpMode {
 
     @Override
     public void start() {
-        robot.drive_train.encoder_drive(10,10,0,1000,0.1);
+        robot.drive_train.encoder_drive(10,10,0,1000,1);
     }
 
     @Override

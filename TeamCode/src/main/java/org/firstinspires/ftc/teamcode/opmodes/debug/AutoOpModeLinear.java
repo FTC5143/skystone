@@ -18,7 +18,8 @@ public class AutoOpModeLinear extends LinearOpMode {
         robot = new SoftwareRobot(this);
         robot.startup();
         waitForStart();
-        robot.drive_train.encoder_drive(10,10,0,1000,0.1);
+        robot.drive_train.encoder_drive(10,10,0,1000,1);
+        wait(10000);
         robot.shutdown();
     }
 }
