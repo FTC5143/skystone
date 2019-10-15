@@ -22,6 +22,9 @@ public class DriveTrain extends Component {
 
 
     final static double WHEEL_DIAMETER = 4.0;
+    final static double TICKS_PER_REVOLUTION = 1120;
+    final static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+    final static double TICKS_PER_INCH = TICKS_PER_REVOLUTION / WHEEL_CIRCUMFERENCE;
 
     //// MOTORS ////
     private DcMotor drive_lf;   // Left-Front drive motor
@@ -143,7 +146,7 @@ public class DriveTrain extends Component {
         return drive_lf.isBusy() || drive_rf.isBusy() || drive_lb.isBusy() || drive_rb.isBusy();
     }
 
-    public void encoder_drive(double x, double y, double a, double distance, double speed) {
+    public void encoder_drive(double x, double y, double a, double inches, double speed) {
 
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -152,10 +155,13 @@ public class DriveTrain extends Component {
         double lb = (-x - y + a);
         double rb =  (x - y - a);
 
-        drive_lf.setTargetPosition((int)(lf*distance));
-        drive_rf.setTargetPosition((int)(rf*distance));
-        drive_lb.setTargetPosition((int)(lb*distance));
-        drive_rb.setTargetPosition((int)(rb*distance));
+        double encoder_ticks = inches * TICKS_PER_INCH;
+
+
+        drive_lf.setTargetPosition((int)(lf*encoder_ticks));
+        drive_rf.setTargetPosition((int)(rf*encoder_ticks));
+        drive_lb.setTargetPosition((int)(lb*encoder_ticks));
+        drive_rb.setTargetPosition((int)(rb*encoder_ticks));
 
         set_mode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -164,6 +170,10 @@ public class DriveTrain extends Component {
 
         while (is_busy() && robot.lopmode.opModeIsActive()){
             robot.lopmode.idle();
+            if (!drive_lf.isBusy()) {drive_lf.setPower(0);}
+            if (!drive_rf.isBusy()) {drive_rf.setPower(0);}
+            if (!drive_lb.isBusy()) {drive_lb.setPower(0);}
+            if (!drive_rb.isBusy()) {drive_rb.setPower(0);}
         }
 
         set_power(0);

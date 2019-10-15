@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,6 +15,17 @@ public class Dragger extends Component {
     //// SERVOS ////
     Servo left_dragger;
     Servo right_dragger;
+
+    public double left_target = 0;
+    public double right_target = 0;
+
+    private static final double LEFT_OPEN = 0.85;
+    private static final double LEFT_CLOSE = 0.15;
+
+    private static final double RIGHT_OPEN = 0.15;
+    private static final double RIGHT_CLOSE = 0.85;
+
+
 
     {
         name = "Dragger";
@@ -30,6 +42,7 @@ public class Dragger extends Component {
         //// SERVOS ////
         left_dragger    = hwmap.get(Servo.class, "left_dragger");
         right_dragger   = hwmap.get(Servo.class, "right_dragger");
+        release();
     }
 
     @Override
@@ -40,13 +53,20 @@ public class Dragger extends Component {
         telemetry.addData("RG", TELEMETRY_DECIMAL.format(right_dragger.getPosition()));
     }
 
+    @Override
+    public void update(OpMode opmode) {
+        super.update(opmode);
+        left_dragger.setPosition(left_target);
+        right_dragger.setPosition(right_target);
+    }
+
     public void grab() {
-        left_dragger.setPosition(1);
-        right_dragger.setPosition(1);
+        left_target = LEFT_CLOSE;
+        right_target = RIGHT_CLOSE;
     }
 
     public void release() {
-        left_dragger.setPosition(0);
-        right_dragger.setPosition(0);
+        left_target = LEFT_OPEN;
+        right_target = RIGHT_OPEN;
     }
 }
