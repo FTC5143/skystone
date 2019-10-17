@@ -3,29 +3,25 @@ package org.firstinspires.ftc.teamcode.robot.components.debug;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
 import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 public class PhoneCamera extends Component {
 
-    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Stone";
-    private static final String LABEL_SECOND_ELEMENT = "Skystone";
-
-
-    private static final String VUFORIA_KEY = "AckXrr//////AAAAmaDBkb1xNkx0ru8YM4IE6J5E9LuPxKCWHq/SbgTltCRV7gAqSa7Hx3QK/klvy8AHSBTRdKjgzLOXcKrLmD2up9yd7j0thOSW6zeLw901mUdpqCJHP4uIFT57Nu94ermDVSe0a/l2PtOBSw2C2rSJevczyf4QuD/al9wATQ63yICvPKFhAduN3rZrFsyn4TJQYV97JqWAaURJ3FJTt7+xo43/A0zZxDwedBpQ8y3IxuX6STUClcMSlDWiwfjaKPlZA4TYq7e1GN02gNilVN0CYkPvJixPs+eKQW5ziQz8gujuIw0x6dfsaKMHZnU+jOdlpHt8v9hQX8CdCzui9mEB35VYOCl8LMUp3aE0c8pPOEep";
-
-    private VuforiaLocalizer vuforia;
-
-    private TFObjectDetector tfod;
+    OpenCvCamera phone_camera;
 
 
     public PhoneCamera(Robot robot) {
@@ -34,63 +30,70 @@ public class PhoneCamera extends Component {
 
     @Override
     public void registerHardware(HardwareMap hwmap) {
-        super.registerHardware(hwmap);
-        initVuforia();
-        initTfod(hwmap);
-
-        tfod.activate();
+        int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
+        phone_camera = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
     }
 
+    @Override
+    public void startup() {
+        super.startup();
 
-    public class RecognitionPositionComparator implements Comparator<Recognition> {
-        @Override
-        public int compare(Recognition o1, Recognition o2) {
-            return ((Float)o1.getLeft()).compareTo(o2.getLeft());
-        }
+        phone_camera.openCameraDevice();
+        phone_camera.setPipeline(new SamplePipeline());
     }
 
-    public ArrayList<Boolean> findBlocks() {
-        ArrayList<Boolean> recognized_blocks = new ArrayList<>();
+    @Override
+    protected void updateTelemetry(Telemetry telemetry) {
+        super.updateTelemetry(telemetry);
 
-        try {
-            if (tfod != null) {
-                List<Recognition> updated_recognitions = tfod.getUpdatedRecognitions();
-                Collections.sort(updated_recognitions, new RecognitionPositionComparator());
-
-                if (updated_recognitions != null) {
-                    for (Recognition recognition : updated_recognitions) {
-                        if (recognition != null) {
-                            recognized_blocks.add(recognition.getLabel() == "Skystone");
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {}
-        return recognized_blocks;
-    }
-
-
-    private void initVuforia() {
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-    }
-
-    private void initTfod(HardwareMap hwmap) {
-        int tfodMonitorViewId = hwmap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hwmap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.4;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        telemetry.addData("FRAME", phone_camera.getFrameCount());
+        telemetry.addData("FPS", String.format("%.2f", phone_camera.getFps()));
+        telemetry.addData("TFT MS", phone_camera.getTotalFrameTimeMs());
+        telemetry.addData("PT MS", phone_camera.getPipelineTimeMs());
+        telemetry.addData("OT MS", phone_camera.getOverheadTimeMs());
+        telemetry.addData("MAX FPS", phone_camera.getCurrentPipelineMaxFps());
     }
 
     @Override
     public void shutdown() {
-        super.shutdown();
-        tfod.shutdown();
+    }
+
+    public void start_streaming() {
+        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+    }
+
+    public void stop_streaming() {
+        phone_camera.stopStreaming();
+    }
+
+    class SamplePipeline extends OpenCvPipeline
+    {
+        @Override
+        public Mat processFrame(Mat input)
+        {
+            Imgproc.rectangle(
+                    input,
+                    new Point(
+                            input.cols()*(1f/4f),
+                            input.rows()*(3f/4f)),
+
+                    new Point(
+                            input.cols()*(2f/4f),
+                            input.rows()*(4f/4f)),
+                    new Scalar(0, 255, 0), 4);
+
+            Imgproc.rectangle(
+                    input,
+                    new Point(
+                            input.cols()*(2f/4f),
+                            input.rows()*(3f/4f)),
+
+                    new Point(
+                            input.cols()*(3f/4f),
+                            input.rows()*(4f/4f)),
+                    new Scalar(0, 0, 255), 4);
+
+            return input;
+        }
     }
 }

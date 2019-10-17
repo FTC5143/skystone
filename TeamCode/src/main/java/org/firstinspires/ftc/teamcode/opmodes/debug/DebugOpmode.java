@@ -31,8 +31,17 @@ public class DebugOpmode extends OpMode {
         if(gamepad1.a) {
             robot.dragger.grab();
         }
+
         if(gamepad1.b) {
             robot.dragger.release();
+        }
+
+        if(gamepad1.x) {
+            robot.phone_camera.start_streaming();
+        }
+
+        if(gamepad1.y) {
+            robot.phone_camera.stop_streaming();
         }
 
         telemetry.addData("IS IT A SKYSTONE", robot.sensor_debug.isSkystone());
