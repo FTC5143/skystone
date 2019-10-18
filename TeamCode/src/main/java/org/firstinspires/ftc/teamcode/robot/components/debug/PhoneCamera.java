@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
 import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -19,10 +21,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.util.Arrays;
+
 public class PhoneCamera extends Component {
 
     OpenCvCamera phone_camera;
 
+    SamplePipeline stone_pipeline;
 
     public PhoneCamera(Robot robot) {
         super(robot);
@@ -39,7 +44,9 @@ public class PhoneCamera extends Component {
         super.startup();
 
         phone_camera.openCameraDevice();
-        phone_camera.setPipeline(new SamplePipeline());
+
+        stone_pipeline = new SamplePipeline();
+        phone_camera.setPipeline(stone_pipeline);
     }
 
     @Override
@@ -52,6 +59,28 @@ public class PhoneCamera extends Component {
         telemetry.addData("PT MS", phone_camera.getPipelineTimeMs());
         telemetry.addData("OT MS", phone_camera.getOverheadTimeMs());
         telemetry.addData("MAX FPS", phone_camera.getCurrentPipelineMaxFps());
+        if(stone_pipeline.left_mean != null) {
+            telemetry.addData("LEFT RECT",
+                    (int) stone_pipeline.left_mean.val[0] + " " +
+                            (int) stone_pipeline.left_mean.val[1] + " " +
+                            (int) stone_pipeline.left_mean.val[2] + " " +
+                            (int) stone_pipeline.left_mean.val[3]
+            );
+        }
+        if(stone_pipeline.right_mean != null) {
+            telemetry.addData("RIGHT RECT",
+                    (int) stone_pipeline.right_mean.val[0] + " " +
+                            (int) stone_pipeline.right_mean.val[1] + " " +
+                            (int) stone_pipeline.right_mean.val[2] + " " +
+                            (int) stone_pipeline.right_mean.val[3]
+            );
+        }
+    }
+
+    @Override
+    public void update(OpMode opmode) {
+        super.update(opmode);
+
     }
 
     @Override
@@ -59,7 +88,7 @@ public class PhoneCamera extends Component {
     }
 
     public void start_streaming() {
-        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
     }
 
     public void stop_streaming() {
@@ -68,30 +97,57 @@ public class PhoneCamera extends Component {
 
     class SamplePipeline extends OpenCvPipeline
     {
+
+        Scalar left_mean;
+        Scalar right_mean;
+
         @Override
         public Mat processFrame(Mat input)
         {
+            int[] left_rect = {
+                    (int)(input.cols()*(1f/4f)),
+                    (int)(input.cols()*(1f/8f)),
+                    (int)(input.cols()*(2f/4f)),
+                    (int)(input.cols()*(1f/4f))
+            };
+
+            int[] right_rect = {
+                    (int)(input.cols()*(2f/4f)),
+                    (int)(input.cols()*(1f/8f)),
+                    (int)(input.cols()*(3f/4f)),
+                    (int)(input.cols()*(1f/4f))
+            };
+
             Imgproc.rectangle(
                     input,
                     new Point(
-                            input.cols()*(1f/4f),
-                            input.rows()*(3f/4f)),
+                            left_rect[0],
+                            left_rect[1]),
 
                     new Point(
-                            input.cols()*(2f/4f),
-                            input.rows()*(4f/4f)),
-                    new Scalar(0, 255, 0), 4);
+                            left_rect[2],
+                            left_rect[3]),
+                    new Scalar(0, 255, 0), 2);
 
             Imgproc.rectangle(
                     input,
                     new Point(
-                            input.cols()*(2f/4f),
-                            input.rows()*(3f/4f)),
+                            right_rect[0],
+                            right_rect[1]),
 
                     new Point(
-                            input.cols()*(3f/4f),
-                            input.rows()*(4f/4f)),
-                    new Scalar(0, 0, 255), 4);
+                            right_rect[2],
+                            right_rect[3]),
+                    new Scalar(0, 0, 255), 2);
+
+            Mat left_block = input.submat(left_rect[0], left_rect[2], left_rect[1], left_rect[3]);
+            Mat right_block = input.submat(right_rect[0], right_rect[2], right_rect[1], right_rect[3]);
+
+
+            left_mean = Core.mean(left_block);
+
+
+            right_mean = Core.mean(right_block);
 
             return input;
         }
