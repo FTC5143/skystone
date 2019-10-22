@@ -59,22 +59,9 @@ public class PhoneCamera extends Component {
         telemetry.addData("PT MS", phone_camera.getPipelineTimeMs());
         telemetry.addData("OT MS", phone_camera.getOverheadTimeMs());
         telemetry.addData("MAX FPS", phone_camera.getCurrentPipelineMaxFps());
-        if(stone_pipeline.left_mean != null) {
-            telemetry.addData("LEFT RECT",
-                    (int) stone_pipeline.left_mean.val[0] + " " +
-                            (int) stone_pipeline.left_mean.val[1] + " " +
-                            (int) stone_pipeline.left_mean.val[2] + " " +
-                            (int) stone_pipeline.left_mean.val[3]
-            );
-        }
-        if(stone_pipeline.right_mean != null) {
-            telemetry.addData("RIGHT RECT",
-                    (int) stone_pipeline.right_mean.val[0] + " " +
-                            (int) stone_pipeline.right_mean.val[1] + " " +
-                            (int) stone_pipeline.right_mean.val[2] + " " +
-                            (int) stone_pipeline.right_mean.val[3]
-            );
-        }
+        telemetry.addData("LEFT RECT", stone_pipeline.left_hue+" "+stone_pipeline.left_br);
+        telemetry.addData("RIGHT RECT", stone_pipeline.right_hue+" "+stone_pipeline.right_br);
+
     }
 
     @Override
@@ -97,9 +84,11 @@ public class PhoneCamera extends Component {
 
     class SamplePipeline extends OpenCvPipeline
     {
+        int left_hue;
+        int right_hue;
 
-        Scalar left_mean;
-        Scalar right_mean;
+        int left_br;
+        int right_br;
 
         @Override
         public Mat processFrame(Mat input)
@@ -140,16 +129,52 @@ public class PhoneCamera extends Component {
                             right_rect[3]),
                     new Scalar(0, 0, 255), 2);
 
-            Mat left_block = input.submat(left_rect[0], left_rect[2], left_rect[1], left_rect[3]);
-            Mat right_block = input.submat(right_rect[0], right_rect[2], right_rect[1], right_rect[3]);
+            Mat left_block = input.submat(left_rect[1], left_rect[3], left_rect[0], left_rect[2]);
+            Mat right_block = input.submat(right_rect[1], right_rect[3], right_rect[0], right_rect[2]);
 
 
-            left_mean = Core.mean(left_block);
+            Scalar left_mean = Core.mean(left_block);
 
 
-            right_mean = Core.mean(right_block);
+            Scalar right_mean = Core.mean(right_block);
+
+            left_hue = get_hue((int) left_mean.val[0], (int) left_mean.val[1], (int) left_mean.val[2]);
+            right_hue = get_hue((int) right_mean.val[0], (int) right_mean.val[1], (int) right_mean.val[2]);
+            left_br = get_brightness((int) left_mean.val[0], (int) left_mean.val[1], (int) left_mean.val[2]);
+            right_br = get_brightness((int) right_mean.val[0], (int) right_mean.val[1], (int) right_mean.val[2]);
 
             return input;
         }
+    }
+
+
+    private int get_hue(int red, int green, int blue) {
+
+        float min = Math.min(Math.min(red, green), blue);
+        float max = Math.max(Math.max(red, green), blue);
+
+        if (min == max) {
+            return 0;
+        }
+
+        float hue = 0f;
+        if (max == red) {
+            hue = (green - blue) / (max - min);
+
+        } else if (max == green) {
+            hue = 2f + (blue - red) / (max - min);
+
+        } else {
+            hue = 4f + (red - green) / (max - min);
+        }
+
+        hue = hue * 60;
+        if (hue < 0) hue = hue + 360;
+
+        return Math.round(hue);
+    }
+
+    private int get_brightness(int red, int green, int blue) {
+        return (int)(((double)(red + green + blue))/3);
     }
 }
