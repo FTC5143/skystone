@@ -114,10 +114,10 @@ public class DriveTrain extends Component {
     public void mechanumDrive(double lx, double ly, double rx) {
 
         // I hate myself for writing it out like this but I also was too lazy to figure out a better way
-        drive_lf.setPower(lx - ly + rx);
-        drive_rf.setPower(-lx - ly - rx);
-        drive_lb.setPower(-lx - ly + rx);
-        drive_rb.setPower(lx - ly - rx);
+        drive_lf.setPower(lx - ly - rx);
+        drive_rf.setPower(-lx - ly + rx);
+        drive_lb.setPower(-lx - ly - rx);
+        drive_rb.setPower(lx - ly + rx);
     }
 
     public void stop() {
@@ -146,39 +146,56 @@ public class DriveTrain extends Component {
         return drive_lf.isBusy() || drive_rf.isBusy() || drive_lb.isBusy() || drive_rb.isBusy();
     }
 
-    public void encoder_drive(double x, double y, double a, double inches, double speed) {
+    public void encoder_drive(double x, double y, double a, double d) {
+        encoder_drive(x, y, a, 1);
+    }
+
+    public void encoder_drive(double x, double y, double d) {
+        encoder_drive(x, y, d, 0);
+    }
+
+    public void encoder_drive(double x, double y, double a, double d, double speed) {
 
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        double lf =  (x - y + a);
-        double rf = (-x - y - a);
-        double lb = (-x - y + a);
-        double rb =  (x - y - a);
-
-        double encoder_ticks = inches * TICKS_PER_INCH;
+        double lf =  (x - y - a);
+        double rf = (-x - y + a);
+        double lb = (-x - y - a);
+        double rb =  (x - y + a);
 
 
-        drive_lf.setTargetPosition((int)(lf*encoder_ticks));
-        drive_rf.setTargetPosition((int)(rf*encoder_ticks));
-        drive_lb.setTargetPosition((int)(lb*encoder_ticks));
-        drive_rb.setTargetPosition((int)(rb*encoder_ticks));
+
+        drive_lf.setTargetPosition((int)(lf*TICKS_PER_INCH*d));
+        drive_rf.setTargetPosition((int)(rf*TICKS_PER_INCH*d));
+        drive_lb.setTargetPosition((int)(lb*TICKS_PER_INCH*d));
+        drive_rb.setTargetPosition((int)(rb*TICKS_PER_INCH*d));
 
         set_mode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        set_power(lf, rf, lb, rb);
+        set_power(lf*speed, rf*speed, lb*speed, rb*speed);
 
         while (is_busy() && robot.lopmode.opModeIsActive()){
             robot.lopmode.idle();
-            if (!drive_lf.isBusy()) {drive_lf.setPower(0);}
-            if (!drive_rf.isBusy()) {drive_rf.setPower(0);}
-            if (!drive_lb.isBusy()) {drive_lb.setPower(0);}
-            if (!drive_rb.isBusy()) {drive_rb.setPower(0);}
+            robot.lopmode.telemetry.addData("MOVING", (int)(lf*TICKS_PER_INCH)+" "+(int)(rf*TICKS_PER_INCH)+" "+(int)(lb*TICKS_PER_INCH)+" "+(int)(rb*TICKS_PER_INCH));
+            robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
+            robot.lopmode.telemetry.update();
+            if (!is_busy()) {
+                break;
+            }
         }
+
+
+        robot.lopmode.telemetry.addData("MOVING", "STOPPING");
+        robot.lopmode.telemetry.update();
 
         set_power(0);
 
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
+        robot.lopmode.telemetry.update();
+
     }
 }

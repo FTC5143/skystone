@@ -21,7 +21,7 @@ public class DebugOpmode extends OpMode {
     public void loop() {
         robot.update();
 
-        robot.drive_train.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        robot.drive_train.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, -gamepad1.right_stick_x);
 
         if(gamepad1.dpad_down)  { robot.dragger.left_target -= 0.05; }
         if(gamepad1.dpad_up)    { robot.dragger.left_target += 0.05; }
