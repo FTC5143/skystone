@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.rewriting.LessBadSkystoneDetector;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
 import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 
@@ -18,7 +19,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 public class PhoneCamera extends Component {
 
     private OpenCvCamera phone_camera;
-    private SkystoneDetector skystone_detector;
+    private LessBadSkystoneDetector skystone_detector;
 
     public PhoneCamera(Robot robot) {
         super(robot);
@@ -36,7 +37,7 @@ public class PhoneCamera extends Component {
 
         phone_camera.openCameraDevice();
 
-        skystone_detector = new SkystoneDetector();
+        skystone_detector = new LessBadSkystoneDetector();
         phone_camera.setPipeline(skystone_detector);
     }
 
