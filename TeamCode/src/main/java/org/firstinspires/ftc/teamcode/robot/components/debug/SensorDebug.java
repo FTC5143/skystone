@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -13,8 +15,9 @@ import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 public class SensorDebug extends Component {
 
     ColorSensor color_sensor;
-    TouchSensor touch_sensor;
+    RevTouchSensor touch_sensor;
     DistanceSensor distance_sensor;
+
 
     {
         name = "Sensor Debug";
@@ -29,7 +32,7 @@ public class SensorDebug extends Component {
         super.registerHardware(hwmap);
 
         color_sensor = hwmap.get(ColorSensor.class, "color_sensor");
-        touch_sensor = hwmap.get(TouchSensor.class, "touch_sensor");
+        touch_sensor = hwmap.get(RevTouchSensor.class, "touch_sensor");
     }
 
     @Override

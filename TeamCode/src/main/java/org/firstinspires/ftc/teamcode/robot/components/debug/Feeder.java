@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -17,7 +19,7 @@ public class Feeder extends Component {
     DcMotor right_spinner;   // The right feeder wheel on the take-in device
 
     //// SENSORS ////
-    TouchSensor block_detector; // The touch sensor to detect a block in the chamber
+    RevTouchSensor block_detector; // The touch sensor to detect a block in the chamber
 
     {
         name = "Feeder";
@@ -36,7 +38,7 @@ public class Feeder extends Component {
         right_spinner   = hwmap.get(DcMotor.class, "right_spinner");
 
         //// SENSORS ////
-        block_detector  = hwmap.get(TouchSensor.class, "block_detector");
+        block_detector  = hwmap.get(RevTouchSensor.class, "block_detector");
     }
 
     @Override
