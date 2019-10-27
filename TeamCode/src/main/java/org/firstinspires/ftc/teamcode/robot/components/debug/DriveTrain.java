@@ -155,20 +155,15 @@ public class DriveTrain extends Component {
     }
 
     public void encoder_drive(double x, double y, double a, double d, double speed) {
-
-        set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         double lf =  (x - y - a);
         double rf = (-x - y + a);
         double lb = (-x - y - a);
         double rb =  (x - y + a);
 
-
-
-        drive_lf.setTargetPosition((int)(lf*TICKS_PER_INCH*d));
-        drive_rf.setTargetPosition((int)(rf*TICKS_PER_INCH*d));
-        drive_lb.setTargetPosition((int)(lb*TICKS_PER_INCH*d));
-        drive_rb.setTargetPosition((int)(rb*TICKS_PER_INCH*d));
+        drive_lf.setTargetPosition(drive_lf.getCurrentPosition()+(int)(lf*TICKS_PER_INCH*d));
+        drive_rf.setTargetPosition(drive_rf.getCurrentPosition()+(int)(rf*TICKS_PER_INCH*d));
+        drive_lb.setTargetPosition(drive_lb.getCurrentPosition()+(int)(lb*TICKS_PER_INCH*d));
+        drive_rb.setTargetPosition(drive_rb.getCurrentPosition()+(int)(rb*TICKS_PER_INCH*d));
 
         set_mode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -191,7 +186,6 @@ public class DriveTrain extends Component {
 
         set_power(0);
 
-        set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
