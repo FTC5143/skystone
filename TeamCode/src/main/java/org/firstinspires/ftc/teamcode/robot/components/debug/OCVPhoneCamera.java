@@ -76,7 +76,7 @@ public class OCVPhoneCamera extends Component {
     }
 
     public void start_streaming() {
-        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
+        phone_camera.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
     }
 
     public void stop_streaming() {
