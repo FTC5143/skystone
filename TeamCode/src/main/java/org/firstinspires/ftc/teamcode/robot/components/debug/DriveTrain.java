@@ -114,10 +114,10 @@ public class DriveTrain extends Component {
     public void mechanumDrive(double lx, double ly, double rx) {
 
         // I hate myself for writing it out like this but I also was too lazy to figure out a better way
-        drive_lf.setPower(lx - ly - rx);
-        drive_rf.setPower(-lx - ly + rx);
-        drive_lb.setPower(-lx - ly - rx);
-        drive_rb.setPower(lx - ly + rx);
+        drive_lf.setPower(-lx + ly + rx);
+        drive_rf.setPower(+lx + ly - rx);
+        drive_lb.setPower(+lx + ly + rx);
+        drive_rb.setPower(-lx + ly - rx);
     }
 
     public void stop() {
@@ -155,10 +155,10 @@ public class DriveTrain extends Component {
     }
 
     public void encoder_drive(double x, double y, double a, double d, double speed) {
-        double lf =  (x - y - a);
-        double rf = (-x - y + a);
-        double lb = (-x - y - a);
-        double rb =  (x - y + a);
+        double lf =  (-x + y + a);
+        double rf = (+x + y - a);
+        double lb = (+x + y + a);
+        double rb =  (-x + y - a);
 
         drive_lf.setTargetPosition(drive_lf.getCurrentPosition()+(int)(lf*TICKS_PER_INCH*d));
         drive_rf.setTargetPosition(drive_rf.getCurrentPosition()+(int)(rf*TICKS_PER_INCH*d));
@@ -175,6 +175,7 @@ public class DriveTrain extends Component {
             robot.lopmode.telemetry.addData("MOVING", (int)(lf*TICKS_PER_INCH)+" "+(int)(rf*TICKS_PER_INCH)+" "+(int)(lb*TICKS_PER_INCH)+" "+(int)(rb*TICKS_PER_INCH));
             robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
             robot.lopmode.telemetry.update();
+
             if (!is_busy()) {
                 break;
             }

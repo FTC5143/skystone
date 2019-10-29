@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot.robots.SoftwareRobot;
 
-@TeleOp(name="Debug Auto Linear", group="driver control")
+@Autonomous(name="Debug Auto Linear", group="autonomous")
 //@Disabled
 public class AutoOpModeLinear extends LinearOpMode {
 
