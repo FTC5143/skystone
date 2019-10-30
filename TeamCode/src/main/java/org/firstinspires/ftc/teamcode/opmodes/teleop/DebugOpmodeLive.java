@@ -47,6 +47,14 @@ public class DebugOpmodeLive extends OpMode {
         if(gamepad1.y) {
             robot.phone_camera.stop_streaming();
         }
+
+        if(gamepad2.a) {
+            robot.feeder.spin(1);
+        } else if (gamepad2.b) {
+            robot.feeder.spin(-1);
+        } else {
+            robot.feeder.spin(0);
+        }
     }
 
     @Override

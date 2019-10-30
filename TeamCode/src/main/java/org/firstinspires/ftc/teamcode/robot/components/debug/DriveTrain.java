@@ -95,6 +95,7 @@ public class DriveTrain extends Component {
         drive_lf.setDirection(DcMotor.Direction.REVERSE);
         drive_lb.setDirection(DcMotor.Direction.REVERSE);
 
+        set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
@@ -146,24 +147,18 @@ public class DriveTrain extends Component {
         return drive_lf.isBusy() || drive_rf.isBusy() || drive_lb.isBusy() || drive_rb.isBusy();
     }
 
-    public void encoder_drive(double x, double y, double a, double d) {
-        encoder_drive(x, y, a, 1);
-    }
-
-    public void encoder_drive(double x, double y, double d) {
-        encoder_drive(x, y, d, 0);
-    }
 
     public void encoder_drive(double x, double y, double a, double d, double speed) {
-        double lf =  (-x + y + a);
-        double rf = (+x + y - a);
-        double lb = (+x + y + a);
-        double rb =  (-x + y - a);
+        double lf =  (-x - y + a);
+        double rf = (+x - y - a);
+        double lb = (+x - y + a);
+        double rb =  (-x - y - a);
 
         drive_lf.setTargetPosition(drive_lf.getCurrentPosition()+(int)(lf*TICKS_PER_INCH*d));
         drive_rf.setTargetPosition(drive_rf.getCurrentPosition()+(int)(rf*TICKS_PER_INCH*d));
         drive_lb.setTargetPosition(drive_lb.getCurrentPosition()+(int)(lb*TICKS_PER_INCH*d));
         drive_rb.setTargetPosition(drive_rb.getCurrentPosition()+(int)(rb*TICKS_PER_INCH*d));
+
 
         set_mode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -172,8 +167,10 @@ public class DriveTrain extends Component {
 
         while (is_busy() && robot.lopmode.opModeIsActive()){
             robot.lopmode.idle();
-            robot.lopmode.telemetry.addData("MOVING", (int)(lf*TICKS_PER_INCH)+" "+(int)(rf*TICKS_PER_INCH)+" "+(int)(lb*TICKS_PER_INCH)+" "+(int)(rb*TICKS_PER_INCH));
+            robot.lopmode.telemetry.addData("MOVING", (int)(lf*TICKS_PER_INCH*d)+" "+(int)(rf*TICKS_PER_INCH*d)+" "+(int)(lb*TICKS_PER_INCH*d)+" "+(int)(rb*TICKS_PER_INCH*d));
             robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
+            robot.lopmode.telemetry.addData("POSITION", drive_lf.getCurrentPosition()+" "+drive_rf.getCurrentPosition()+" "+drive_lb.getCurrentPosition()+" "+drive_rb.getCurrentPosition());
+            robot.lopmode.telemetry.addData("TARGET", drive_lf.getTargetPosition()+" "+drive_rf.getTargetPosition()+" "+drive_lb.getTargetPosition()+" "+drive_rb.getTargetPosition());
             robot.lopmode.telemetry.update();
 
             if (!is_busy()) {
@@ -181,16 +178,13 @@ public class DriveTrain extends Component {
             }
         }
 
-
         robot.lopmode.telemetry.addData("MOVING", "STOPPING");
         robot.lopmode.telemetry.update();
 
         set_power(0);
-
         set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
         robot.lopmode.telemetry.update();
-
     }
 }

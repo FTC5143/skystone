@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.components.debug;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -39,6 +40,16 @@ public class Feeder extends Component {
 
         //// SENSORS ////
         block_detector  = hwmap.get(RevTouchSensor.class, "block_detector");
+    }
+
+    @Override
+    public void startup() {
+        super.startup();
+    }
+
+    public void spin(double power) {
+        left_spinner.setPower(power);
+        right_spinner.setPower(-power);
     }
 
     @Override

@@ -29,8 +29,9 @@ public class AutonomousLive extends LinearOpMode {
         robot.startup();
 
         if (SKYSTONE) {
+            robot.phone_camera.start_streaming();
             while(!isStarted()) {
-                robot.phone_camera.start_streaming();
+
                 pattern = robot.phone_camera.get_pattern();
 
                 telemetry.addData("PATTERN", pattern);
@@ -42,12 +43,26 @@ public class AutonomousLive extends LinearOpMode {
 
         if (SKYSTONE) {
             robot.phone_camera.stop_streaming();
+            switch(pattern) {
+                case(1): {
+                    robot.drive_train.encoder_drive(-1, 0, 0, 4, 1);
+                }
+                case(2): {
+                    robot.drive_train.encoder_drive(1,0,0,4,1);
+                }
+                case(3): {
+                    robot.drive_train.encoder_drive(1, 0, 0, 12, 1);
+                }
+            }
+            robot.drive_train.encoder_drive(0,1,0, 20, 1);
+            sleep(300);
+            robot.dragger.grab();
+            sleep(300);
+            robot.drive_train.encoder_drive(0,-1,0, 8, 1);
+            sleep(300);
+            robot.dragger.release();
         }
 
-        if (TAPE) {
-            int dir = (SIDE == LEFT) ? 1 : -1;
-            robot.drive_train.encoder_drive(dir, 0, 0, 33, 1);
-        }
 
         robot.shutdown();
     }

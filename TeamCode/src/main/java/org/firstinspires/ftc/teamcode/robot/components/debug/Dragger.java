@@ -19,8 +19,8 @@ public class Dragger extends Component {
     public double left_target = 0;
     public double right_target = 0;
 
-    private static final double LEFT_OPEN = 0.85;
-    private static final double LEFT_CLOSE = 0.15;
+    private static final double LEFT_OPEN = 0.1;
+    private static final double LEFT_CLOSE = 0.35;
 
     private static final double RIGHT_OPEN = 0.15;
     private static final double RIGHT_CLOSE = 0.85;
