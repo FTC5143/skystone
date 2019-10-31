@@ -4,8 +4,11 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.robots.Robot;
@@ -13,6 +16,8 @@ import org.firstinspires.ftc.teamcode.robot.components.Component;
 import org.firstinspires.ftc.teamcode.util.LynxOptimizedI2cFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 // Drive Train component
 // Includes: Drive Motors, IMU
@@ -27,16 +32,19 @@ public class DriveTrain extends Component {
     final static double TICKS_PER_INCH = TICKS_PER_REVOLUTION / WHEEL_CIRCUMFERENCE;
 
     //// MOTORS ////
-    private DcMotor drive_lf;   // Left-Front drive motor
-    private DcMotor drive_rf;   // Right-Front drive motor
-    private DcMotor drive_lb;   // Left-Back drive motor
-    private DcMotor drive_rb;   // Right-Back drive motor
+    private DcMotorEx drive_lf;   // Left-Front drive motor
+    private DcMotorEx drive_rf;   // Right-Front drive motor
+    private DcMotorEx drive_lb;   // Left-Back drive motor
+    private DcMotorEx drive_rb;   // Right-Back drive motor
 
     //// LYNX ////
     private LynxModule lynx_module;
 
     //// SENSORS ////
     private BNO055IMU imu;      // Internal REV IMU, which we might use to drive straight
+
+
+    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
 
 
     {
@@ -52,10 +60,10 @@ public class DriveTrain extends Component {
         super.registerHardware(hwmap);
 
         //// MOTORS ////
-        drive_lf    = hwmap.get(DcMotor.class, "drive_lf");
-        drive_rf    = hwmap.get(DcMotor.class, "drive_rf");
-        drive_lb    = hwmap.get(DcMotor.class, "drive_lb");
-        drive_rb    = hwmap.get(DcMotor.class, "drive_rb");
+        drive_lf    = hwmap.get(DcMotorEx.class, "drive_lf");
+        drive_rf    = hwmap.get(DcMotorEx.class, "drive_rf");
+        drive_lb    = hwmap.get(DcMotorEx.class, "drive_lb");
+        drive_rb    = hwmap.get(DcMotorEx.class, "drive_rb");
 
         //// LYNX ////
         //lynx_module = hwmap.get(LynxModule.class, "Rev expansion hub 1");
@@ -81,6 +89,9 @@ public class DriveTrain extends Component {
         telemetry.addData("RB TURNS",TELEMETRY_DECIMAL.format(drive_rb.getCurrentPosition()));
 
         telemetry.addData("IMU",imu.getAngularOrientation().toString()+", "+imu.getPosition().toString()+", "+imu.isGyroCalibrated());
+
+        telemetry.addData("PID", drive_lf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_lb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
+
     }
 
     @Override
@@ -98,6 +109,11 @@ public class DriveTrain extends Component {
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        drive_lf.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
+        drive_rf.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
+        drive_lb.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
+        drive_rb.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
+
     }
 
     @Override
@@ -112,13 +128,24 @@ public class DriveTrain extends Component {
         super.update(opmode);
     }
 
-    public void mechanumDrive(double lx, double ly, double rx) {
+    private Double[] mecanum_math(double lx, double ly, double rx) {
+        Double[] power = new Double[]{-lx + ly + rx, +lx + ly - rx, +lx + ly + rx, -lx + ly - rx};
 
-        // I hate myself for writing it out like this but I also was too lazy to figure out a better way
-        drive_lf.setPower(-lx + ly + rx);
-        drive_rf.setPower(+lx + ly - rx);
-        drive_lb.setPower(+lx + ly + rx);
-        drive_rb.setPower(-lx + ly - rx);
+        /*Double max = Math.abs(Collections.max(Arrays.asList(power)));
+
+        if (max != 0) {
+            power[0] = power[0] / max;
+            power[1] = power[1] / max;
+            power[2] = power[2] / max;
+            power[3] = power[3] / max;
+        }*/
+
+        return power;
+    }
+
+    public void mechanumDrive(double lx, double ly, double rx) {
+        Double[] power = mecanum_math(lx, ly, rx);
+        set_power(power[0], power[1], power[2], power[3]);
     }
 
     public void stop() {
@@ -145,6 +172,34 @@ public class DriveTrain extends Component {
 
     private boolean is_busy() {
         return drive_lf.isBusy() || drive_rf.isBusy() || drive_lb.isBusy() || drive_rb.isBusy();
+    }
+
+    public void timed_drive(double x, double y, double a, double d, double speed) {
+        robot.lopmode.resetStartTime();
+        robot.lopmode.getRuntime();
+
+        Double[] power = mecanum_math(x, y, a);
+
+
+        set_power(power[0]*speed, power[1]*speed, power[2]*speed, power[3]*speed);
+
+
+        while (robot.lopmode.getRuntime() < d && robot.lopmode.opModeIsActive()){
+            robot.lopmode.idle();
+            robot.lopmode.telemetry.addData("MOVING", (int)(power[0]*TICKS_PER_INCH*d)+" "+(int)(power[1]*TICKS_PER_INCH*d)+" "+(int)(power[2]*TICKS_PER_INCH*d)+" "+(int)(power[3]*TICKS_PER_INCH*d));
+            robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
+            robot.lopmode.telemetry.addData("POSITION", robot.lopmode.getRuntime());
+            robot.lopmode.telemetry.addData("TARGET", d);
+            robot.lopmode.telemetry.update();
+        }
+
+        robot.lopmode.telemetry.addData("MOVING", "STOPPING");
+        robot.lopmode.telemetry.update();
+
+        set_power(0);
+
+        robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
+        robot.lopmode.telemetry.update();
     }
 
 

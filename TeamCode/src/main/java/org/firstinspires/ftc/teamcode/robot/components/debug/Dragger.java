@@ -19,11 +19,11 @@ public class Dragger extends Component {
     public double left_target = 0;
     public double right_target = 0;
 
-    private static final double LEFT_OPEN = 0.1;
-    private static final double LEFT_CLOSE = 0.35;
+    private static final double LEFT_OPEN = 0.65;
+    private static final double LEFT_CLOSE = 0.97;
 
-    private static final double RIGHT_OPEN = 0.15;
-    private static final double RIGHT_CLOSE = 0.85;
+    private static final double RIGHT_OPEN = 0.37;
+    private static final double RIGHT_CLOSE = 0.05;
 
 
 
@@ -63,10 +63,14 @@ public class Dragger extends Component {
     public void grab() {
         left_target = LEFT_CLOSE;
         right_target = RIGHT_CLOSE;
+        left_dragger.setPosition(left_target);
+        right_dragger.setPosition(right_target);
     }
 
     public void release() {
         left_target = LEFT_OPEN;
         right_target = RIGHT_OPEN;
+        left_dragger.setPosition(left_target);
+        right_dragger.setPosition(right_target);
     }
 }

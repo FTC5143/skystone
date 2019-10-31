@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.robot.robots.SoftwareRobot;
@@ -22,21 +23,26 @@ public class DebugOpmodeLive extends OpMode {
     public void loop() {
         robot.update();
 
-        robot.drive_train.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        if(gamepad1.right_bumper) {
+            robot.drive_train.mechanumDrive(gamepad1.left_stick_x/2, gamepad1.left_stick_y/2, gamepad1.right_stick_x/2);
+        }
+        else {
+            robot.drive_train.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        }
 
         robot.lift.elevate(gamepad1.right_trigger-gamepad1.left_trigger);
 
 
-        if(gamepad1.dpad_down)  { robot.dragger.left_target -= 0.05; }
-        if(gamepad1.dpad_up)    { robot.dragger.left_target += 0.05; }
-        if(gamepad1.dpad_left)  { robot.dragger.right_target -= 0.05; }
-        if(gamepad1.dpad_right) { robot.dragger.right_target += 0.05; }
+        if(gamepad2.dpad_down)  { robot.dragger.left_target -= 0.05; }
+        if(gamepad2.dpad_up)    { robot.dragger.left_target += 0.05; }
+        if(gamepad2.dpad_left)  { robot.dragger.right_target -= 0.05; }
+        if(gamepad2.dpad_right) { robot.dragger.right_target += 0.05; }
 
-        if(gamepad1.a) {
+        if(gamepad2.x) {
             robot.dragger.grab();
         }
 
-        if(gamepad1.b) {
+        if(gamepad2.y) {
             robot.dragger.release();
         }
 
