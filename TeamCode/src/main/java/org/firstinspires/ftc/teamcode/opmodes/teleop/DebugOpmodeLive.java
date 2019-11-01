@@ -38,6 +38,14 @@ public class DebugOpmodeLive extends OpMode {
         if(gamepad2.dpad_left)  { robot.dragger.right_target -= 0.05; }
         if(gamepad2.dpad_right) { robot.dragger.right_target += 0.05; }
 
+        if(gamepad2.right_bumper) {
+            robot.stone_grabber.grab();
+        }
+
+        if(gamepad2.left_bumper) {
+            robot.stone_grabber.release();
+        }
+
         if(gamepad2.x) {
             robot.dragger.grab();
         }

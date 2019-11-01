@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.components.debug.Feeder;
 import org.firstinspires.ftc.teamcode.robot.components.debug.Lift;
 import org.firstinspires.ftc.teamcode.robot.components.debug.OCVPhoneCamera;
 import org.firstinspires.ftc.teamcode.robot.components.debug.PhoneCamera;
+import org.firstinspires.ftc.teamcode.robot.components.debug.StoneGrabber;
 
 public class LiveRobot extends Robot {
 
@@ -15,6 +16,7 @@ public class LiveRobot extends Robot {
     public Lift             lift;
     public OCVPhoneCamera   phone_camera;
     public Dragger          dragger;
+    public StoneGrabber     stone_grabber;
     public Feeder           feeder;
 
     {

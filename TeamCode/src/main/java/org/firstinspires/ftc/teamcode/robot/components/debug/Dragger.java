@@ -16,14 +16,14 @@ public class Dragger extends Component {
     Servo left_dragger;
     Servo right_dragger;
 
-    public double left_target = 0;
-    public double right_target = 0;
+    public double left_target = 0.65;
+    public double right_target = 0.37;
 
-    private static final double LEFT_OPEN = 0.65;
-    private static final double LEFT_CLOSE = 0.97;
+    private static final double LEFT_HORIZONTAL = 0.65;
+    private static final double LEFT_VERTICAL = 0.97;
 
-    private static final double RIGHT_OPEN = 0.37;
-    private static final double RIGHT_CLOSE = 0.05;
+    private static final double RIGHT_HORIZONTAL = 0.37;
+    private static final double RIGHT_VERTICAL = 0.05;
 
 
 
@@ -61,15 +61,15 @@ public class Dragger extends Component {
     }
 
     public void grab() {
-        left_target = LEFT_CLOSE;
-        right_target = RIGHT_CLOSE;
+        left_target = LEFT_VERTICAL;
+        right_target = RIGHT_VERTICAL;
         left_dragger.setPosition(left_target);
         right_dragger.setPosition(right_target);
     }
 
     public void release() {
-        left_target = LEFT_OPEN;
-        right_target = RIGHT_OPEN;
+        left_target = LEFT_HORIZONTAL;
+        right_target = RIGHT_HORIZONTAL;
         left_dragger.setPosition(left_target);
         right_dragger.setPosition(right_target);
     }
