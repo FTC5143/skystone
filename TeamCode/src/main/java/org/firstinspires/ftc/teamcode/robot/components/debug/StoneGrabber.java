@@ -11,10 +11,8 @@ import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 public class StoneGrabber extends Component {
     Servo stone_grabber;
 
-    public double grabber_target = 0.8;
-
-    public static final double grabber_up = 0.8;
-    public static final double grabber_down = 0.5;
+    public static final double GRABBER_UP = 0.8;
+    public static final double GRABBER_DOWN = 0.5;
 
     {
         name = "StoneGrabber";
@@ -43,16 +41,13 @@ public class StoneGrabber extends Component {
     @Override
     public void update(OpMode opmode) {
         super.update(opmode);
-        stone_grabber.setPosition(grabber_target);
     }
 
     public void grab() {
-        grabber_target = grabber_down;
-        stone_grabber.setPosition(grabber_target);
+        stone_grabber.setPosition(GRABBER_DOWN);
     }
 
     public void release() {
-        grabber_target = grabber_up;
-        stone_grabber.setPosition(grabber_target);
+        stone_grabber.setPosition(GRABBER_UP);
     }
 }

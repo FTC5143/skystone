@@ -31,6 +31,7 @@ public class LiveRobot extends Robot {
         lift            = new Lift(this);
         phone_camera    = new OCVPhoneCamera(this);
         dragger         = new Dragger(this);
+        stone_grabber   = new StoneGrabber(this);
         feeder          = new Feeder(this);
     }
 }
