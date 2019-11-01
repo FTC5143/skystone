@@ -23,7 +23,10 @@ public class DebugOpmodeLive extends OpMode {
     public void loop() {
         robot.update();
 
-        if(gamepad1.right_bumper) {
+        if(gamepad1.left_bumper) {
+            robot.drive_train.mechanumDrive(gamepad1.left_stick_x/4, gamepad1.left_stick_y/4, gamepad1.right_stick_x/4);
+        }
+        else if(gamepad1.right_bumper) {
             robot.drive_train.mechanumDrive(gamepad1.left_stick_x/2, gamepad1.left_stick_y/2, gamepad1.right_stick_x/2);
         }
         else {

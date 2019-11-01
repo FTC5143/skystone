@@ -8,8 +8,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 import org.firstinspires.ftc.teamcode.robot.components.Component;
 
-// Elevator lifts the stone and edxtender up
-// Extender extends over the twoer, and the grabber releases the stone
+// Elevator lifts the stone and extender up
+// Extender extends over the tower, and the grabber releases the stone
 
 public class Lift extends Component {
     
