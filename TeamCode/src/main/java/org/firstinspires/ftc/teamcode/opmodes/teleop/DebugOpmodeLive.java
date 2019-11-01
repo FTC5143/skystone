@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.robot.robots.SoftwareRobot;
 
-@TeleOp(name="Debug Teleop Live", group="driver control")
+@TeleOp(name="Teleop Live", group="driver control")
 //@Disabled
 public class DebugOpmodeLive extends OpMode {
 
@@ -49,6 +49,8 @@ public class DebugOpmodeLive extends OpMode {
             robot.stone_grabber.release();
         }
 
+        //robot.stone_grabber.inc_position(gamepad2.left_trigger-gamepad2.right_trigger);
+
         if(gamepad2.x) {
             robot.dragger.grab();
         }
@@ -70,7 +72,7 @@ public class DebugOpmodeLive extends OpMode {
         } else if (gamepad2.b) {
             robot.feeder.spin(-1);
         } else {
-            robot.feeder.spin(0);
+            robot.feeder.spin(-gamepad2.left_trigger, -gamepad2.right_trigger);
         }
     }
 

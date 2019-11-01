@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.constants.AutonomousConst;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.*;
 
 @Autonomous(name="Live Auto", group="autonomous")
+@Disabled
 public class AutonomousLive extends LinearOpMode {
 
     LiveRobot robot;

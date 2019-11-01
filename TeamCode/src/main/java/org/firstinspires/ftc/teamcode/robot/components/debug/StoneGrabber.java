@@ -43,6 +43,10 @@ public class StoneGrabber extends Component {
         super.update(opmode);
     }
 
+    public void inc_position(double amt) {
+        stone_grabber.setPosition(stone_grabber.getPosition()+amt);
+    }
+
     public void grab() {
         stone_grabber.setPosition(GRABBER_DOWN);
     }

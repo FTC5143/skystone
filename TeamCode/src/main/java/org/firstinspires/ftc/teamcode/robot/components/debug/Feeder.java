@@ -48,8 +48,12 @@ public class Feeder extends Component {
     }
 
     public void spin(double power) {
-        left_spinner.setPower(power);
-        right_spinner.setPower(-power);
+        spin(power, power);
+    }
+
+    public void spin(double lp, double rp) {
+        left_spinner.setPower(lp);
+        right_spinner.setPower(-rp);
     }
 
     @Override
