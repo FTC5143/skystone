@@ -46,6 +46,7 @@ public class DriveTrain extends Component {
 
     static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
 
+    private static final int DEBUG_WAIT = 300; // Time to wait after each move, for debug purposes
 
     {
         name = "Drive Train";
@@ -200,6 +201,8 @@ public class DriveTrain extends Component {
 
         robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
         robot.lopmode.telemetry.update();
+
+        if(DEBUG_WAIT > 0) robot.lopmode.sleep(DEBUG_WAIT);
     }
 
 
@@ -241,5 +244,7 @@ public class DriveTrain extends Component {
 
         robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
         robot.lopmode.telemetry.update();
+
+        if(DEBUG_WAIT > 0) robot.lopmode.sleep(DEBUG_WAIT);
     }
 }
