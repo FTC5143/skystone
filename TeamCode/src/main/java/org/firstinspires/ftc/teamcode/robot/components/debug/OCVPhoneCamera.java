@@ -103,15 +103,15 @@ public class OCVPhoneCamera extends Component {
 
             int[] left_rect = {
                     (int) (input.cols() * (13f / 32f)),
-                    (int) (input.rows() * (8f / 32f)),
-                    (int) (input.cols() * (19f / 32f)),
-                    (int) (input.rows() * (15f / 32f))
+                    (int) (input.rows() * (11f / 32f)),
+                    (int) (input.cols() * (18f / 32f)),
+                    (int) (input.rows() * (17f / 32f))
             };
 
             int[] right_rect = {
                     (int) (input.cols() * (13f / 32f)),
                     (int) (input.rows() * (17f / 32f)),
-                    (int) (input.cols() * (19f / 32f)),
+                    (int) (input.cols() * (18f / 32f)),
                     (int) (input.rows() * (24f / 32f))
             };
 

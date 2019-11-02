@@ -31,6 +31,9 @@ public class DriveTrain extends Component {
     final static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
     final static double TICKS_PER_INCH = TICKS_PER_REVOLUTION / WHEEL_CIRCUMFERENCE;
 
+    final static double TICKS_FOR_ROTATION = 5450;
+    final static double INCHES_FOR_ROTATION = TICKS_FOR_ROTATION/TICKS_PER_INCH;
+
     //// MOTORS ////
     private DcMotorEx drive_lf;   // Left-Front drive motor
     private DcMotorEx drive_rf;   // Right-Front drive motor
@@ -175,29 +178,40 @@ public class DriveTrain extends Component {
         return drive_lf.isBusy() || drive_rf.isBusy() || drive_lb.isBusy() || drive_rb.isBusy();
     }
 
-    public void timed_drive(double x, double y, double a, double d, double speed) {
-        robot.lopmode.resetStartTime();
-        robot.lopmode.getRuntime();
+    public void turn(double turns, double speed) {
+        double lf = turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
+        double rf = -turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
+        double lb = turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
+        double rb = -turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
 
-        Double[] power = mecanum_math(x, y, a);
+        drive_lf.setTargetPosition(drive_lf.getCurrentPosition()+(int)lf);
+        drive_rf.setTargetPosition(drive_rf.getCurrentPosition()+(int)rf);
+        drive_lb.setTargetPosition(drive_lb.getCurrentPosition()+(int)lb);
+        drive_rb.setTargetPosition(drive_rb.getCurrentPosition()+(int)rb);
+
+        set_mode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        set_power(speed);
 
 
-        set_power(power[0]*speed, power[1]*speed, power[2]*speed, power[3]*speed);
-
-
-        while (robot.lopmode.getRuntime() < d && robot.lopmode.opModeIsActive()){
+        while (is_busy() && robot.lopmode.opModeIsActive()){
             robot.lopmode.idle();
-            robot.lopmode.telemetry.addData("MOVING", (int)(power[0]*TICKS_PER_INCH*d)+" "+(int)(power[1]*TICKS_PER_INCH*d)+" "+(int)(power[2]*TICKS_PER_INCH*d)+" "+(int)(power[3]*TICKS_PER_INCH*d));
+            robot.lopmode.telemetry.addData("MOVING", (int)lf+" "+(int)rf+" "+(int)lb+" "+(int)rb);
             robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
-            robot.lopmode.telemetry.addData("POSITION", robot.lopmode.getRuntime());
-            robot.lopmode.telemetry.addData("TARGET", d);
+            robot.lopmode.telemetry.addData("POSITION", drive_lf.getCurrentPosition()+" "+drive_rf.getCurrentPosition()+" "+drive_lb.getCurrentPosition()+" "+drive_rb.getCurrentPosition());
+            robot.lopmode.telemetry.addData("TARGET", drive_lf.getTargetPosition()+" "+drive_rf.getTargetPosition()+" "+drive_lb.getTargetPosition()+" "+drive_rb.getTargetPosition());
             robot.lopmode.telemetry.update();
+
+            if (!is_busy()) {
+                break;
+            }
         }
 
         robot.lopmode.telemetry.addData("MOVING", "STOPPING");
         robot.lopmode.telemetry.update();
 
         set_power(0);
+        set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
         robot.lopmode.telemetry.update();
@@ -205,8 +219,8 @@ public class DriveTrain extends Component {
         if(DEBUG_WAIT > 0) robot.lopmode.sleep(DEBUG_WAIT);
     }
 
-
     public void encoder_drive(double x, double y, double a, double d, double speed) {
+
         double lf =  (-x - y + a);
         double rf = (+x - y - a);
         double lb = (+x - y + a);
