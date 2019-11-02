@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.components.debug.StoneGrabber;
 public class LiveRobot extends Robot {
 
     public DriveTrain       drive_train;
-    public Lift             lift;
+    //public Lift             lift;
     public OCVPhoneCamera   phone_camera;
     public Dragger          dragger;
     public StoneGrabber     stone_grabber;
@@ -28,7 +28,7 @@ public class LiveRobot extends Robot {
         super(opmode);
 
         drive_train     = new DriveTrain(this);
-        lift            = new Lift(this);
+        //lift            = new Lift(this);
         phone_camera    = new OCVPhoneCamera(this);
         dragger         = new Dragger(this);
         stone_grabber   = new StoneGrabber(this);

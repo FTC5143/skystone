@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 public class StoneGrabber extends Component {
     Servo stone_grabber;
 
-    public static final double GRABBER_UP = 0.8;
-    public static final double GRABBER_DOWN = 0.5;
+    public static final double GRABBER_UP = 0.05;
+    public static final double GRABBER_DOWN = 0.45;
 
     {
         name = "StoneGrabber";

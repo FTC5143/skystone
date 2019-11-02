@@ -17,6 +17,13 @@ public class Lift extends Component {
     private DcMotor lift_l;
     private DcMotor lift_r;
 
+    private int level;
+
+    private static final int BLOCK_HEIGHT = 200; //In encoder counts
+    private static final int LIFT_OFFSET = 100;
+    private static final int MAX_LEVEL = 6;
+    private static final int MIN_LEVEL = 0;
+
 
     {
         name = "Lift";
@@ -42,8 +49,12 @@ public class Lift extends Component {
     public void startup() {
         super.startup();
 
-        lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elevate(0);
+        lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        set_power(1);
+
 
     }
 
@@ -58,8 +69,19 @@ public class Lift extends Component {
         telemetry.addData("RL TURNS",TELEMETRY_DECIMAL.format(lift_r.getCurrentPosition()));
     }
 
-    public void elevate(double speed) {
+    public void set_power(double speed) {
         lift_l.setPower(speed);
         lift_r.setPower(speed);
     }
+
+    private void set_target_position(int pos) {
+        lift_l.setTargetPosition(pos);
+        lift_r.setTargetPosition(pos);
+    }
+
+    public void elevate(int amt) {
+        level = Math.min(level+amt, MAX_LEVEL);
+        set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
+    }
+
 }
