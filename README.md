@@ -11,7 +11,7 @@ This is the 2019-2020 repository for FTC team 5143. This readme, once completed,
 - [ ] Build-an-Autonomous
 - [ ] autoStacking
 - [ ] Output component (when designed)
-- [ ] Skystone recognition
+- [x] Skystone recognition
 - [ ] Auto foundation pushing
 
 ### Readme:
