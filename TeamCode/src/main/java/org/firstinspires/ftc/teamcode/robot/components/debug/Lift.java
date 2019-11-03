@@ -49,12 +49,22 @@ public class Lift extends Component {
     public void startup() {
         super.startup();
 
+        lift_l.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift_r.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         elevate(0);
         lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         set_power(1);
 
+
+    }
+
+    public void shutdown() {
+        set_power(0);
+        lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
 
@@ -80,7 +90,7 @@ public class Lift extends Component {
     }
 
     public void elevate(int amt) {
-        level = Math.min(level+amt, MAX_LEVEL);
+        level = Math.max(Math.min(level+amt, MAX_LEVEL), MIN_LEVEL);
         set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
     }
 
