@@ -16,12 +16,12 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 
-public class PhoneCamera extends Component {
+public class DCVPhoneCamera extends Component {
 
     private OpenCvCamera phone_camera;
     private LessBadSkystoneDetector skystone_detector;
 
-    public PhoneCamera(Robot robot) {
+    public DCVPhoneCamera(Robot robot) {
         super(robot);
     }
 

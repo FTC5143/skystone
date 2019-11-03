@@ -7,11 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
+import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.FAR;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.LEFT;
+import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.NEAR;
 
-@Autonomous(name="Foundation Auto Blue", group="autonomous")
-public class FoundationAutoBlue extends FoundationAuto {
+@Autonomous(name="Foundation Auto Blue Far", group="autonomous")
+public class FoundationAutoBlueFar extends FoundationAuto {
     {
         COLOR = BLUE;
+        PARK = FAR;
     }
 }

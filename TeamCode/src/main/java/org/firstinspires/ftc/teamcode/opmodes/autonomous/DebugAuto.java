@@ -9,18 +9,12 @@ import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
 @Autonomous(name="Debug Auto", group="autonomous")
-public class DebugAuto extends LinearOpMode {
-
-    LiveRobot robot;
+public class DebugAuto extends LiveAutoBase {
 
     int pattern;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-
-        robot = new LiveRobot(this);
-        robot.startup();
-
+    public void on_init() {
         robot.phone_camera.start_streaming();
 
         while(!isStarted()) {
@@ -29,9 +23,10 @@ public class DebugAuto extends LinearOpMode {
             telemetry.addData("PATTERN", pattern);
             telemetry.update();
         }
+    }
 
-        waitForStart();
-
+    @Override
+    public void on_start() {
         robot.phone_camera.stop_streaming();
 
         robot.drive_train.encoder_drive(0,1,0,8,0.5);
@@ -74,7 +69,8 @@ public class DebugAuto extends LinearOpMode {
         robot.stone_grabber.release();
 
         sleep(800);
-
-        robot.shutdown();
     }
+
+    @Override
+    public void on_stop() { }
 }

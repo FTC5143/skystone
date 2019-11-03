@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.robot.robots;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.robot.components.debug.Dragger;
-import org.firstinspires.ftc.teamcode.robot.components.debug.DriveTrain;
-import org.firstinspires.ftc.teamcode.robot.components.debug.Feeder;
+import org.firstinspires.ftc.teamcode.robot.components.live.Dragger;
+import org.firstinspires.ftc.teamcode.robot.components.live.DriveTrain;
+import org.firstinspires.ftc.teamcode.robot.components.live.Feeder;
 import org.firstinspires.ftc.teamcode.robot.components.debug.Lift;
-import org.firstinspires.ftc.teamcode.robot.components.debug.OCVPhoneCamera;
-import org.firstinspires.ftc.teamcode.robot.components.debug.PhoneCamera;
-import org.firstinspires.ftc.teamcode.robot.components.debug.StoneGrabber;
+import org.firstinspires.ftc.teamcode.robot.components.live.OCVPhoneCamera;
+import org.firstinspires.ftc.teamcode.robot.components.live.StoneGrabber;
 
 public class LiveRobot extends Robot {
 
