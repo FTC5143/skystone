@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -19,10 +20,10 @@ public class Lift extends Component {
 
     private int level;
 
-    private static final int BLOCK_HEIGHT = 200; //In encoder counts
-    private static final int LIFT_OFFSET = 100;
-    private static final int MAX_LEVEL = 6;
-    private static final int MIN_LEVEL = 0;
+    private static final int BLOCK_HEIGHT = 50; //In encoder counts
+    private static final int LIFT_OFFSET = 0;
+    private static final int MAX_LEVEL = 60;
+    private static final int MIN_LEVEL = -60;
 
 
     {
@@ -52,7 +53,11 @@ public class Lift extends Component {
         lift_l.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift_r.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        lift_r.setDirection(DcMotorSimple.Direction.REVERSE);
+
         elevate(0);
+        lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -77,6 +82,10 @@ public class Lift extends Component {
 
         telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(lift_l.getCurrentPosition()));
         telemetry.addData("RL TURNS",TELEMETRY_DECIMAL.format(lift_r.getCurrentPosition()));
+
+
+        telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
+        telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
     }
 
     public void set_power(double speed) {

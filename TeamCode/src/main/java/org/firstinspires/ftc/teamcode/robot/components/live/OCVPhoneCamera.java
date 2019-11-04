@@ -31,6 +31,10 @@ public class OCVPhoneCamera extends Component {
 
     SamplePipeline stone_pipeline;
 
+    {
+        name = "Phone Camera (OCV)";
+    }
+
     public OCVPhoneCamera(Robot robot) {
         super(robot);
     }

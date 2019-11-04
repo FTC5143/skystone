@@ -16,6 +16,10 @@ public class DebugOpmodeLive extends OpMode {
 
     LiveRobot robot;
 
+    boolean dpad_up_pressed = false;
+    boolean dpad_down_pressed = false;
+
+
     @Override
     public void init() {
         robot = new LiveRobot(this);
@@ -25,6 +29,21 @@ public class DebugOpmodeLive extends OpMode {
     @Override
     public void loop() {
         robot.update();
+
+
+        if(gamepad1.dpad_up && !dpad_up_pressed) {
+            robot.lift.elevate(1);
+            dpad_up_pressed = true;
+        } else if (!gamepad1.dpad_up) {
+            dpad_up_pressed = false;
+        }
+
+        if(gamepad1.dpad_down && !dpad_down_pressed) {
+            robot.lift.elevate(-1);
+            dpad_down_pressed = true;
+        } else if (!gamepad1.dpad_down) {
+            dpad_down_pressed = false;
+        }
 
         if(gamepad1.left_bumper) {
             robot.drive_train.mechanumDrive(gamepad1.left_stick_x/4, gamepad1.left_stick_y/4, gamepad1.right_stick_x/4);
