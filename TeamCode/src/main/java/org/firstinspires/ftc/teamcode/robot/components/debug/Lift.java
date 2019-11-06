@@ -62,13 +62,17 @@ public class Lift extends Component {
 
         lift_r.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        elevate(0);
+        //elevate(0);
         lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        set_power(1);
+        //elevate(0);
+        lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //set_power(1);
 
 
     }
