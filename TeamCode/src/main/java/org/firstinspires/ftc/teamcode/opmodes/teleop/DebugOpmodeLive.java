@@ -38,6 +38,8 @@ public class DebugOpmodeLive extends OpMode {
             dpad_up_pressed = false;
         }
 
+        robot.lift.extend(gamepad1.dpad_left ? -1 : (gamepad1.dpad_right ? 1 : 0));
+
         if(gamepad1.dpad_down && !dpad_down_pressed) {
             robot.lift.elevate(-1);
             dpad_down_pressed = true;

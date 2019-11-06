@@ -18,6 +18,9 @@ public class Lift extends Component {
     private DcMotor lift_l;
     private DcMotor lift_r;
 
+    private Servo ext_l;
+    private Servo ext_r;
+
     private int level;
 
     private static final int BLOCK_HEIGHT = 50; //In encoder counts
@@ -43,6 +46,10 @@ public class Lift extends Component {
         //// MOTORS ////
         lift_l     = hwmap.get(DcMotor.class, "lift_l");
         lift_r     = hwmap.get(DcMotor.class, "lift_r");
+
+        //// SERVOS ////
+        ext_l     = hwmap.get(Servo.class, "ext_l");
+        ext_r     = hwmap.get(Servo.class, "ext_r");
 
     }
 
@@ -86,6 +93,10 @@ public class Lift extends Component {
 
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
         telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
+
+
+        telemetry.addData("LE POS",TELEMETRY_DECIMAL.format(ext_l.getPosition()));
+        telemetry.addData("RE POS",TELEMETRY_DECIMAL.format(ext_r.getPosition()));
     }
 
     public void set_power(double speed) {
@@ -101,6 +112,10 @@ public class Lift extends Component {
     public void elevate(int amt) {
         level = Math.max(Math.min(level+amt, MAX_LEVEL), MIN_LEVEL);
         set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
+    }
+
+    public void extend(int dir) {
+        ext_l.setPosition(dir == 0 ? 0.5 : (dir == 1 ? 1 : 0));
     }
 
 }

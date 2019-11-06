@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 
 public abstract class LiveAutoBase extends LinearOpMode {
 
-    LiveRobot robot;
+    protected LiveRobot robot;
 
     @Override
     public void runOpMode() throws InterruptedException {
