@@ -34,10 +34,10 @@ public class Lift extends Component {
     private static final int BLOCK_HEIGHT = 400; //In encoder counts
     private static final int LIFT_OFFSET = 0;
     private static final int MAX_LEVEL = 60;
-    private static final int MIN_LEVEL = -60;
+    private static final int MIN_LEVEL = 0;
 
     private static final double GRABBER_CLOSED = 1;
-    private static final double GRABBER_OPEN = 0.5;
+    private static final double GRABBER_OPEN = 0.25;
 
     static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
 
@@ -75,6 +75,8 @@ public class Lift extends Component {
         if (cached_power != 0) {
             if (!lift_l.isBusy() && !lift_r.isBusy()) {
                 set_power(0);
+                lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
         }
     }
@@ -92,15 +94,14 @@ public class Lift extends Component {
 
         lift_r.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        elevate(0);
         lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elevate(0);
-        //lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     public void shutdown() {
@@ -146,6 +147,21 @@ public class Lift extends Component {
     public void elevate(int amt) {
         level = Math.max(Math.min(level+amt, MAX_LEVEL), MIN_LEVEL);
         set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
+
+        lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        set_power(1);
+    }
+
+
+    public void elevate_without_stops(int amt) {
+        level = level+amt;
+        set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
+
+        lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         set_power(1);
     }
 
