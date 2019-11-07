@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.components.debug;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.robot.components.Component;
 // Extender extends over the tower, and the grabber releases the stone
 
 public class Lift extends Component {
-    
+
     //// MOTORS ////
     private DcMotorEx lift_l;
     private DcMotorEx lift_r;
@@ -26,7 +27,9 @@ public class Lift extends Component {
     private Servo grb_t;
     private Servo grb_g;
 
-    private int level;
+    public int level;
+
+    private double cached_power = 0;
 
     private static final int BLOCK_HEIGHT = 400; //In encoder counts
     private static final int LIFT_OFFSET = 0;
@@ -37,7 +40,6 @@ public class Lift extends Component {
     private static final double GRABBER_OPEN = 0.5;
 
     static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
-
 
     {
         name = "Lift";
@@ -67,6 +69,17 @@ public class Lift extends Component {
     }
 
     @Override
+    public void update(OpMode opmode) {
+        super.update(opmode);
+
+        if (cached_power != 0) {
+            if (!lift_l.isBusy() && !lift_r.isBusy()) {
+                set_power(0);
+            }
+        }
+    }
+
+    @Override
     public void startup() {
         super.startup();
 
@@ -88,17 +101,12 @@ public class Lift extends Component {
         elevate(0);
         //lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        set_power(1);
-
-
     }
 
     public void shutdown() {
         set_power(0);
         lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
     }
 
     @Override
@@ -115,6 +123,7 @@ public class Lift extends Component {
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
         telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
 
+        telemetry.addData("LIFT BUSY",lift_l.isBusy()+" "+lift_r.isBusy());
 
         telemetry.addData("LE POS",TELEMETRY_DECIMAL.format(ext_l.getPosition()));
         telemetry.addData("RE POS",TELEMETRY_DECIMAL.format(ext_r.getPosition()));
@@ -126,6 +135,7 @@ public class Lift extends Component {
     public void set_power(double speed) {
         lift_l.setPower(speed);
         lift_r.setPower(speed);
+        cached_power = speed;
     }
 
     private void set_target_position(int pos) {
@@ -136,13 +146,13 @@ public class Lift extends Component {
     public void elevate(int amt) {
         level = Math.max(Math.min(level+amt, MAX_LEVEL), MIN_LEVEL);
         set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
+        set_power(1);
     }
 
     public void extend(int dir) {
         ext_l.setPosition(dir == 0 ? 0.5 : (dir == 1 ? 1 : 0));
         ext_r.setPosition(dir == 0 ? 0.5 : (dir == 1 ? 0 : 1));
     }
-
 
     public void grab() {
         grb_g.setPosition(GRABBER_CLOSED);
