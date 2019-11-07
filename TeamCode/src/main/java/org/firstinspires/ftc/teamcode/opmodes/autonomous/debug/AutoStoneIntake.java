@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.opmodes.autonomous.LiveAutoBase;
 
-@Autonomous(name="Debug Auto", group="autonomous")
+@Autonomous(name="Auto Stone Intake", group="autonomous")
 public class AutoStoneIntake extends LiveAutoBase {
 
     int pattern;

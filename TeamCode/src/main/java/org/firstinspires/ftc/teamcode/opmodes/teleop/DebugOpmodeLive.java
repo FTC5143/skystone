@@ -30,22 +30,23 @@ public class DebugOpmodeLive extends OpMode {
     public void loop() {
         robot.update();
 
-
-        if(gamepad1.dpad_up && !dpad_up_pressed) {
+        if(gamepad2.dpad_up && !dpad_up_pressed) {
             robot.lift.elevate(1);
             dpad_up_pressed = true;
-        } else if (!gamepad1.dpad_up) {
+        } else if (!gamepad2.dpad_up) {
             dpad_up_pressed = false;
         }
 
-        robot.lift.extend(gamepad1.dpad_left ? -1 : (gamepad1.dpad_right ? 1 : 0));
-
-        if(gamepad1.dpad_down && !dpad_down_pressed) {
+        if(gamepad2.dpad_down && !dpad_down_pressed) {
             robot.lift.elevate(-1);
             dpad_down_pressed = true;
-        } else if (!gamepad1.dpad_down) {
+        } else if (!gamepad2.dpad_down) {
             dpad_down_pressed = false;
         }
+
+        robot.lift.extend(gamepad2.b ? -1 : (gamepad2.a ? 1 : 0));
+        //robot.lift.set_power(gamepad1.dpad_up ? 1 : (gamepad1.dpad_down ? -1 : 0));
+
 
         if(gamepad1.left_bumper) {
             robot.drive_train.mechanumDrive(gamepad1.left_stick_x/4, gamepad1.left_stick_y/4, gamepad1.right_stick_x/4);
@@ -58,43 +59,38 @@ public class DebugOpmodeLive extends OpMode {
         }
 
 
-        if(gamepad2.dpad_down)  { robot.dragger.left_target -= 0.05; }
-        if(gamepad2.dpad_up)    { robot.dragger.left_target += 0.05; }
-        if(gamepad2.dpad_left)  { robot.dragger.right_target -= 0.05; }
-        if(gamepad2.dpad_right) { robot.dragger.right_target += 0.05; }
+        if(gamepad2.x)  { robot.lift.grab(); }
+        if(gamepad2.y)    { robot.lift.release(); }
 
-        if(gamepad2.right_bumper) {
+
+        if(gamepad2.dpad_left)  { robot.lift.turn(0.4); }
+        else if(gamepad2.dpad_right) { robot.lift.turn(0.6); }
+        else { robot.lift.turn(0.5); }
+
+        if(gamepad1.x) {
             robot.stone_grabber.grab();
         }
 
-        if(gamepad2.left_bumper) {
+        if(gamepad1.y) {
             robot.stone_grabber.release();
         }
 
-        //robot.stone_grabber.inc_position(gamepad2.left_trigger-gamepad2.right_trigger);
-
-        if(gamepad2.x) {
+        if(gamepad1.a) {
             robot.dragger.grab();
         }
 
-        if(gamepad2.y) {
+        if(gamepad1.b) {
             robot.dragger.release();
         }
 
-        if(gamepad1.x) {
+        if(gamepad1.back) {
             robot.phone_camera.start_streaming();
         }
 
-        if(gamepad1.y) {
-            robot.phone_camera.stop_streaming();
-        }
-
-        if(gamepad2.a) {
-            robot.feeder.spin(1);
-        } else if (gamepad2.b) {
-            robot.feeder.spin(-1);
+        if (gamepad2.left_bumper || gamepad2.right_bumper) {
+            robot.feeder.spin(gamepad2.left_bumper ? -1 : 0, gamepad2.right_bumper ? -1 : 0);
         } else {
-            robot.feeder.spin(-gamepad2.left_trigger, -gamepad2.right_trigger);
+            robot.feeder.spin(gamepad2.left_trigger, gamepad2.right_trigger);
         }
     }
 
