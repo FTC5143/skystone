@@ -47,9 +47,9 @@ public class DriveTrain extends Component {
     private BNO055IMU imu;      // Internal REV IMU, which we might use to drive straight
 
 
-    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
+    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0.5);
 
-    private static final int DEBUG_WAIT = 300; // Time to wait after each move, for debug purposes
+    private static final int DEBUG_WAIT = 0; // Time to wait after each move, for debug purposes
 
     {
         name = "Drive Train";
@@ -196,7 +196,7 @@ public class DriveTrain extends Component {
 
         while (is_busy() && robot.lopmode.opModeIsActive()){
             robot.lopmode.idle();
-            robot.lopmode.telemetry.addData("MOVING", (int)lf+" "+(int)rf+" "+(int)lb+" "+(int)rb);
+            robot.lopmode.telemetry.addData("TURNING", (int)lf+" "+(int)rf+" "+(int)lb+" "+(int)rb);
             robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
             robot.lopmode.telemetry.addData("POSITION", drive_lf.getCurrentPosition()+" "+drive_rf.getCurrentPosition()+" "+drive_lb.getCurrentPosition()+" "+drive_rb.getCurrentPosition());
             robot.lopmode.telemetry.addData("TARGET", drive_lf.getTargetPosition()+" "+drive_rf.getTargetPosition()+" "+drive_lb.getTargetPosition()+" "+drive_rb.getTargetPosition());

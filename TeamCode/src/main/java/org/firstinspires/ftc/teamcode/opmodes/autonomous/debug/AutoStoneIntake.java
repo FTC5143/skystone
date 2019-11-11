@@ -15,14 +15,11 @@ public class AutoStoneIntake extends LiveAutoBase {
 
     @Override
     public void on_start() {
-        robot.phone_camera.stop_streaming();
-
-        robot.drive_train.turn(1/8, 0.5);
+        robot.drive_train.turn(1.0/8, 0.5);
 
         robot.feeder.spin(1);
         robot.drive_train.encoder_drive(-1,1,0,80,0.5);
         robot.feeder.spin(0);
-
     }
 
     @Override

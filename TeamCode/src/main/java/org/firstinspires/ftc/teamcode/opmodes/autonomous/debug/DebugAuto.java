@@ -30,44 +30,36 @@ public class DebugAuto extends LiveAutoBase {
     public void on_start() {
         robot.phone_camera.stop_streaming();
 
-        robot.drive_train.encoder_drive(0,1,0,8,0.5);
+        robot.drive_train.encoder_drive(0,1,0,12,1);
 
-        robot.drive_train.turn(0.5, 0.5);
+        robot.drive_train.turn(0.25, 1);
 
 
-        robot.drive_train.encoder_drive(0,-1,0,12,0.5);
-
-        switch(pattern) {
-            case(1): {
-                robot.drive_train.encoder_drive(-1,0,0,6,0.5);
-            }
-            case(2): {
-                //robot.drive_train.encoder_drive(-1,0,0,0,0.5);
-            }
-            case(3): {
-                robot.drive_train.encoder_drive(1,0,0,6,0.5);
-            }
+        if (pattern == 1) {
+            robot.drive_train.encoder_drive(0, -1, 0, 4, 1);
+        } else if (pattern == 3) {
+            robot.drive_train.encoder_drive(0,1,0,6,1);
         }
 
-        robot.stone_grabber.grab();
 
-        sleep(800);
+        robot.drive_train.encoder_drive(-1,0,0,19,1);
 
-        robot.drive_train.encoder_drive(0,1,0,8,0.5);
+        robot.feeder.spin(1);
+        robot.drive_train.encoder_drive(0,1,0,7,0.5); // Intake the block
+        robot.feeder.spin(0);
 
-        switch(pattern) {
-            case(1): {
-                robot.drive_train.encoder_drive(1,0,0,50,0.5);
-            }
-            case(2): {
-                robot.drive_train.encoder_drive(1,0,0,44,0.5);
-            }
-            case(3): {
-                robot.drive_train.encoder_drive(1,0,0,38,0.5);
-            }
-        }
+        robot.drive_train.encoder_drive(0,-1,0,7,1); // Back up from next block
 
-        robot.stone_grabber.release();
+        robot.drive_train.encoder_drive(1,0,0,13,1); // Drive adjacent to the tape
+
+        robot.drive_train.turn(0.5, 1); // 180
+
+        robot.drive_train.encoder_drive(0,1,0,40,1);
+
+        robot.feeder.spin(-1);
+        robot.drive_train.encoder_drive(0,-1,0,25,1); // Spit the block
+        robot.feeder.spin(0);
+
 
         sleep(800);
     }
