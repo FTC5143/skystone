@@ -33,7 +33,7 @@ public class Lift extends Component {
 
     private static final int BLOCK_HEIGHT = 400; //In encoder counts
     private static final int LIFT_OFFSET = 0;
-    private static final int MAX_LEVEL = 60;
+    private static final int MAX_LEVEL = 17;
     private static final int MIN_LEVEL = 0;
 
     private static final double GRABBER_CLOSED = 1;
@@ -152,6 +152,11 @@ public class Lift extends Component {
         lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         set_power(1);
+    }
+
+    public void reset() {
+        elevate(-level);
+        level -= level;
     }
 
 

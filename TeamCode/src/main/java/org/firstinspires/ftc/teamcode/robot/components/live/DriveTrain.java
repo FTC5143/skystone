@@ -47,7 +47,7 @@ public class DriveTrain extends Component {
     private BNO055IMU imu;      // Internal REV IMU, which we might use to drive straight
 
 
-    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0.5);
+    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
 
     private static final int DEBUG_WAIT = 0; // Time to wait after each move, for debug purposes
 
@@ -132,23 +132,23 @@ public class DriveTrain extends Component {
         super.update(opmode);
     }
 
-    private Double[] mecanum_math(double lx, double ly, double rx) {
-        Double[] power = new Double[]{-lx + ly + rx, +lx + ly - rx, +lx + ly + rx, -lx + ly - rx};
+    private double[] mecanum_math(double lx, double ly, double rx) {
+        double[] power = new double[]{-lx + ly + rx, +lx + ly - rx, +lx + ly + rx, -lx + ly - rx};
 
-        /*Double max = Math.abs(Collections.max(Arrays.asList(power)));
+        double max = Math.max(Math.max(Math.abs(power[0]),Math.abs(power[1])),Math.max(Math.abs(power[2]),Math.abs(power[3])));
 
         if (max != 0) {
             power[0] = power[0] / max;
             power[1] = power[1] / max;
             power[2] = power[2] / max;
             power[3] = power[3] / max;
-        }*/
+        }
 
         return power;
     }
 
     public void mechanumDrive(double lx, double ly, double rx) {
-        Double[] power = mecanum_math(lx, ly, rx);
+        double[] power = mecanum_math(lx, ly, rx);
         set_power(power[0], power[1], power[2], power[3]);
     }
 
