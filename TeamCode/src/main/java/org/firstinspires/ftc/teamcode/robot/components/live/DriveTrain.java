@@ -137,11 +137,11 @@ public class DriveTrain extends Component {
 
         double max = Math.max(Math.max(Math.abs(power[0]),Math.abs(power[1])),Math.max(Math.abs(power[2]),Math.abs(power[3])));
 
-        if (max != 0) {
-            power[0] = power[0] / max;
-            power[1] = power[1] / max;
-            power[2] = power[2] / max;
-            power[3] = power[3] / max;
+        if (max > 1) {
+            power[0] /= max;
+            power[1] /= max;
+            power[2] /= max;
+            power[3] /= max;
         }
 
         return power;

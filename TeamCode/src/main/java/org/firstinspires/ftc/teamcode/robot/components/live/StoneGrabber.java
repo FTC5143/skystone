@@ -9,10 +9,15 @@ import org.firstinspires.ftc.teamcode.robot.components.Component;
 import org.firstinspires.ftc.teamcode.robot.robots.Robot;
 
 public class StoneGrabber extends Component {
-    Servo stone_grabber;
+    Servo stone_grabber_l;
+    Servo stone_grabber_r;
 
-    public static final double GRABBER_UP = 0.05;
-    public static final double GRABBER_DOWN = 0.45;
+    public static final double GRABBER_UP_L = 0.25;
+    public static final double GRABBER_DOWN_L = 1;
+
+
+    public static final double GRABBER_UP_R = 0.75;
+    public static final double GRABBER_DOWN_R = 0.025;
 
     {
         name = "StoneGrabber";
@@ -27,15 +32,21 @@ public class StoneGrabber extends Component {
         super.registerHardware(hwmap);
 
         //// SERVOS ////
-        stone_grabber    = hwmap.get(Servo.class, "stone_grabber");
-        release();
+        stone_grabber_l    = hwmap.get(Servo.class, "sg_l");
+        stone_grabber_r    = hwmap.get(Servo.class, "sg_r");
+    }
+
+    public void startup() {
+        release_l();
+        release_r();
     }
 
     @Override
     protected void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("SG", TELEMETRY_DECIMAL.format(stone_grabber.getPosition()));
+        telemetry.addData("SGL", TELEMETRY_DECIMAL.format(stone_grabber_l.getPosition()));
+        telemetry.addData("SGR", TELEMETRY_DECIMAL.format(stone_grabber_r.getPosition()));
     }
 
     @Override
@@ -43,15 +54,19 @@ public class StoneGrabber extends Component {
         super.update(opmode);
     }
 
-    public void inc_position(double amt) {
-        stone_grabber.setPosition(stone_grabber.getPosition()+amt);
+
+    public void grab_l() {
+        stone_grabber_l.setPosition(GRABBER_DOWN_L);
+    }
+    public void release_l() {
+        stone_grabber_l.setPosition(GRABBER_UP_L);
     }
 
-    public void grab() {
-        stone_grabber.setPosition(GRABBER_DOWN);
-    }
 
-    public void release() {
-        stone_grabber.setPosition(GRABBER_UP);
+    public void grab_r() {
+        stone_grabber_r.setPosition(GRABBER_DOWN_R);
+    }
+    public void release_r() {
+        stone_grabber_r.setPosition(GRABBER_UP_R);
     }
 }

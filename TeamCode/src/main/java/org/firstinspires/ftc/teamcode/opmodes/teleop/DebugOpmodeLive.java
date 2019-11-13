@@ -44,6 +44,15 @@ public class DebugOpmodeLive extends OpMode {
             dpad_down_pressed = false;
         }
 
+        if(gamepad2.back) {
+            if(gamepad2.dpad_up) {
+                robot.lift.max_lift();
+            }
+            else {
+                robot.lift.min_lift();
+            }
+        }
+
         robot.lift.extend(gamepad2.b ? -1 : (gamepad2.a ? 1 : 0));
         //robot.lift.set_power(gamepad1.dpad_up ? 1 : (gamepad1.dpad_down ? -1 : 0));
 
@@ -63,16 +72,19 @@ public class DebugOpmodeLive extends OpMode {
         if(gamepad2.y)    { robot.lift.release(); }
 
 
-        if(gamepad2.dpad_left)  { robot.lift.turn(0.4); }
-        else if(gamepad2.dpad_right) { robot.lift.turn(0.6); }
-        else { robot.lift.turn(0.5); }
+        if(gamepad2.dpad_right)  { robot.lift.turn(0.995); }
+        else if(gamepad2.dpad_left) { robot.lift.turn(0.665); }
 
         if(gamepad1.x) {
-            robot.stone_grabber.grab();
+            robot.stone_grabber.grab_l();
+        } else {
+            robot.stone_grabber.release_l();
         }
 
         if(gamepad1.y) {
-            robot.stone_grabber.release();
+            robot.stone_grabber.grab_r();
+        } else {
+            robot.stone_grabber.release_r();
         }
 
         if(gamepad1.a) {

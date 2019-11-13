@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
-@Autonomous(name="Debug Auto", group="autonomous")
+@Autonomous(name="TwoStone", group="autonomous")
 public class DebugAuto extends LiveAutoBase {
 
     int pattern;
@@ -36,29 +36,49 @@ public class DebugAuto extends LiveAutoBase {
 
 
         if (pattern == 1) {
-            robot.drive_train.encoder_drive(0, -1, 0, 4, 0.75);
+            robot.drive_train.encoder_drive(0, 1, 0, 1, 0.75);
         } else if (pattern == 3) {
-            robot.drive_train.encoder_drive(0,1,0,6,0.75);
+            robot.drive_train.encoder_drive(0,-1,0,7,0.75);
         }
 
 
-        robot.drive_train.encoder_drive(-1,0,0,19,0.75);
+        robot.drive_train.encoder_drive(-1,0,0,9,0.75);
 
-        robot.feeder.spin(1);
-        robot.drive_train.encoder_drive(0,1,0,7,0.5); // Intake the block
-        robot.feeder.spin(0);
+        robot.stone_grabber.grab_l();
+        sleep(1000);
 
-        robot.drive_train.encoder_drive(0,-1,0,7,0.75); // Back up from next block
+        robot.drive_train.encoder_drive(1,0,0,15,0.75); // Drive adjacent to the tape
 
-        robot.drive_train.encoder_drive(1,0,0,14,0.75); // Drive adjacent to the tape
+        if (pattern == 1) {
+            robot.drive_train.encoder_drive(0, -1, 0, 36, 0.75);
+        } else if (pattern == 3) {
+            robot.drive_train.encoder_drive(0,-1,0,28,0.75);
+        }
 
-        robot.drive_train.turn(0.5, 0.5); // 180
+        robot.stone_grabber.release_l();
+        sleep(1000);
 
-        robot.drive_train.encoder_drive(0,1,0,40,0.75);
+        if (pattern == 1) {
+            robot.drive_train.encoder_drive(0, 1, 0, 51, 0.75);
+        } else if (pattern == 3) {
+            robot.drive_train.encoder_drive(0,1,0,43,0.75);
+        }
 
-        robot.feeder.spin(-1);
-        robot.drive_train.encoder_drive(0,-1,0,22,0.5); // Spit the block
-        robot.feeder.spin(0);
+        robot.drive_train.encoder_drive(-1,0,0,15,0.75);
+        robot.stone_grabber.grab_l();
+        sleep(1000);
+        robot.drive_train.encoder_drive(1,0,0,15,0.75); // Drive adjacent to the tape
+
+        if (pattern == 1) {
+            robot.drive_train.encoder_drive(0, -1, 0, 51, 0.75);
+        } else if (pattern == 3) {
+            robot.drive_train.encoder_drive(0,-1,0,43,0.75);
+        }
+
+        robot.stone_grabber.release_l();
+        sleep(1000);
+
+        robot.drive_train.encoder_drive(0,1,0,10,1);
 
 
         sleep(800);

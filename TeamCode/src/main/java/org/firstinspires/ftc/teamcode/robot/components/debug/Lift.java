@@ -131,6 +131,8 @@ public class Lift extends Component {
 
         telemetry.addData("GT POS",TELEMETRY_DECIMAL.format(grb_t.getPosition()));
         telemetry.addData("GG POS",TELEMETRY_DECIMAL.format(grb_g.getPosition()));
+
+        telemetry.addData("LEVEL", level);
     }
 
     public void set_power(double speed) {
@@ -154,9 +156,12 @@ public class Lift extends Component {
         set_power(1);
     }
 
-    public void reset() {
-        elevate(-level);
-        level -= level;
+    public void min_lift() {
+        elevate(MIN_LEVEL-level);
+    }
+
+    public void max_lift() {
+        elevate(MAX_LEVEL-level);
     }
 
 
