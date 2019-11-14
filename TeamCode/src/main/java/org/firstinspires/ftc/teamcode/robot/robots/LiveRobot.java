@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.robot.components.live.Dragger;
 import org.firstinspires.ftc.teamcode.robot.components.live.DriveTrain;
 import org.firstinspires.ftc.teamcode.robot.components.live.Feeder;
-import org.firstinspires.ftc.teamcode.robot.components.debug.Lift;
+import org.firstinspires.ftc.teamcode.robot.components.live.Lift;
 import org.firstinspires.ftc.teamcode.robot.components.live.OCVPhoneCamera;
 import org.firstinspires.ftc.teamcode.robot.components.live.StoneGrabber;
 

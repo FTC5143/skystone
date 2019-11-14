@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous.debug;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.opmodes.autonomous.LiveAutoBase;
 
 @Autonomous(name="Auto Stone Intake", group="autonomous")
+@Disabled
 public class AutoStoneIntake extends LiveAutoBase {
 
     int pattern;

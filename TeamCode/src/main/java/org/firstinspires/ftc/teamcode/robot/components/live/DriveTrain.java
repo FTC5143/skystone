@@ -153,7 +153,8 @@ public class DriveTrain extends Component {
     }
 
     public void stop() {
-        set_power(0.0);
+        set_power(0);
+        set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     private void set_mode(DcMotor.RunMode mode) {

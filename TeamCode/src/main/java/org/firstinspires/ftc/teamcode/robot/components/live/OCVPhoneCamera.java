@@ -23,6 +23,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.Arrays;
 
+import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
+import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 import static org.opencv.core.CvType.CV_8UC1;
 
 public class OCVPhoneCamera extends Component {
@@ -34,6 +36,8 @@ public class OCVPhoneCamera extends Component {
     {
         name = "Phone Camera (OCV)";
     }
+
+    int color = RED;
 
     public OCVPhoneCamera(Robot robot) {
         super(robot);
@@ -62,8 +66,6 @@ public class OCVPhoneCamera extends Component {
         telemetry.addData("FPS", String.format("%.2f", phone_camera.getFps()));
         telemetry.addData("TFT MS", phone_camera.getTotalFrameTimeMs());
         telemetry.addData("PT MS", phone_camera.getPipelineTimeMs());
-        telemetry.addData("OT MS", phone_camera.getOverheadTimeMs());
-        telemetry.addData("MAX FPS", phone_camera.getCurrentPipelineMaxFps());
         telemetry.addData("LEFT RECT", stone_pipeline.left_hue + " " + stone_pipeline.left_br);
         telemetry.addData("RIGHT RECT", stone_pipeline.right_hue + " " + stone_pipeline.right_br);
         telemetry.addData("PATTERN", stone_pipeline.pattern);
@@ -79,8 +81,25 @@ public class OCVPhoneCamera extends Component {
     public void shutdown() {
     }
 
+    public void start_streaming(int c) {
+        color = c;
+        start_streaming();
+    }
+
     public void start_streaming() {
         phone_camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT );
+    }
+
+    public int get_pattern(int color) {
+        int pattern = get_pattern();
+        if (color == BLUE) {
+            if (pattern == 3) {
+                return 2;
+            } else if (pattern == 2) {
+                return 3;
+            }
+        }
+        return pattern;
     }
 
     public int get_pattern() {
@@ -106,19 +125,31 @@ public class OCVPhoneCamera extends Component {
             input.convertTo(input, CV_8UC1, 1, 10);
 
             int[] left_rect = {
-                    (int) (input.cols() * (13f / 32f)),
-                    (int) (input.rows() * (11f / 32f)),
-                    (int) (input.cols() * (18f / 32f)),
-                    (int) (input.rows() * (17f / 32f))
+                    (int) (input.cols() * (27f / 64f)),
+                    (int) (input.rows() * (18f / 64f)),
+                    (int) (input.cols() * (35f / 64f)),
+                    (int) (input.rows() * (28f / 64f))
             };
 
             int[] right_rect = {
-                    (int) (input.cols() * (13f / 32f)),
-                    (int) (input.rows() * (17f / 32f)),
-                    (int) (input.cols() * (18f / 32f)),
-                    (int) (input.rows() * (24f / 32f))
+                    (int) (input.cols() * (27f / 64f)),
+                    (int) (input.rows() * (32f / 64f)),
+                    (int) (input.cols() * (35f / 64f)),
+                    (int) (input.rows() * (42f / 64f))
             };
 
+            if (color == BLUE) {
+                left_rect[0] = (int) (input.cols() * (27f / 64f));
+                left_rect[1] = (int) (input.rows() * (23f / 64f));
+                left_rect[2] = (int) (input.cols() * (35f / 64f));
+                left_rect[3] = (int) (input.rows() * (33f / 64f));
+
+                right_rect[0] = (int) (input.cols() * (27f / 64f));
+                right_rect[1] = (int) (input.rows() * (35f / 64f));
+                right_rect[2] = (int) (input.cols() * (35f / 64f));
+                right_rect[3] = (int) (input.rows() * (45f / 64f));
+
+            }
             Imgproc.rectangle(
                     input,
                     new Point(

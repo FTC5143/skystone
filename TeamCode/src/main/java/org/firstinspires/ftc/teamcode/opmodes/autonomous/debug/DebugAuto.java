@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
 @Autonomous(name="TwoStone", group="autonomous")
+@Disabled
 public class DebugAuto extends LiveAutoBase {
 
     int pattern;

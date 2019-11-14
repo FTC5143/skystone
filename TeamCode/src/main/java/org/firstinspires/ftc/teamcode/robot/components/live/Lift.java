@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.components.debug;
+package org.firstinspires.ftc.teamcode.robot.components.live;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
