@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
+import org.firstinspires.ftc.teamcode.robots.LiveRobot;
 
 public abstract class LiveAutoBase extends LinearOpMode {
 

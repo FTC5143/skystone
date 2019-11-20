@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -13,7 +14,6 @@ import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
 
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.*;
-import com.acmerobotics.dashboard.config.Config;
 
 // Drive Train component
 // Includes: Drive Motors, IMU

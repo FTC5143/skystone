@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
-import org.firstinspires.ftc.teamcode.robot.robots.SoftwareRobot;
+import org.firstinspires.ftc.teamcode.robots.LiveRobot;
+import org.firstinspires.ftc.teamcode.robots.SoftwareRobot;
 
 @Autonomous(name="Debug Auto Linear Live", group="autonomous")
 @Disabled
