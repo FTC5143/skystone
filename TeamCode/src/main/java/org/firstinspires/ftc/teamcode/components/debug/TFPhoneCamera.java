@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.components.debug;
+package org.firstinspires.ftc.teamcode.components.debug;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,8 +7,8 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.robot.components.Component;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
+import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
 
 import java.util.List;
 

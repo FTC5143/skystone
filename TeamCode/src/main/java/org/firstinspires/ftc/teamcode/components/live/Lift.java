@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.robot.components.live;
+package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,8 +10,10 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
-import org.firstinspires.ftc.teamcode.robot.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
+import org.firstinspires.ftc.teamcode.components.Component;
+
+import static org.firstinspires.ftc.teamcode.components.live.Lift.LiftConfig.*;
 
 // Elevator lifts the stone and extender up
 // Extender extends over the tower, and the grabber releases the stone
@@ -31,15 +34,22 @@ public class Lift extends Component {
 
     private double cached_power = 0;
 
-    private static final int BLOCK_HEIGHT = 400; //In encoder counts
-    private static final int LIFT_OFFSET = 0;
-    private static final int MAX_LEVEL = 17;
-    private static final int MIN_LEVEL = 0;
+    @Config
+    static class LiftConfig {
+        static int BLOCK_HEIGHT = 400; //In encoder counts
+        static int LIFT_OFFSET = 0;
+        static int MAX_LEVEL = 17;
+        static int MIN_LEVEL = 0;
 
-    private static final double GRABBER_CLOSED = 1;
-    private static final double GRABBER_OPEN = 0.25;
+        static double GRABBER_CLOSED = 1;
+        static double GRABBER_OPEN = 0.25;
 
-    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
+        static double PID_P = 5;
+        static double PID_I = 1;
+        static double PID_D = 0;
+    }
+
+    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
     {
         name = "Lift";

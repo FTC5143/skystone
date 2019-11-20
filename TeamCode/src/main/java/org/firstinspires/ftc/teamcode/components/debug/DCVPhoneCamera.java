@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.robot.components.debug;
+package org.firstinspires.ftc.teamcode.components.debug;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.rewriting.LessBadSkystoneDetector;
-import org.firstinspires.ftc.teamcode.robot.components.Component;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
+import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
 
 import java.util.Locale;
 
-import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;

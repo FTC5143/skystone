@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import android.view.KeyEvent;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.robot.robots.LiveRobot;
 import org.firstinspires.ftc.teamcode.robot.robots.SoftwareRobot;
-import org.firstinspires.ftc.teamcode.util.LessBadGamepad;
 
 @TeleOp(name="Teleop Live", group="driver control")
 //@Disabled

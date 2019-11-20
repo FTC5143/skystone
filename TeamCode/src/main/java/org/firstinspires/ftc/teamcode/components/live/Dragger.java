@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.robot.components.live;
+package org.firstinspires.ftc.teamcode.components.live;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
-import org.firstinspires.ftc.teamcode.robot.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
+import org.firstinspires.ftc.teamcode.components.Component;
 
 // Dragger Component
 // For dragging the baseplate.

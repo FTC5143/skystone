@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.robot.components.live;
+package org.firstinspires.ftc.teamcode.components.live;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
-import org.firstinspires.ftc.teamcode.robot.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
+import org.firstinspires.ftc.teamcode.components.Component;
 
 // Feeder Component
 // Feeds in blocks using the spinner wheels, and uses a touch sensor to detect the blocks

@@ -1,23 +1,27 @@
-package org.firstinspires.ftc.teamcode.robot.components.live;
+package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.components.Component;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
+import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
+
+import static org.firstinspires.ftc.teamcode.components.live.StoneGrabber.StoneGrabberConfig.*;
 
 public class StoneGrabber extends Component {
     Servo stone_grabber_l;
     Servo stone_grabber_r;
 
-    public static final double GRABBER_UP_L = 0.25;
-    public static final double GRABBER_DOWN_L = 1;
-
-
-    public static final double GRABBER_UP_R = 0.75;
-    public static final double GRABBER_DOWN_R = 0.025;
+    @Config
+    static class StoneGrabberConfig {
+        static double GRABBER_UP_L = 0.25;
+        static double GRABBER_DOWN_L = 1;
+        static double GRABBER_UP_R = 0.75;
+        static double GRABBER_DOWN_R = 0.025;
+    }
 
     {
         name = "StoneGrabber";

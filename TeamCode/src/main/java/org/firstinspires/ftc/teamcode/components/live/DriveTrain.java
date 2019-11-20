@@ -1,23 +1,19 @@
-package org.firstinspires.ftc.teamcode.robot.components.live;
+package org.firstinspires.ftc.teamcode.components.live;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.robots.Robot;
-import org.firstinspires.ftc.teamcode.robot.components.Component;
-import org.firstinspires.ftc.teamcode.util.LynxOptimizedI2cFactory;
+import org.firstinspires.ftc.teamcode.robots.Robot;
+import org.firstinspires.ftc.teamcode.components.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.*;
+import com.acmerobotics.dashboard.config.Config;
 
 // Drive Train component
 // Includes: Drive Motors, IMU
@@ -25,14 +21,22 @@ import java.util.Collections;
 
 public class DriveTrain extends Component {
 
+    @Config
+    static class DriveTrainConfig {
+        static double WHEEL_DIAMETER = 4.0;
+        static double TICKS_PER_REVOLUTION = 1120;
+        static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+        static double TICKS_PER_INCH = TICKS_PER_REVOLUTION / WHEEL_CIRCUMFERENCE;
 
-    final static double WHEEL_DIAMETER = 4.0;
-    final static double TICKS_PER_REVOLUTION = 1120;
-    final static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
-    final static double TICKS_PER_INCH = TICKS_PER_REVOLUTION / WHEEL_CIRCUMFERENCE;
+        static double TICKS_PER_ROTATION = 5450;
+        static double INCHES_PER_ROTATION = TICKS_PER_ROTATION / TICKS_PER_INCH;
 
-    final static double TICKS_FOR_ROTATION = 5450;
-    final static double INCHES_FOR_ROTATION = TICKS_FOR_ROTATION/TICKS_PER_INCH;
+        static double PID_P = 5;
+        static double PID_I = 1;
+        static double PID_D = 0;
+
+        static int DEBUG_WAIT = 0; // Time to wait after each move, for debug purposes
+    }
 
     //// MOTORS ////
     private DcMotorEx drive_lf;   // Left-Front drive motor
@@ -46,10 +50,7 @@ public class DriveTrain extends Component {
     //// SENSORS ////
     private BNO055IMU imu;      // Internal REV IMU, which we might use to drive straight
 
-
-    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(5, 1, 0);
-
-    private static final int DEBUG_WAIT = 0; // Time to wait after each move, for debug purposes
+    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
     {
         name = "Drive Train";
@@ -73,7 +74,6 @@ public class DriveTrain extends Component {
         //lynx_module = hwmap.get(LynxModule.class, "Rev expansion hub 1");
 
         //// SENSORS ////
-        //imu = LynxOptimizedI2cFactory.createLynxEmbeddedImu(lynx_module, 0);
         imu         = hwmap.get(BNO055IMU.class, "imu");
         imu.initialize(new BNO055IMU.Parameters());
     }
@@ -180,10 +180,10 @@ public class DriveTrain extends Component {
     }
 
     public void turn(double turns, double speed) {
-        double lf = turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
-        double rf = -turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
-        double lb = turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
-        double rb = -turns * INCHES_FOR_ROTATION * TICKS_PER_INCH;
+        double lf = turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
+        double rf = -turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
+        double lb = turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
+        double rb = -turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
 
         drive_lf.setTargetPosition(drive_lf.getCurrentPosition()+(int)lf);
         drive_rf.setTargetPosition(drive_rf.getCurrentPosition()+(int)rf);
