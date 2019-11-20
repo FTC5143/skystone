@@ -63,7 +63,11 @@ public class DebugOpmodeLive extends OpMode {
             robot.drive_train.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
 
-
+/*
+Change the world
+My final message
+Goodbye
+ */
         if(gamepad2.x)  { robot.lift.grab(); }
         if(gamepad2.y)    { robot.lift.release(); }
 
