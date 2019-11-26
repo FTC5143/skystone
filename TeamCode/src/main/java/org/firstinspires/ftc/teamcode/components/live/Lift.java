@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -30,9 +31,16 @@ public class Lift extends Component {
     private Servo grb_t;
     private Servo grb_g;
 
+    //// SENSORS ////
+
+    RevTouchSensor block_detector;
+
+
     public int level;
 
     private double cached_power = 0;
+
+    private boolean cached_grab = false;
 
     @Config
     static class LiftConfig {
@@ -76,6 +84,9 @@ public class Lift extends Component {
         grb_t   = hwmap.get(Servo.class, "grb_t");
         grb_g   = hwmap.get(Servo.class, "grb_g");
 
+        //// SENSORS ////
+        block_detector = hwmap.get(RevTouchSensor.class, "block_detector");
+
     }
 
     @Override
@@ -89,6 +100,11 @@ public class Lift extends Component {
                 lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
         }
+
+        if (!cached_grab && block_detector.isPressed()) {
+            grab();
+        }
+
     }
 
     @Override
@@ -143,6 +159,10 @@ public class Lift extends Component {
         telemetry.addData("GG POS",TELEMETRY_DECIMAL.format(grb_g.getPosition()));
 
         telemetry.addData("LEVEL", level);
+
+        telemetry.addData("BD", block_detector.isPressed());
+
+        telemetry.addData("C GRAB", cached_grab);
     }
 
     public void set_power(double speed) {
@@ -192,10 +212,12 @@ public class Lift extends Component {
 
     public void grab() {
         grb_g.setPosition(GRABBER_CLOSED);
+        cached_grab = true;
     }
 
     public void release() {
         grb_g.setPosition(GRABBER_OPEN);
+        cached_grab = false;
     }
 
     public void turn(double pos) {

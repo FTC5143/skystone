@@ -16,9 +16,6 @@ public class Feeder extends Component {
     DcMotor left_spinner;    // The left feeder wheel on the take-in device
     DcMotor right_spinner;   // The right feeder wheel on the take-in device
 
-    //// SENSORS ////
-    RevTouchSensor block_detector; // The touch sensor to detect a block in the chamber
-
     {
         name = "Feeder";
     }
@@ -35,8 +32,6 @@ public class Feeder extends Component {
         left_spinner    = hwmap.get(DcMotor.class, "left_spinner");
         right_spinner   = hwmap.get(DcMotor.class, "right_spinner");
 
-        //// SENSORS ////
-        block_detector  = hwmap.get(RevTouchSensor.class, "block_detector");
     }
 
     @Override
@@ -59,6 +54,5 @@ public class Feeder extends Component {
 
         telemetry.addData("LS",left_spinner.getPower());
         telemetry.addData("RS",right_spinner.getPower());
-        telemetry.addData("BD",block_detector.isPressed());
     }
 }
