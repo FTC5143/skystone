@@ -44,9 +44,9 @@ public class Lift extends Component {
 
     @Config
     static class LiftConfig {
-        static int BLOCK_HEIGHT = 400; //In encoder counts
+        static int BLOCK_HEIGHT = 170; //In encoder counts
         static int LIFT_OFFSET = 0;
-        static int MAX_LEVEL = 17;
+        static int MAX_LEVEL = 10;
         static int MIN_LEVEL = 0;
 
         static double GRABBER_CLOSED = 1;
