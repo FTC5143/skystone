@@ -25,8 +25,12 @@ public class Lift extends Component {
     private DcMotorEx lift_l;
     private DcMotorEx lift_r;
 
-    private Servo ext_l;
-    private Servo ext_r;
+    private Servo ext;
+    private DcMotorEx ext_encoder;
+
+    private double ext_target;
+    private double ext_old_pos;
+    private boolean ext_running;
 
     private Servo grb_t;
     private Servo grb_g;
@@ -55,9 +59,12 @@ public class Lift extends Component {
         static double PID_P = 5;
         static double PID_I = 1;
         static double PID_D = 0;
-    }
 
-    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
+        static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
+
+        static double EXT_MIN_ACCURACY = 50;
+
+    }
 
     {
         name = "Lift";
@@ -78,8 +85,8 @@ public class Lift extends Component {
         lift_r     = hwmap.get(DcMotorEx.class, "lift_r");
 
         //// SERVOS ////
-        ext_l     = hwmap.get(Servo.class, "ext_l");
-        ext_r     = hwmap.get(Servo.class, "ext_r");
+        ext     = hwmap.get(Servo.class, "ext");
+        ext_encoder = hwmap.get(DcMotorEx.class, "right_spinner");
 
         grb_t   = hwmap.get(Servo.class, "grb_t");
         grb_g   = hwmap.get(Servo.class, "grb_g");
@@ -105,6 +112,18 @@ public class Lift extends Component {
             grab();
         }
 
+        if (ext_running) {
+            double position = ext.getPosition();
+
+            if (Math.abs(position-ext_target) < EXT_MIN_ACCURACY) {
+                ext_running = false;
+                extend(0);
+            } else {
+                double error = ((ext_target - position)/(Math.abs(ext_target-ext_old_pos)))*2;
+                extend(error);
+            }
+        }
+
     }
 
     @Override
@@ -122,6 +141,9 @@ public class Lift extends Component {
 
         lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        ext_encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ext_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -152,8 +174,8 @@ public class Lift extends Component {
 
         telemetry.addData("LIFT BUSY",lift_l.isBusy()+" "+lift_r.isBusy());
 
-        telemetry.addData("LE POS",TELEMETRY_DECIMAL.format(ext_l.getPosition()));
-        telemetry.addData("RE POS",TELEMETRY_DECIMAL.format(ext_r.getPosition()));
+        telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(ext.getPosition()));
+        telemetry.addData("EXT ENCODER POS",TELEMETRY_DECIMAL.format(ext_encoder.getCurrentPosition()));
 
         telemetry.addData("GT POS",TELEMETRY_DECIMAL.format(grb_t.getPosition()));
         telemetry.addData("GG POS",TELEMETRY_DECIMAL.format(grb_g.getPosition()));
@@ -205,9 +227,23 @@ public class Lift extends Component {
         set_power(1);
     }
 
-    public void extend(int dir) {
-        ext_l.setPosition(dir == 0 ? 0.5 : (dir == 1 ? 1 : 0));
-        ext_r.setPosition(dir == 0 ? 0.5 : (dir == 1 ? 0 : 1));
+    public void extend(double power) {
+
+        power = Math.max(-1, Math.min(power, 1));
+
+        ext.setPosition((((power)/2)+0.5));
+    }
+
+    public void extend_out() {
+        ext_target = -5000;
+        ext_running = true;
+        ext_old_pos = ext_encoder.getCurrentPosition();
+    }
+
+    public void retract_in() {
+        ext_target = 0;
+        ext_running = true;
+        ext_old_pos = ext_encoder.getCurrentPosition();
     }
 
     public void grab() {

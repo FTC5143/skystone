@@ -49,7 +49,13 @@ public class DebugOpmodeLive extends OpMode {
             }
         }
 
-        robot.lift.extend(gamepad2.b ? -1 : (gamepad2.a ? 1 : 0));
+        if (gamepad2.a) {
+            robot.lift.retract_in();
+        }
+        if (gamepad2.b) {
+            robot.lift.extend_out();
+        }
+
         //robot.lift.set_power(gamepad1.dpad_up ? 1 : (gamepad1.dpad_down ? -1 : 0));
 
 
