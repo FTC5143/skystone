@@ -30,6 +30,7 @@ public class Lift extends Component {
 
     private double ext_target;
     private double ext_old_pos;
+    private double ext_error;
     private boolean ext_running;
 
     private Servo grb_t;
@@ -113,14 +114,14 @@ public class Lift extends Component {
         }
 
         if (ext_running) {
-            double position = ext.getPosition();
+            double position = ext_encoder.getCurrentPosition();
 
             if (Math.abs(position-ext_target) < EXT_MIN_ACCURACY) {
                 ext_running = false;
                 extend(0);
             } else {
-                double error = ((ext_target - position)/(Math.abs(ext_target-ext_old_pos)))*2;
-                extend(error);
+                ext_error = ((ext_target - position)/(Math.abs(ext_target-ext_old_pos)))*2;
+                extend(ext_error);
             }
         }
 
@@ -174,8 +175,11 @@ public class Lift extends Component {
 
         telemetry.addData("LIFT BUSY",lift_l.isBusy()+" "+lift_r.isBusy());
 
-        telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(ext.getPosition()));
-        telemetry.addData("EXT ENCODER POS",TELEMETRY_DECIMAL.format(ext_encoder.getCurrentPosition()));
+        telemetry.addData("EXT DIR",TELEMETRY_DECIMAL.format(ext.getPosition()));
+        telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(ext_encoder.getCurrentPosition()));
+        telemetry.addData("EXT OLD POS",ext_old_pos);
+        telemetry.addData("EXT TARGET", ext_target);
+        telemetry.addData("EXT ERROR", ext_error);
 
         telemetry.addData("GT POS",TELEMETRY_DECIMAL.format(grb_t.getPosition()));
         telemetry.addData("GG POS",TELEMETRY_DECIMAL.format(grb_g.getPosition()));
@@ -235,15 +239,19 @@ public class Lift extends Component {
     }
 
     public void extend_out() {
-        ext_target = -5000;
-        ext_running = true;
-        ext_old_pos = ext_encoder.getCurrentPosition();
+        if (ext_target != -5000 || !ext_running) {
+            ext_target = -5000;
+            ext_running = true;
+            ext_old_pos = ext_encoder.getCurrentPosition();
+        }
     }
 
     public void retract_in() {
-        ext_target = 0;
-        ext_running = true;
-        ext_old_pos = ext_encoder.getCurrentPosition();
+        if (ext_target != 0 || !ext_running) {
+            ext_target = 0;
+            ext_running = true;
+            ext_old_pos = ext_encoder.getCurrentPosition();
+        }
     }
 
     public void grab() {
