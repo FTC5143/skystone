@@ -44,12 +44,6 @@ public class DriveTrain extends Component {
     private DcMotorEx drive_lb;   // Left-Back drive motor
     private DcMotorEx drive_rb;   // Right-Back drive motor
 
-    //// LYNX ////
-    private LynxModule lynx_module;
-
-    //// SENSORS ////
-    private BNO055IMU imu;      // Internal REV IMU, which we might use to drive straight
-
     static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
     {
@@ -72,30 +66,18 @@ public class DriveTrain extends Component {
 
         //// LYNX ////
         //lynx_module = hwmap.get(LynxModule.class, "Rev expansion hub 1");
-
-        //// SENSORS ////
-        imu         = hwmap.get(BNO055IMU.class, "imu");
-        imu.initialize(new BNO055IMU.Parameters());
     }
 
     @Override
-    protected void updateTelemetry(Telemetry telemetry) {
+    public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("LF SPEED",TELEMETRY_DECIMAL.format(drive_lf.getPower()));
-        telemetry.addData("RF SPEED",TELEMETRY_DECIMAL.format(drive_rf.getPower()));
-        telemetry.addData("LB SPEED",TELEMETRY_DECIMAL.format(drive_lb.getPower()));
-        telemetry.addData("RB SPEED",TELEMETRY_DECIMAL.format(drive_rb.getPower()));
-
-        telemetry.addData("LF TURNS",TELEMETRY_DECIMAL.format(drive_lf.getCurrentPosition()));
-        telemetry.addData("RF TURNS",TELEMETRY_DECIMAL.format(drive_rf.getCurrentPosition()));
-        telemetry.addData("LB TURNS",TELEMETRY_DECIMAL.format(drive_lb.getCurrentPosition()));
-        telemetry.addData("RB TURNS",TELEMETRY_DECIMAL.format(drive_rb.getCurrentPosition()));
-
-        telemetry.addData("IMU",imu.getAngularOrientation().toString()+", "+imu.getPosition().toString()+", "+imu.isGyroCalibrated());
+        telemetry.addData("LF TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lf));
+        telemetry.addData("RF TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rf));
+        telemetry.addData("LB TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
+        telemetry.addData("RB TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rb));
 
         telemetry.addData("PID", drive_lf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_lb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-
     }
 
     @Override

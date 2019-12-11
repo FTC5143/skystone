@@ -33,7 +33,7 @@ public class SensorDebug extends Component {
     }
 
     @Override
-    protected void updateTelemetry(Telemetry telemetry) {
+    public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
         telemetry.addData("color", color_sensor.red()+","+color_sensor.green()+","+color_sensor.blue());

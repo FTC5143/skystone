@@ -160,15 +160,14 @@ public class Lift extends Component {
     }
 
     @Override
-    protected void updateTelemetry(Telemetry telemetry) {
+    public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
         telemetry.addData("LL SPEED",TELEMETRY_DECIMAL.format(lift_l.getPower()));
         telemetry.addData("RL SPEED",TELEMETRY_DECIMAL.format(lift_r.getPower()));
 
-        telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(lift_l.getCurrentPosition()));
-        telemetry.addData("RL TURNS",TELEMETRY_DECIMAL.format(lift_r.getCurrentPosition()));
-
+        telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_l)));
+        telemetry.addData("RL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_r)));
 
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
         telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
@@ -176,7 +175,7 @@ public class Lift extends Component {
         telemetry.addData("LIFT BUSY",lift_l.isBusy()+" "+lift_r.isBusy());
 
         telemetry.addData("EXT DIR",TELEMETRY_DECIMAL.format(ext.getPosition()));
-        telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(ext_encoder.getCurrentPosition()));
+        telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(ext_encoder)));
         telemetry.addData("EXT OLD POS",ext_old_pos);
         telemetry.addData("EXT TARGET", ext_target);
         telemetry.addData("EXT ERROR", ext_error);

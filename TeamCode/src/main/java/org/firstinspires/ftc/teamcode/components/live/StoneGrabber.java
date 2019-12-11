@@ -47,7 +47,7 @@ public class StoneGrabber extends Component {
     }
 
     @Override
-    protected void updateTelemetry(Telemetry telemetry) {
+    public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
         telemetry.addData("SGL", TELEMETRY_DECIMAL.format(stone_grabber_l.getPosition()));

@@ -36,7 +36,6 @@ public abstract class Component {
 
     // Called every time the robot update method is called
     public void update(OpMode opmode) {
-        updateTelemetry(opmode.telemetry);
     }
 
     // Called when robot.startup() is called, which should be called when an opmode is started
@@ -50,7 +49,7 @@ public abstract class Component {
     }
 
     // Called on every update. Modify statusString here to update telemetry on the phone
-    protected void updateTelemetry(Telemetry telemetry) {
+    public void updateTelemetry(Telemetry telemetry) {
         telemetry.addData("[CMP "+name+"]", status == STATUS_ONLINE ? "ONLINE": "OFFLINE");
     }
 }

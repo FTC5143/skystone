@@ -24,7 +24,6 @@ public class DebugOpmodeLive extends OpMode {
 
     @Override
     public void loop() {
-        robot.update();
 
         if(gamepad2.dpad_up && !dpad_up_pressed) {
             robot.lift.elevate(1);
@@ -110,6 +109,8 @@ Goodbye
         } else {
             robot.feeder.spin(gamepad2.left_trigger, gamepad2.right_trigger);
         }
+
+        robot.updateTelemetry();
     }
 
     @Override

@@ -41,7 +41,7 @@ public class DCVPhoneCamera extends Component {
     }
 
     @Override
-    protected void updateTelemetry(Telemetry telemetry) {
+    public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
         telemetry.addData("SP X", skystone_detector.getScreenPosition().x);
