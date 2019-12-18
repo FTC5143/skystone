@@ -47,13 +47,17 @@ public class DebugOpmodeLive extends OpMode {
                 robot.lift.min_lift();
             }
         }
-
+        /*
         if (gamepad2.a) {
             robot.lift.retract_in();
         }
         if (gamepad2.b) {
             robot.lift.extend_out();
         }
+        */
+
+        robot.lift.extend(gamepad2.b ? -1 : (gamepad2.a ? 1 : 0));
+
 
         //robot.lift.set_power(gamepad1.dpad_up ? 1 : (gamepad1.dpad_down ? -1 : 0));
 
@@ -110,6 +114,7 @@ Goodbye
             robot.feeder.spin(gamepad2.left_trigger, gamepad2.right_trigger);
         }
 
+        robot.update();
         robot.updateTelemetry();
     }
 

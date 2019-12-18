@@ -49,7 +49,7 @@ public class Robot {
         @Override
         public void run() {
             while(robot.running) {
-                robot.update();
+                //robot.update();
             }
         }
     }
@@ -85,12 +85,13 @@ public class Robot {
 
         last_update = System.nanoTime();
 
-        for (Component component : components) {
-            component.update(opmode);
-        }
 
         bulk_data_1 = expansion_hub_1.getBulkInputData();
         bulk_data_2 = expansion_hub_2.getBulkInputData();
+
+        for (Component component : components) {
+            component.update(opmode);
+        }
 
         long update_duration = System.nanoTime()-last_update;
         update_freq = (update_duration/(double)1000000000) != 0 ? (int)(1/(update_duration/(double)1000000000)) : Integer.MAX_VALUE;

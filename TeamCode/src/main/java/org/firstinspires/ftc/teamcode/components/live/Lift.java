@@ -63,7 +63,7 @@ public class Lift extends Component {
 
         static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
-        static double EXT_MIN_ACCURACY = 50;
+        static double EXT_MIN_ACCURACY = 30;
 
     }
 
@@ -163,9 +163,6 @@ public class Lift extends Component {
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("LL SPEED",TELEMETRY_DECIMAL.format(lift_l.getPower()));
-        telemetry.addData("RL SPEED",TELEMETRY_DECIMAL.format(lift_r.getPower()));
-
         telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_l)));
         telemetry.addData("RL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_r)));
 
@@ -238,8 +235,8 @@ public class Lift extends Component {
     }
 
     public void extend_out() {
-        if (ext_target != -5000 || !ext_running) {
-            ext_target = -5000;
+        if (ext_target != -5200 || !ext_running) {
+            ext_target = -5200;
             ext_running = true;
             ext_old_pos = ext_encoder.getCurrentPosition();
         }

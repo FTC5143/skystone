@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
 
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.*;
 
@@ -46,6 +47,8 @@ public class DriveTrain extends Component {
 
     static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
+    LocalCoordinateSystem lcs = new LocalCoordinateSystem();
+
     {
         name = "Drive Train";
     }
@@ -69,13 +72,24 @@ public class DriveTrain extends Component {
     }
 
     @Override
+    public void update(OpMode opmode) {
+        super.update(opmode);
+
+        lcs.update(robot.bulk_data_1.getMotorCurrentPosition(drive_lf), robot.bulk_data_1.getMotorCurrentPosition(drive_rf), robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
+
+    }
+
+    @Override
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
-        telemetry.addData("LF TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lf));
-        telemetry.addData("RF TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rf));
-        telemetry.addData("LB TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
-        telemetry.addData("RB TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rb));
+        telemetry.addData("LE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lf));
+        telemetry.addData("RE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_rf));
+        telemetry.addData("CE TURNS", robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
+
+        telemetry.addData("X", lcs.x);
+        telemetry.addData("Y", lcs.y);
+        telemetry.addData("A", lcs.a);
 
         telemetry.addData("PID", drive_lf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rf.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_lb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION)+" | "+drive_rb.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
     }
@@ -93,7 +107,7 @@ public class DriveTrain extends Component {
         drive_lb.setDirection(DcMotor.Direction.REVERSE);
 
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
+        set_mode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         drive_lf.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
         drive_rf.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
@@ -107,11 +121,6 @@ public class DriveTrain extends Component {
         super.shutdown();
 
         stop();
-    }
-
-    @Override
-    public void update(OpMode opmode) {
-        super.update(opmode);
     }
 
     private double[] mecanum_math(double lx, double ly, double rx) {
