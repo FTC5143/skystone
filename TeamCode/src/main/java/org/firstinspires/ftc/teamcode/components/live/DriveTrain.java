@@ -1,20 +1,24 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
 
-import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.*;
+import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.DEBUG_WAIT;
+import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.INCHES_PER_ROTATION;
+import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_D;
+import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_I;
+import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_P;
+import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.TICKS_PER_INCH;
 
 // Drive Train component
 // Includes: Drive Motors, IMU
@@ -252,5 +256,27 @@ public class DriveTrain extends Component {
         robot.lopmode.telemetry.update();
 
         if(DEBUG_WAIT > 0) robot.lopmode.sleep(DEBUG_WAIT);
+    }
+
+    public void odo_move(double x, double y, double a, double speed) {
+
+        double original_distance = Math.hypot(x-lcs.x, y-lcs.y);
+        double original_distance_a = Math.abs(a - lcs.a);
+
+        if (original_distance > 0) {
+            while (is_busy() && robot.lopmode.opModeIsActive()) {
+                double distance = Math.hypot(x - lcs.x, y - lcs.y);
+                double distance_a = Math.abs(a - lcs.a);
+
+                double progress = distance/original_distance;
+                double progress_a = distance_a/original_distance_a;
+
+                double drive_angle = Math.atan2(y, x);
+                double drive_x = Math.cos(drive_angle - lcs.a);
+                double drive_y = Math.sin(drive_angle - lcs.a);
+                double drive_a = Range.clip(a-lcs.a, -1, 1);
+                mechanumDrive(drive_x, drive_y, drive_a);
+            }
+        }
     }
 }

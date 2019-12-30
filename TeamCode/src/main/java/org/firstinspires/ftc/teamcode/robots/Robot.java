@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
@@ -36,6 +34,7 @@ public class Robot {
     protected int cycle = 0;
 
     Runnable update_thread;
+    Runnable telemetry_thread;
 
     class UpdateThread implements Runnable {
 
@@ -49,7 +48,29 @@ public class Robot {
         @Override
         public void run() {
             while(robot.running) {
-                //robot.update();
+                robot.update();
+            }
+        }
+    }
+
+    class TelemetryThread implements Runnable {
+
+        Robot robot;
+
+        public TelemetryThread(Robot robot) {
+            super();
+            this.robot = robot;
+        }
+
+        @Override
+        public void run() {
+            while(robot.running) {
+                robot.updateTelemetry();
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    
+                }
             }
         }
     }
@@ -67,15 +88,21 @@ public class Robot {
 
     public void startup() {
         running = true;
+
         for (Component component : components) {
             component.startup();
         }
+
+        telemetry_thread = new TelemetryThread(this);
         update_thread = new UpdateThread(this);
+
         new Thread(update_thread).start();
+        new Thread(telemetry_thread).start();
     }
 
     public void shutdown() {
         running = false;
+
         for (Component component : components) {
             component.shutdown();
         }

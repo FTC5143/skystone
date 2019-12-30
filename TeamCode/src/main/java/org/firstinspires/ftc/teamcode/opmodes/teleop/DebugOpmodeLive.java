@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robots.LiveRobot;
-import org.firstinspires.ftc.teamcode.robots.SoftwareRobot;
 
 @TeleOp(name="Teleop Live", group="driver control")
 //@Disabled
@@ -113,9 +112,6 @@ Goodbye
         } else {
             robot.feeder.spin(gamepad2.left_trigger, gamepad2.right_trigger);
         }
-
-        robot.update();
-        robot.updateTelemetry();
     }
 
     @Override
