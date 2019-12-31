@@ -260,11 +260,13 @@ public class DriveTrain extends Component {
 
     public void odo_move(double x, double y, double a, double speed) {
 
+        a = -a;
+
         double original_distance = Math.hypot(x-lcs.x, y-lcs.y);
         double original_distance_a = Math.abs(a - lcs.a);
 
-        if (original_distance > 0) {
-            while (is_busy() && robot.lopmode.opModeIsActive()) {
+        if (original_distance > 0 || original_distance_a > 0) {
+            while (robot.lopmode.opModeIsActive()) {
                 double distance = Math.hypot(x - lcs.x, y - lcs.y);
                 double distance_a = Math.abs(a - lcs.a);
 
@@ -272,10 +274,14 @@ public class DriveTrain extends Component {
                 double progress_a = distance_a/original_distance_a;
 
                 double drive_angle = Math.atan2(y, x);
-                double drive_x = Math.cos(drive_angle - lcs.a);
-                double drive_y = Math.sin(drive_angle - lcs.a);
+                double drive_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, 8))/8);
+                double drive_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, 8))/8);
                 double drive_a = Range.clip(a-lcs.a, -1, 1);
-                mechanumDrive(drive_x, drive_y, drive_a);
+
+                //drive_x = 0;
+                //drive_y = 0;
+
+                mechanumDrive(drive_x, -drive_y, -drive_a);
             }
         }
     }

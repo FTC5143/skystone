@@ -10,6 +10,9 @@ package org.firstinspires.ftc.teamcode.systems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
+import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
 public class LocalCoordinateSystem {
     public double x = 0;    // The approximated x position of the robot relative to where it started
@@ -39,13 +42,13 @@ public class LocalCoordinateSystem {
 
 
         // Calculate phi, or the delta of our angle
-        double ph = (ld*INCHES_PER_COUNT - rd*INCHES_PER_COUNT) / ROBOT_DIAMETER;
+        double ph = (rd*INCHES_PER_COUNT - ld*INCHES_PER_COUNT) / ROBOT_DIAMETER;
 
         // The arclength of movement forward/backward
         double dc = ((rd*INCHES_PER_COUNT + ld*INCHES_PER_COUNT) / 2);
 
         // The arclength of movement left/right
-        double sc = ce - (cd*CENTER_WHEEL_OFFSET);
+        double sc = cd - (ph*CENTER_WHEEL_OFFSET);
 
         y += dc * Math.cos(a + (ph / 2)) - (sc*INCHES_PER_COUNT) * Math.sin(a + (ph / 2));
         x += dc * Math.sin(a + (ph / 2)) + (sc*INCHES_PER_COUNT) * Math.cos(a + (ph / 2));
@@ -58,10 +61,7 @@ public class LocalCoordinateSystem {
 
         TelemetryPacket packet = new TelemetryPacket();
 
-        packet.fieldOverlay()
-                .setStroke("blue")
-                .setStrokeWidth(1)
-                .strokeRect(x-9, y-9, 18, 18);
+        DashboardUtil.drawRobot(packet.fieldOverlay(), new Pose2d(y, x, a));
 
         dashboard.sendTelemetryPacket(packet);
 

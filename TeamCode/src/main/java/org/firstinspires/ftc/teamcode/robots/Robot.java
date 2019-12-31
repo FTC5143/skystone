@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
@@ -25,6 +26,8 @@ public class Robot {
     protected ExpansionHubEx expansion_hub_1;
     protected ExpansionHubEx expansion_hub_2;
 
+    Telemetry telemetry;
+
     public RevBulkData bulk_data_1;
     public RevBulkData bulk_data_2;
 
@@ -34,7 +37,6 @@ public class Robot {
     protected int cycle = 0;
 
     Runnable update_thread;
-    Runnable telemetry_thread;
 
     class UpdateThread implements Runnable {
 
@@ -49,28 +51,7 @@ public class Robot {
         public void run() {
             while(robot.running) {
                 robot.update();
-            }
-        }
-    }
-
-    class TelemetryThread implements Runnable {
-
-        Robot robot;
-
-        public TelemetryThread(Robot robot) {
-            super();
-            this.robot = robot;
-        }
-
-        @Override
-        public void run() {
-            while(robot.running) {
                 robot.updateTelemetry();
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    
-                }
             }
         }
     }
@@ -78,8 +59,10 @@ public class Robot {
     public Robot(OpMode opmode) { // FIRST THIS IS *YOUR* FAULT IT HAS TO BE THIS WAY AND I HATE IT AND YOU SHOULD BE ASHAMED
         if (opmode instanceof LinearOpMode) {
             this.lopmode = (LinearOpMode) opmode;
+            this.telemetry = this.lopmode.telemetry;
         } else {
             this.opmode = opmode;
+            this.telemetry = this.opmode.telemetry;
         }
 
         this.hwmap  = opmode.hardwareMap;
@@ -93,11 +76,9 @@ public class Robot {
             component.startup();
         }
 
-        telemetry_thread = new TelemetryThread(this);
         update_thread = new UpdateThread(this);
 
         new Thread(update_thread).start();
-        new Thread(telemetry_thread).start();
     }
 
     public void shutdown() {
@@ -123,18 +104,23 @@ public class Robot {
         long update_duration = System.nanoTime()-last_update;
         update_freq = (update_duration/(double)1000000000) != 0 ? (int)(1/(update_duration/(double)1000000000)) : Integer.MAX_VALUE;
 
+
+        if (cycle % 10 == 0) {
+            updateTelemetry();
+        }
+
         cycle++;
     }
 
     public void updateTelemetry() {
-        opmode.telemetry.addData("[RBT "+name+"]", components.size()+" components");
-        opmode.telemetry.addData("FREQ", update_freq);
+        telemetry.addData("[RBT "+name+"]", components.size()+" components");
+        telemetry.addData("FREQ", update_freq);
 
         for (Component component : components) {
-            component.updateTelemetry(opmode.telemetry);
+            component.updateTelemetry(telemetry);
         }
 
-        opmode.telemetry.update();
+        telemetry.update();
     }
 
     public void registerComponent(Component component) {
