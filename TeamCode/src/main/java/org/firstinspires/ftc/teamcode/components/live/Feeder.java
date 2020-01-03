@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
-import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
 
 // Feeder Component
 // Feeds in blocks using the spinner wheels, and uses a touch sensor to detect the blocks
@@ -32,11 +31,6 @@ public class Feeder extends Component {
         left_spinner    = hwmap.get(DcMotor.class, "left_spinner");
         right_spinner   = hwmap.get(DcMotor.class, "right_spinner");
 
-    }
-
-    @Override
-    public void startup() {
-        super.startup();
     }
 
     public void spin(double power) {

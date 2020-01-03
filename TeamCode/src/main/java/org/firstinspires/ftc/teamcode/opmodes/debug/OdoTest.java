@@ -16,7 +16,7 @@ public class OdoTest extends LinearOpMode {
         robot = new LiveRobot(this);
         robot.startup();
         waitForStart();
-        robot.drive_train.odo_move(0,24,0,1);
+        robot.drive_train.odo_move(0,72,Math.PI,1);
         robot.shutdown();
     }
 }

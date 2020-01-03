@@ -273,13 +273,28 @@ public class DriveTrain extends Component {
                 double progress = distance/original_distance;
                 double progress_a = distance_a/original_distance_a;
 
-                double drive_angle = Math.atan2(y, x);
-                double drive_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, 8))/8);
-                double drive_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, 8))/8);
-                double drive_a = Range.clip(a-lcs.a, -1, 1);
+                double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
+                double drive_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, 6))/6) * speed;
+                double drive_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, 6))/6) * speed;
+                double drive_a = Range.clip((a-lcs.a)*2, -1, 1) * speed;
 
                 //drive_x = 0;
                 //drive_y = 0;
+
+                robot.lopmode.telemetry.addData("x", lcs.x);
+                robot.lopmode.telemetry.addData("y", lcs.y);
+                robot.lopmode.telemetry.addData("a", lcs.a);
+
+                robot.lopmode.telemetry.addData("drive_x", drive_x);
+                robot.lopmode.telemetry.addData("drive_y", drive_y);
+                robot.lopmode.telemetry.addData("drive_a", drive_a);
+
+                robot.lopmode.telemetry.addData("drive_angle", drive_angle);
+
+                robot.lopmode.telemetry.addData("distance", distance);
+                robot.lopmode.telemetry.addData("distance_a", distance_a);
+
+                robot.lopmode.telemetry.update();
 
                 mechanumDrive(drive_x, -drive_y, -drive_a);
             }
