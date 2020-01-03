@@ -276,7 +276,7 @@ public class DriveTrain extends Component {
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
                 double drive_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, 6))/6) * speed;
                 double drive_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, 6))/6) * speed;
-                double drive_a = Range.clip((a-lcs.a)*2, -1, 1) * speed;
+                double drive_a = Range.clip((a-lcs.a)*5, -1, 1) * speed;
 
                 //drive_x = 0;
                 //drive_y = 0;
