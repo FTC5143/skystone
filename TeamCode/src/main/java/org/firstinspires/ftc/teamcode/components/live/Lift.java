@@ -38,7 +38,7 @@ public class Lift extends Component {
 
     //// SENSORS ////
 
-    RevTouchSensor block_detector;
+    public RevTouchSensor block_detector;
 
 
     public int level;

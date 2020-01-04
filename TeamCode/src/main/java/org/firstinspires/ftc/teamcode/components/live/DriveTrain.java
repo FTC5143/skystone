@@ -259,6 +259,10 @@ public class DriveTrain extends Component {
     }
 
     public void odo_move(double x, double y, double a, double speed) {
+        odo_move(x, y, a, speed, 1, 0.02);
+    }
+
+    public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc) {
 
         a = -a;
 
@@ -274,9 +278,9 @@ public class DriveTrain extends Component {
                 double progress_a = distance_a/original_distance_a;
 
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
-                double drive_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, 6))/6) * speed;
-                double drive_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, 6))/6) * speed;
-                double drive_a = Range.clip((a-lcs.a)*5, -1, 1) * speed;
+                double drive_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+                double drive_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+                double drive_a = Range.clip((a-lcs.a)*3, -1, 1) * speed;
 
                 //drive_x = 0;
                 //drive_y = 0;
@@ -284,6 +288,11 @@ public class DriveTrain extends Component {
                 robot.lopmode.telemetry.addData("x", lcs.x);
                 robot.lopmode.telemetry.addData("y", lcs.y);
                 robot.lopmode.telemetry.addData("a", lcs.a);
+
+                robot.lopmode.telemetry.addData("le", lcs.prev_le);
+                robot.lopmode.telemetry.addData("re", lcs.prev_re);
+                robot.lopmode.telemetry.addData("ce", lcs.prev_ce);
+
 
                 robot.lopmode.telemetry.addData("drive_x", drive_x);
                 robot.lopmode.telemetry.addData("drive_y", drive_y);
@@ -297,6 +306,12 @@ public class DriveTrain extends Component {
                 robot.lopmode.telemetry.update();
 
                 mechanumDrive(drive_x, -drive_y, -drive_a);
+
+
+                if (distance < pos_acc && distance_a < angle_acc) {
+                    mechanumDrive(0, 0, 0);
+                    break;
+                }
             }
         }
     }
