@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,6 +20,7 @@ import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTra
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_I;
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_P;
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.TICKS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
 // Drive Train component
 // Includes: Drive Motors, IMU
@@ -52,6 +54,8 @@ public class DriveTrain extends Component {
     static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
     LocalCoordinateSystem lcs = new LocalCoordinateSystem();
+
+    public int color = RED;
 
     {
         name = "Drive Train";
@@ -264,7 +268,15 @@ public class DriveTrain extends Component {
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc) {
 
-        a = -a;
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dtelemetry = dashboard.getTelemetry();
+
+
+        if (color == RED) {
+            a = -a;
+        } else {
+            x = -x;
+        }
 
         double original_distance = Math.hypot(x-lcs.x, y-lcs.y);
         double original_distance_a = Math.abs(a - lcs.a);
@@ -304,6 +316,16 @@ public class DriveTrain extends Component {
                 robot.lopmode.telemetry.addData("distance_a", distance_a);
 
                 robot.lopmode.telemetry.update();
+
+
+                dtelemetry.addData("distance", distance);
+                dtelemetry.addData("orig_distance", original_distance);
+
+                dtelemetry.addData("distance_a", distance_a);
+                dtelemetry.addData("orig_distance_a", original_distance_a);
+
+                dtelemetry.update();
+
 
                 mechanumDrive(drive_x, -drive_y, -drive_a);
 
