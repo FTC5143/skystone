@@ -52,7 +52,7 @@ public class LocalCoordinateSystem {
 
         y += (dc * Math.cos(a + (ph / 2))) - (sc * Math.sin(a + (ph / 2)));
         x -= (dc * Math.sin(a + (ph / 2))) + (sc * Math.cos(a + (ph / 2)));
-        a += ph;
+        a = (re*INCHES_PER_COUNT - le*INCHES_PER_COUNT) / ROBOT_DIAMETER;;
 
         // Used to calculate deltas for next loop
         prev_le = le;
