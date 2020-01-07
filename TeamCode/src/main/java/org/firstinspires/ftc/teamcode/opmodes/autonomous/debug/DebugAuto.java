@@ -2,12 +2,8 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous.debug;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.opmodes.autonomous.LiveAutoBase;
-import org.firstinspires.ftc.teamcode.robots.LiveRobot;
-
-import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
 @Autonomous(name="TwoStone", group="autonomous")
 @Disabled
@@ -45,7 +41,6 @@ public class DebugAuto extends LiveAutoBase {
 
         robot.drive_train.encoder_drive(-1,0,0,9,0.75);
 
-        robot.stone_grabber.grab_l();
         sleep(1000);
 
         robot.drive_train.encoder_drive(1,0,0,15,0.75); // Drive adjacent to the tape
@@ -56,7 +51,6 @@ public class DebugAuto extends LiveAutoBase {
             robot.drive_train.encoder_drive(0,-1,0,28,0.75);
         }
 
-        robot.stone_grabber.release_l();
         sleep(1000);
 
         if (pattern == 1) {
@@ -66,7 +60,7 @@ public class DebugAuto extends LiveAutoBase {
         }
 
         robot.drive_train.encoder_drive(-1,0,0,15,0.75);
-        robot.stone_grabber.grab_l();
+
         sleep(1000);
         robot.drive_train.encoder_drive(1,0,0,15,0.75); // Drive adjacent to the tape
 
@@ -76,7 +70,6 @@ public class DebugAuto extends LiveAutoBase {
             robot.drive_train.encoder_drive(0,-1,0,43,0.75);
         }
 
-        robot.stone_grabber.release_l();
         sleep(1000);
 
         robot.drive_train.encoder_drive(0,1,0,10,1);

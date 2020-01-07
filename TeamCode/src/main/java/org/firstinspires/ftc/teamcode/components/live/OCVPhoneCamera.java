@@ -58,8 +58,6 @@ public class OCVPhoneCamera extends Component {
         super.updateTelemetry(telemetry);
         telemetry.addData("FRAME", phone_camera.getFrameCount());
         telemetry.addData("FPS", String.format("%.2f", phone_camera.getFps()));
-        telemetry.addData("TFT MS", phone_camera.getTotalFrameTimeMs());
-        telemetry.addData("PT MS", phone_camera.getPipelineTimeMs());
         telemetry.addData("LEFT RECT", stone_pipeline.left_hue + " " + stone_pipeline.left_br);
         telemetry.addData("RIGHT RECT", stone_pipeline.right_hue + " " + stone_pipeline.right_br);
         telemetry.addData("PATTERN", stone_pipeline.pattern);

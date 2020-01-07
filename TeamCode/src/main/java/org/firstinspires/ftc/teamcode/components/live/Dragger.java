@@ -51,6 +51,7 @@ public class Dragger extends Component {
 
         telemetry.addData("LG", TELEMETRY_DECIMAL.format(left_dragger.getPosition()));
         telemetry.addData("RG", TELEMETRY_DECIMAL.format(right_dragger.getPosition()));
+
     }
 
     @Override

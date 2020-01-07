@@ -45,8 +45,5 @@ public class Feeder extends Component {
     @Override
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
-
-        telemetry.addData("LS",left_spinner.getPower());
-        telemetry.addData("RS",right_spinner.getPower());
     }
 }

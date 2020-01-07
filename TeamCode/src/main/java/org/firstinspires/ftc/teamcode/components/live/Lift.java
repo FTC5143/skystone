@@ -26,15 +26,9 @@ public class Lift extends Component {
     private DcMotorEx lift_r;
 
     private Servo ext;
-    private DcMotorEx ext_encoder;
-
-    private double ext_target;
-    private double ext_old_pos;
-    private double ext_error;
-    private boolean ext_running;
-
     private Servo grb_t;
     private Servo grb_g;
+    private Servo capstone;
 
     //// SENSORS ////
 
@@ -49,6 +43,7 @@ public class Lift extends Component {
 
     @Config
     static class LiftConfig {
+
         static int BLOCK_HEIGHT = 640; //In encoder counts
         static int LIFT_OFFSET = 0;
         static int MAX_LEVEL = 10;
@@ -64,6 +59,9 @@ public class Lift extends Component {
         static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
         static double EXT_MIN_ACCURACY = 30;
+
+        static double CAPSTONE_UP = 0.9;
+        static double CAPSTONE_DOWN = 0.6;
 
     }
 
@@ -87,7 +85,8 @@ public class Lift extends Component {
 
         //// SERVOS ////
         ext     = hwmap.get(Servo.class, "ext");
-        ext_encoder = hwmap.get(DcMotorEx.class, "right_spinner");
+
+        capstone = hwmap.get(Servo.class, "capstone");
 
         grb_t   = hwmap.get(Servo.class, "grb_t");
         grb_g   = hwmap.get(Servo.class, "grb_g");
@@ -112,19 +111,6 @@ public class Lift extends Component {
         if (!cached_grab && block_detector.isPressed()) {
             grab();
         }
-
-        if (ext_running) {
-            double position = ext_encoder.getCurrentPosition();
-
-            if (Math.abs(position-ext_target) < EXT_MIN_ACCURACY) {
-                ext_running = false;
-                extend(0);
-            } else {
-                ext_error = ((ext_target - position)/(Math.abs(ext_target-ext_old_pos)))*2;
-                extend(ext_error);
-            }
-        }
-
     }
 
     @Override
@@ -143,11 +129,10 @@ public class Lift extends Component {
         lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        ext_encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ext_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        uncap();
 
         elevate(0);
 
@@ -169,20 +154,16 @@ public class Lift extends Component {
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
         telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
 
-        telemetry.addData("LIFT BUSY",lift_l.isBusy()+" "+lift_r.isBusy());
+        telemetry.addData("LIFT BUSY",robot.bulk_data_1.isMotorAtTargetPosition(lift_l)+" "+robot.bulk_data_1.isMotorAtTargetPosition(lift_r));
 
-        telemetry.addData("EXT DIR",TELEMETRY_DECIMAL.format(ext.getPosition()));
-        telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(ext_encoder)));
-        telemetry.addData("EXT OLD POS",ext_old_pos);
-        telemetry.addData("EXT TARGET", ext_target);
-        telemetry.addData("EXT ERROR", ext_error);
+        telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(ext.getPosition()));
 
         telemetry.addData("GT POS",TELEMETRY_DECIMAL.format(grb_t.getPosition()));
         telemetry.addData("GG POS",TELEMETRY_DECIMAL.format(grb_g.getPosition()));
 
         telemetry.addData("LEVEL", level);
 
-        telemetry.addData("BD", block_detector.isPressed());
+        telemetry.addData("BD", robot.bulk_data_2.getDigitalInputState(1));
 
         telemetry.addData("C GRAB", cached_grab);
     }
@@ -199,8 +180,8 @@ public class Lift extends Component {
     }
 
     public void elevate(int amt) {
-        level = Math.max(Math.min(level+amt, MAX_LEVEL), MIN_LEVEL);
-        set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
+        level = Math.max(Math.min(level + amt, MAX_LEVEL), MIN_LEVEL);
+        set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
 
         lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -209,17 +190,17 @@ public class Lift extends Component {
     }
 
     public void min_lift() {
-        elevate(MIN_LEVEL-level);
+        elevate(MIN_LEVEL - level);
     }
 
     public void max_lift() {
-        elevate(MAX_LEVEL-level);
+        elevate(MAX_LEVEL - level);
     }
 
 
     public void elevate_without_stops(int amt) {
-        level = level+amt;
-        set_target_position((level*BLOCK_HEIGHT)+LIFT_OFFSET);
+        level = level + amt;
+        set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
 
         lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -231,23 +212,7 @@ public class Lift extends Component {
 
         power = Math.max(-1, Math.min(power, 1));
 
-        ext.setPosition((((power)/2)+0.5));
-    }
-
-    public void extend_out() {
-        if (ext_target != -5200 || !ext_running) {
-            ext_target = -5200;
-            ext_running = true;
-            ext_old_pos = ext_encoder.getCurrentPosition();
-        }
-    }
-
-    public void retract_in() {
-        if (ext_target != 0 || !ext_running) {
-            ext_target = 0;
-            ext_running = true;
-            ext_old_pos = ext_encoder.getCurrentPosition();
-        }
+        ext.setPosition(((power / 2) + 0.5));
     }
 
     public void grab() {
@@ -259,6 +224,15 @@ public class Lift extends Component {
         grb_g.setPosition(GRABBER_OPEN);
         cached_grab = false;
     }
+
+    public void uncap() {
+        capstone.setPosition(CAPSTONE_UP);
+    }
+
+    public void cap() {
+        capstone.setPosition(CAPSTONE_DOWN);
+    }
+
 
     public void turn(double pos) {
         grb_t.setPosition(pos);

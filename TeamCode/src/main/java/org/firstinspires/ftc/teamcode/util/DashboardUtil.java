@@ -24,10 +24,6 @@ public class DashboardUtil {
 
     private static final double ROBOT_RADIUS = 9; // in
 
-
-
-
-
     public static void drawSampledPath(Canvas canvas, Path path, double resolution) {
 
         int samples = (int) Math.ceil(path.length() / resolution);
@@ -49,7 +45,7 @@ public class DashboardUtil {
             yPoints[i] = pose.getY();
 
         }
-
+////REEEEEEEEE
         canvas.strokePolyline(xPoints, yPoints);
 
     }

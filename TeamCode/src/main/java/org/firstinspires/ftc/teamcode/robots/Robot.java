@@ -106,7 +106,7 @@ public class Robot {
 
 
         if (cycle % 10 == 0) {
-            //updateTelemetry();
+            updateTelemetry();
         }
 
         cycle++;
