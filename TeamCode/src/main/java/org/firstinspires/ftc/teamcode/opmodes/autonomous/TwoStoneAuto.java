@@ -1,40 +1,37 @@
-package org.firstinspires.ftc.teamcode.opmodes.debug;
+package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.teamcode.robots.LiveRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
+import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.FAR;
 
 @Autonomous(name="Two Stone Auto", group="autonomous")
-//@Disabled
-public class TwoStoneAuto extends LinearOpMode {
-
-    LiveRobot robot;
+@Disabled
+public class TwoStoneAuto extends LiveAutoBase {
 
     int pattern;
 
+    protected static int COLOR = BLUE;
+    protected static int PARK = FAR;
+
     @Override
-    public void runOpMode() throws InterruptedException {
-        robot = new LiveRobot(this);
-        robot.startup();
+    public void on_init() {
+        robot.phone_camera.start_streaming(COLOR);
 
-        int color = BLUE;
-
-        robot.drive_train.color = color;
-
-
-        robot.phone_camera.start_streaming(color);
+        robot.drive_train.color = COLOR;
 
         while(!isStarted()) {
-            pattern = robot.phone_camera.get_pattern(color);
+            pattern = robot.phone_camera.get_pattern(COLOR);
 
             telemetry.addData("PATTERN", pattern);
             telemetry.update();
         }
 
-        waitForStart();
+    }
+
+    @Override
+    public void on_start() {
 
         if (pattern == 1) {
 
@@ -148,10 +145,14 @@ public class TwoStoneAuto extends LinearOpMode {
 
         robot.drive_train.odo_move(48, 25, Math.PI/2, 0.5);
 
-        robot.drive_train.odo_move(36, 25, Math.PI/2, 1);
+        if (PARK == FAR) {
+            robot.drive_train.odo_move(36, 25, Math.PI / 2, 1);
+        }
 
+    }
 
+    @Override
+    public void on_stop() {
 
-        robot.shutdown();
     }
 }
