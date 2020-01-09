@@ -26,26 +26,34 @@ public class EncoderReset extends OpMode {
         robot.update();
 
         if(gamepad2.dpad_up && !dpad_up_pressed) {
+
             robot.lift.elevate_without_stops(1);
             dpad_up_pressed = true;
+
         } else if (!gamepad2.dpad_up) {
+
             dpad_up_pressed = false;
+
         }
 
         if(gamepad2.dpad_down && !dpad_down_pressed) {
+
             robot.lift.elevate_without_stops(-1);
             dpad_down_pressed = true;
+
         } else if (!gamepad2.dpad_down) {
+
             dpad_down_pressed = false;
+
         }
 
         robot.lift.extend(gamepad2.b ? -1 : (gamepad2.a ? 1 : 0));
 
 
         if(gamepad2.x)  { robot.lift.grab(); }
-        if(gamepad2.y)    { robot.lift.release(); }
+        if(gamepad2.y)  { robot.lift.release(); }
 
-        if(gamepad2.dpad_right)  { robot.lift.turn(0.995); }
+        if(gamepad2.dpad_right)     { robot.lift.turn(0.995); }
         else if(gamepad2.dpad_left) { robot.lift.turn(0.665); }
 
         if (gamepad2.left_bumper || gamepad2.right_bumper) {

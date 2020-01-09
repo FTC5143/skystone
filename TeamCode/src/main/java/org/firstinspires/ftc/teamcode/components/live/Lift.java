@@ -154,7 +154,7 @@ public class Lift extends Component {
         telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
         telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
 
-        telemetry.addData("LIFT BUSY",robot.bulk_data_1.isMotorAtTargetPosition(lift_l)+" "+robot.bulk_data_1.isMotorAtTargetPosition(lift_r));
+        telemetry.addData("LIFT BUSY",robot.bulk_data_2.isMotorAtTargetPosition(lift_l)+" "+robot.bulk_data_2.isMotorAtTargetPosition(lift_r));
 
         telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(ext.getPosition()));
 
@@ -163,7 +163,7 @@ public class Lift extends Component {
 
         telemetry.addData("LEVEL", level);
 
-        telemetry.addData("BD", robot.bulk_data_2.getDigitalInputState(1));
+        telemetry.addData("BD", robot.bulk_data_1.getDigitalInputState(1));
 
         telemetry.addData("C GRAB", cached_grab);
     }
@@ -210,9 +210,10 @@ public class Lift extends Component {
 
     public void extend(double power) {
 
-        power = Math.max(-1, Math.min(power, 1));
+        power = ((Math.max(-1, Math.min(power, 1)) / 2) + 0.5);
 
-        ext.setPosition(((power / 2) + 0.5));
+        ext.setPosition(power);
+
     }
 
     public void grab() {

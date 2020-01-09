@@ -7,7 +7,7 @@ import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.FAR;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.NEAR;
 
-@Autonomous(name="Foundation Auto", group="autonomous")
+@Autonomous(name="Tape Auto", group="autonomous")
 @Disabled
 public class TapeAuto extends LiveAutoBase {
 
@@ -27,11 +27,11 @@ public class TapeAuto extends LiveAutoBase {
 
             robot.drive_train.odo_move(0, 24, 0, 0.5);
 
-            robot.drive_train.odo_move(24, 24, 0, 0.5);
+            robot.drive_train.odo_move(30, 24, 0, 0.5);
 
         } else if (PARK == NEAR) {
 
-            robot.drive_train.odo_move(24, 2, 0, 0.5);
+            robot.drive_train.odo_move(30, 2, 0, 0.5);
 
         }
 
