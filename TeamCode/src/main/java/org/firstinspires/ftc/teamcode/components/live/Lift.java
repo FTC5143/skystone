@@ -49,8 +49,10 @@ public class Lift extends Component {
         static int MAX_LEVEL = 10;
         static int MIN_LEVEL = 0;
 
+        static int MAX_ENCODER_COUNT = 6400;
+
         static double GRABBER_CLOSED = 1;
-        static double GRABBER_OPEN = 0.25;
+        static double GRABBER_OPEN = 0.30;
 
         static double PID_P = 5;
         static double PID_I = 1;
@@ -58,10 +60,8 @@ public class Lift extends Component {
 
         static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
-        static double EXT_MIN_ACCURACY = 30;
-
-        static double CAPSTONE_UP = 0.9;
-        static double CAPSTONE_DOWN = 0.6;
+        static double CAPSTONE_UP = 0.94;
+        static double CAPSTONE_DOWN = 0.7;
 
     }
 

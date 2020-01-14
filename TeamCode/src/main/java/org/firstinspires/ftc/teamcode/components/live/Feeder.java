@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.components.live;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
@@ -14,6 +13,9 @@ public class Feeder extends Component {
     //// MOTORS ////
     DcMotor left_spinner;    // The left feeder wheel on the take-in device
     DcMotor right_spinner;   // The right feeder wheel on the take-in device
+
+    private double lp_cache;
+    private double rp_cache;
 
     {
         name = "Feeder";
@@ -38,12 +40,14 @@ public class Feeder extends Component {
     }
 
     public void spin(double lp, double rp) {
-        left_spinner.setPower(lp);
-        right_spinner.setPower(-rp);
-    }
+        if (lp != lp_cache) {
+            left_spinner.setPower(lp);
+            lp_cache = lp;
+        }
 
-    @Override
-    public void updateTelemetry(Telemetry telemetry) {
-        super.updateTelemetry(telemetry);
+        if (rp != rp_cache) {
+            right_spinner.setPower(-rp);
+            rp_cache = rp;
+        }
     }
 }
