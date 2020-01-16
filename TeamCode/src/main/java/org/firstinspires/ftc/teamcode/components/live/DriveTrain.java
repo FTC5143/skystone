@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,9 +15,6 @@ import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
 
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.DEBUG_WAIT;
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.INCHES_PER_ROTATION;
-import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_D;
-import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_I;
-import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.PID_P;
 import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.TICKS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
@@ -38,10 +34,6 @@ public class DriveTrain extends Component {
         static double TICKS_PER_ROTATION = 5450;
         static double INCHES_PER_ROTATION = TICKS_PER_ROTATION / TICKS_PER_INCH;
 
-        static double PID_P = 5;
-        static double PID_I = 1;
-        static double PID_D = 0;
-
         static int DEBUG_WAIT = 0; // Time to wait after each move, for debug purposes
     }
 
@@ -50,8 +42,6 @@ public class DriveTrain extends Component {
     private DcMotorEx drive_rf;   // Right-Front drive motor
     private DcMotorEx drive_lb;   // Left-Back drive motor
     private DcMotorEx drive_rb;   // Right-Back drive motor
-
-    static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
     LocalCoordinateSystem lcs = new LocalCoordinateSystem();
 
@@ -116,11 +106,6 @@ public class DriveTrain extends Component {
 
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         set_mode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        drive_lf.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
-        drive_rf.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
-        drive_lb.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
-        drive_rb.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
 
     }
 
@@ -268,6 +253,8 @@ public class DriveTrain extends Component {
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc) {
 
+        final double MOVE_FEEDFORWARD  = 0.1;
+
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dtelemetry = dashboard.getTelemetry();
 
@@ -326,9 +313,27 @@ public class DriveTrain extends Component {
 
                 dtelemetry.update();
 
+                /*
+                if (drive_x > 0) {
+                    drive_x += MOVE_FEEDFORWARD;
+                } else if (drive_x < 0) {
+                    drive_x -= MOVE_FEEDFORWARD;
+                }
+
+                if (drive_y > 0) {
+                    drive_y += MOVE_FEEDFORWARD;
+                } else if (drive_y < 0) {
+                    drive_y -= MOVE_FEEDFORWARD;
+                }
+
+                if (drive_a > 0) {
+                    drive_a += MOVE_FEEDFORWARD;
+                } else if (drive_a < 0) {
+                    drive_a -= MOVE_FEEDFORWARD;
+                }
+                */
 
                 mechanumDrive(drive_x, -drive_y, -drive_a);
-
 
                 if (distance < pos_acc && distance_a < angle_acc) {
                     mechanumDrive(0, 0, 0);

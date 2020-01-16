@@ -60,7 +60,7 @@ public class Lift extends Component {
 
         static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
-        static double CAPSTONE_UP = 0.94;
+        static double CAPSTONE_UP = 0.9;
         static double CAPSTONE_DOWN = 0.7;
 
     }
@@ -108,7 +108,7 @@ public class Lift extends Component {
             }
         }
 
-        if (!cached_grab && block_detector.isPressed()) {
+        if (!cached_grab && block_detector.isPressed() && robot.opmode != null) {
             grab();
         }
     }
@@ -133,6 +133,7 @@ public class Lift extends Component {
         lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         uncap();
+        release();
 
         elevate(0);
 
