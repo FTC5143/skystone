@@ -27,10 +27,8 @@ public class OdoTest extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()) {
-            robot.drive_train.odo_move(0, 24, 0, 1);
-            robot.drive_train.odo_move(0, 0, 0, 1);
-        }
+        robot.drive_train.odo_move(48, 0, 2*Math.PI, 1, -1, -1);
+
 
         robot.shutdown();
     }

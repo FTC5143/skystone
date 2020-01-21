@@ -14,6 +14,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
     protected static int COLOR = BLUE;
     protected static int PARK = FAR;
+    protected static boolean FOUNDATION = false;
 
     @Override
     public void on_init() {
@@ -79,6 +80,24 @@ public class TwoStoneAuto extends LiveAutoBase {
         robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
 
         robot.drive_train.odo_move(48, 25, Math.PI/2, 1);
+
+        if (FOUNDATION) {
+
+            robot.drive_train.odo_move(78, 32, 0, 1);
+
+            robot.drive_train.odo_move(78, 36, 0, 0.5);
+
+            robot.dragger.grab();
+
+            sleep(500);
+
+            robot.drive_train.odo_move(76, 20, Math.PI/2, 1);
+
+            robot.dragger.release();
+
+            sleep(500);
+
+        }
 
         robot.drive_train.odo_move(52, 25, Math.PI/2, 0.5);
 

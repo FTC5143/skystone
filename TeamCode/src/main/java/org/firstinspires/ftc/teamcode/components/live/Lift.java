@@ -52,7 +52,7 @@ public class Lift extends Component {
         static int MAX_ENCODER_COUNT = 6400;
 
         static double GRABBER_CLOSED = 1;
-        static double GRABBER_OPEN = 0.30;
+        static double GRABBER_OPEN = 0.33;
 
         static double PID_P = 5;
         static double PID_I = 1;
