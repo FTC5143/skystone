@@ -108,9 +108,9 @@ public class Lift extends Component {
             }
         }
 
-        if (!cached_grab && block_detector.isPressed() && robot.opmode != null) {
-            grab();
-        }
+        //if (!cached_grab && block_detector.isPressed() && robot.opmode != null) {
+        //    grab();
+        //}
     }
 
     @Override
