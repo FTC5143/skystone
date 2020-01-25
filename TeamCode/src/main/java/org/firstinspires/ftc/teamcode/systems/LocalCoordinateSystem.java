@@ -26,7 +26,7 @@ public class LocalCoordinateSystem {
     private double WHEEL_DIAMETER       = 1.48982939421;    // Diameter of the omniwheels
     private double ENCODER_CPR          = 1440;             // Counts per full rotation of an encoder
     private double ROBOT_DIAMETER       = 15.7473587496;    //15.53           // Distance between the left and right encoder (diameter) in inches
-    private double CENTER_WHEEL_OFFSET  = 7.375;              //7.375 Distance of the center encoder to the line made between the left and right encoders (radius) in inches
+    private double CENTER_WHEEL_OFFSET  = 8.2;              //7.375 Distance of the center encoder to the line made between the left and right encoders (radius) in inches
 
     private double WHEEL_CIRCUMFERENCE  = WHEEL_DIAMETER * Math.PI;
     private double INCHES_PER_COUNT     = WHEEL_CIRCUMFERENCE / ENCODER_CPR;

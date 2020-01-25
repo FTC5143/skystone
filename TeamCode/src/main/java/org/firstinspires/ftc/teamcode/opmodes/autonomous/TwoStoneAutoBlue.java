@@ -10,5 +10,6 @@ public class TwoStoneAutoBlue extends TwoStoneAuto {
     {
         COLOR = BLUE;
         PARK = FAR;
+        FOUNDATION = false;
     }
 }
