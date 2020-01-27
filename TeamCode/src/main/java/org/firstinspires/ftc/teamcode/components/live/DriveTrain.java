@@ -248,10 +248,14 @@ public class DriveTrain extends Component {
     }
 
     public void odo_move(double x, double y, double a, double speed) {
-        odo_move(x, y, a, speed, 1, 0.02);
+        odo_move(x, y, a, speed, 1, 0.02, 0);
     }
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc) {
+        odo_move(x, y, a, speed, pos_acc, angle_acc, 0);
+    }
+
+    public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc, double timeout) {
 
         final double MOVE_FEEDFORWARD  = 0.1;
 
@@ -267,6 +271,8 @@ public class DriveTrain extends Component {
 
         double original_distance = Math.hypot(x-lcs.x, y-lcs.y);
         double original_distance_a = Math.abs(a - lcs.a);
+
+        robot.lopmode.resetStartTime();
 
         if (original_distance > 0 || original_distance_a > 0) {
             while (robot.lopmode.opModeIsActive()) {
@@ -335,7 +341,7 @@ public class DriveTrain extends Component {
 
                 mechanumDrive(drive_x, -drive_y, -drive_a);
 
-                if (distance < pos_acc && distance_a < angle_acc) {
+                if ((distance < pos_acc && distance_a < angle_acc) || (timeout > 0 && robot.lopmode.getRuntime() > timeout)) {
                     mechanumDrive(0, 0, 0);
                     break;
                 }
