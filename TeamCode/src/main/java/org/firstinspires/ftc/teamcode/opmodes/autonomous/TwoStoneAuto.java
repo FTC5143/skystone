@@ -36,9 +36,9 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         if (pattern == 1) {
 
-            robot.drive_train.odo_move(2, 30, -Math.PI / 2, 1);
+            robot.drive_train.odo_move(5, 30, -Math.PI / 2, 1);
 
-            robot.drive_train.odo_move(4, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(5, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
 
             robot.feeder.spin(1);
 
@@ -47,9 +47,9 @@ public class TwoStoneAuto extends LiveAutoBase {
         }
         else if (pattern == 2) {
 
-            robot.drive_train.odo_move(10, 30, -Math.PI / 2, 1);
+            robot.drive_train.odo_move(13, 30, -Math.PI / 2, 1);
 
-            robot.drive_train.odo_move(12, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(13, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
 
             robot.feeder.spin(1);
 

@@ -43,7 +43,7 @@ public class DriveTrain extends Component {
     private DcMotorEx drive_lb;   // Left-Back drive motor
     private DcMotorEx drive_rb;   // Right-Back drive motor
 
-    LocalCoordinateSystem lcs = new LocalCoordinateSystem();
+    public LocalCoordinateSystem lcs = new LocalCoordinateSystem();
 
     public int color = RED;
 

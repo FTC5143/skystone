@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robots.Robot;
@@ -41,12 +42,14 @@ public class Lift extends Component {
 
     private boolean cached_grab = false;
 
+    private int grabber_turn = 0;
+
     @Config
     static class LiftConfig {
 
         static int BLOCK_HEIGHT = 640; //In encoder counts
         static int LIFT_OFFSET = 0;
-        static int MAX_LEVEL = 14;
+        static int MAX_LEVEL = 16;
         static int MIN_LEVEL = 0;
 
         static int MAX_ENCODER_COUNT = 6400;
@@ -236,7 +239,8 @@ public class Lift extends Component {
     }
 
 
-    public void turn(double pos) {
-        grb_t.setPosition(pos);
+    public void turn(int direction) {
+        grabber_turn = Range.clip(grabber_turn+direction, 0, 2);
+        grb_t.setPosition(0.995-(grabber_turn*0.33));
     }
 }

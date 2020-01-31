@@ -8,12 +8,6 @@ package org.firstinspires.ftc.teamcode.systems;
  *  Licensed under MIT
  */
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-
-import org.firstinspires.ftc.teamcode.util.DashboardUtil;
-
 public class LocalCoordinateSystem {
     public double x = 0;    // The approximated x position of the robot relative to where it started
     public double y = 0;    // The approximated y position of the robot relative to where it started
@@ -30,8 +24,6 @@ public class LocalCoordinateSystem {
 
     private double WHEEL_CIRCUMFERENCE  = WHEEL_DIAMETER * Math.PI;
     private double INCHES_PER_COUNT     = WHEEL_CIRCUMFERENCE / ENCODER_CPR;
-
-    FtcDashboard dashboard = FtcDashboard.getInstance();
 
     public void update(double le, double re, double ce) {
 
@@ -61,12 +53,6 @@ public class LocalCoordinateSystem {
         prev_le = le;
         prev_re = re;
         prev_ce = ce;
-
-        TelemetryPacket packet = new TelemetryPacket();
-
-        DashboardUtil.drawRobot(packet.fieldOverlay(), new Pose2d(y, -x, a));
-
-        dashboard.sendTelemetryPacket(packet);
 
     }
 }

@@ -45,7 +45,7 @@ public class DashboardUtil {
             yPoints[i] = pose.getY();
 
         }
-////REEEEEEEEE
+
         canvas.strokePolyline(xPoints, yPoints);
 
     }

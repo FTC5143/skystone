@@ -14,6 +14,8 @@ public class EncoderReset extends OpMode {
     boolean dpad_up_pressed = false;
     boolean dpad_down_pressed = false;
 
+    boolean dpad_left_pressed = false;
+    boolean dpad_right_pressed = false;
 
     @Override
     public void init() {
@@ -53,8 +55,19 @@ public class EncoderReset extends OpMode {
         if(gamepad2.x)  { robot.lift.grab(); }
         if(gamepad2.y)  { robot.lift.release(); }
 
-        if(gamepad2.dpad_right)     { robot.lift.turn(0.995); }
-        else if(gamepad2.dpad_left) { robot.lift.turn(0.665); }
+        if(gamepad2.dpad_left && !dpad_left_pressed) {
+            robot.lift.turn(1);
+            dpad_left_pressed = true;
+        } else if (!gamepad2.dpad_left) {
+            dpad_left_pressed = false;
+        }
+
+        if(gamepad2.dpad_right && !dpad_right_pressed) {
+            robot.lift.turn(-1);
+            dpad_right_pressed = true;
+        } else if (!gamepad2.dpad_right) {
+            dpad_right_pressed = false;
+        }
 
         if (gamepad2.left_bumper || gamepad2.right_bumper) {
             robot.feeder.spin(gamepad2.left_bumper ? -1 : 0, gamepad2.right_bumper ? -1 : 0);

@@ -14,6 +14,9 @@ public class DebugOpmodeLive extends OpMode {
     boolean dpad_up_pressed = false;
     boolean dpad_down_pressed = false;
 
+    boolean dpad_left_pressed = false;
+    boolean dpad_right_pressed = false;
+
     @Override
     public void init() {
         robot = new LiveRobot(this);
@@ -43,6 +46,7 @@ public class DebugOpmodeLive extends OpMode {
             }
             else {
                 robot.lift.min_lift();
+                robot.lift.turn(-3);
             }
         }
 
@@ -61,8 +65,21 @@ public class DebugOpmodeLive extends OpMode {
         if(gamepad2.x)  { robot.lift.grab(); }
         if(gamepad2.y)    { robot.lift.release(); }
 
-        if(gamepad2.dpad_right)  { robot.lift.turn(0.995); }
-        else if(gamepad2.dpad_left) { robot.lift.turn(0.665); }
+
+        if(gamepad2.dpad_left && !dpad_left_pressed) {
+            robot.lift.turn(1);
+            dpad_left_pressed = true;
+        } else if (!gamepad2.dpad_left) {
+            dpad_left_pressed = false;
+        }
+
+        if(gamepad2.dpad_right && !dpad_right_pressed) {
+            robot.lift.turn(-1);
+            dpad_right_pressed = true;
+        } else if (!gamepad2.dpad_right) {
+            dpad_right_pressed = false;
+        }
+
 
 
         if(gamepad1.a) {
@@ -71,10 +88,6 @@ public class DebugOpmodeLive extends OpMode {
 
         if(gamepad1.b) {
             robot.dragger.release();
-        }
-
-        if(gamepad1.back) {
-            robot.phone_camera.start_streaming();
         }
 
         if (gamepad2.left_bumper || gamepad2.right_bumper) {
