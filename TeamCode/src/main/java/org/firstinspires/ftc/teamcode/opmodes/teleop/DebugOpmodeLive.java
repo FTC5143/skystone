@@ -90,8 +90,6 @@ public class DebugOpmodeLive extends OpMode {
         } else if (gamepad2.left_stick_button) {
             robot.lift.uncap();
         }
-
-        robot.updateTelemetry();
     }
 
     @Override

@@ -36,9 +36,4 @@ public class LiveRobot extends Robot {
         super.update();
     }
 
-    @Override
-    public void updateTelemetry() {
-        super.updateTelemetry();
-    }
-
 }

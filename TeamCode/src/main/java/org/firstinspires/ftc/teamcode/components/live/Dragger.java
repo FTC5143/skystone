@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
+import org.firstinspires.ftc.teamcode.robots.Robot;
 
 // Dragger Component
 // For dragging the baseplate.
@@ -16,16 +15,11 @@ public class Dragger extends Component {
     Servo left_dragger;
     Servo right_dragger;
 
-    public double left_target = 0.65;
-    public double right_target = 0.37;
-
     private static final double LEFT_HORIZONTAL = 0.65;
     private static final double LEFT_VERTICAL = 0.97;
 
     private static final double RIGHT_HORIZONTAL = 0.37;
     private static final double RIGHT_VERTICAL = 0.05;
-
-
 
     {
         name = "Dragger";
@@ -42,6 +36,7 @@ public class Dragger extends Component {
         //// SERVOS ////
         left_dragger    = hwmap.get(Servo.class, "left_dragger");
         right_dragger   = hwmap.get(Servo.class, "right_dragger");
+
         release();
     }
 
@@ -54,24 +49,13 @@ public class Dragger extends Component {
 
     }
 
-    @Override
-    public void update(OpMode opmode) {
-        super.update(opmode);
-        left_dragger.setPosition(left_target);
-        right_dragger.setPosition(right_target);
-    }
-
     public void grab() {
-        left_target = LEFT_VERTICAL;
-        right_target = RIGHT_VERTICAL;
-        left_dragger.setPosition(left_target);
-        right_dragger.setPosition(right_target);
+        left_dragger.setPosition(LEFT_VERTICAL);
+        right_dragger.setPosition(RIGHT_VERTICAL);
     }
 
     public void release() {
-        left_target = LEFT_HORIZONTAL;
-        right_target = RIGHT_HORIZONTAL;
-        left_dragger.setPosition(left_target);
-        right_dragger.setPosition(right_target);
+        left_dragger.setPosition(LEFT_HORIZONTAL);
+        right_dragger.setPosition(RIGHT_HORIZONTAL);
     }
 }
