@@ -47,6 +47,10 @@ public class DriveTrain extends Component {
 
     public int color = RED;
 
+    private double drive_x = 0;
+    private double drive_y = 0;
+    private double drive_a = 0;
+
     {
         name = "Drive Train";
     }
@@ -65,8 +69,6 @@ public class DriveTrain extends Component {
         drive_lb    = hwmap.get(DcMotorEx.class, "drive_lb");
         drive_rb    = hwmap.get(DcMotorEx.class, "drive_rb");
 
-        //// LYNX ////
-        //lynx_module = hwmap.get(LynxModule.class, "Rev expansion hub 1");
     }
 
     @Override
@@ -75,6 +77,12 @@ public class DriveTrain extends Component {
 
         lcs.update(robot.bulk_data_1.getMotorCurrentPosition(drive_lf), robot.bulk_data_1.getMotorCurrentPosition(drive_rf), robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
 
+        double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);
+
+        if (robot.cycle % 4 == 0) {drive_lf.setPower(motor_powers[0]);}
+        if (robot.cycle % 4 == 1) {drive_rf.setPower(motor_powers[1]);}
+        if (robot.cycle % 4 == 2) {drive_lb.setPower(motor_powers[2]);}
+        if (robot.cycle % 4 == 3) {drive_rb.setPower(motor_powers[3]);}
     }
 
     @Override
@@ -116,8 +124,8 @@ public class DriveTrain extends Component {
         stop();
     }
 
-    private double[] mecanum_math(double lx, double ly, double rx) {
-        double[] power = new double[]{-lx + ly + rx, +lx + ly - rx, +lx + ly + rx, -lx + ly - rx};
+    private double[] mecanum_math(double x, double y, double a) {
+        double[] power = new double[]{-x + y + a, +x + y - a, +x + y + a, -x + y - a};
 
         double max = Math.max(Math.max(Math.abs(power[0]),Math.abs(power[1])),Math.max(Math.abs(power[2]),Math.abs(power[3])));
 
@@ -131,14 +139,15 @@ public class DriveTrain extends Component {
         return power;
     }
 
-    public void mechanumDrive(double lx, double ly, double rx) {
-        double[] power = mecanum_math(lx, ly, rx);
-        set_power(power[0], power[1], power[2], power[3]);
+    public void mechanum_drive(double x, double y, double a) {
+        drive_x = x;
+        drive_y = y;
+        drive_a = a;
     }
 
     public void stop() {
+        mechanum_drive(0, 0, 0);
         set_power(0);
-        set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     private void set_mode(DcMotor.RunMode mode) {
@@ -159,94 +168,6 @@ public class DriveTrain extends Component {
         set_power(power, power, power ,power);
     }
 
-    private boolean is_busy() {
-        return drive_lf.isBusy() || drive_rf.isBusy() || drive_lb.isBusy() || drive_rb.isBusy();
-    }
-
-    public void turn(double turns, double speed) {
-        double lf = turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
-        double rf = -turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
-        double lb = turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
-        double rb = -turns * INCHES_PER_ROTATION * TICKS_PER_INCH;
-
-        drive_lf.setTargetPosition(drive_lf.getCurrentPosition()+(int)lf);
-        drive_rf.setTargetPosition(drive_rf.getCurrentPosition()+(int)rf);
-        drive_lb.setTargetPosition(drive_lb.getCurrentPosition()+(int)lb);
-        drive_rb.setTargetPosition(drive_rb.getCurrentPosition()+(int)rb);
-
-        set_mode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        set_power(speed);
-
-
-        while (is_busy() && robot.lopmode.opModeIsActive()){
-            robot.lopmode.idle();
-            robot.lopmode.telemetry.addData("TURNING", (int)lf+" "+(int)rf+" "+(int)lb+" "+(int)rb);
-            robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
-            robot.lopmode.telemetry.addData("POSITION", drive_lf.getCurrentPosition()+" "+drive_rf.getCurrentPosition()+" "+drive_lb.getCurrentPosition()+" "+drive_rb.getCurrentPosition());
-            robot.lopmode.telemetry.addData("TARGET", drive_lf.getTargetPosition()+" "+drive_rf.getTargetPosition()+" "+drive_lb.getTargetPosition()+" "+drive_rb.getTargetPosition());
-            robot.lopmode.telemetry.update();
-
-            if (!is_busy()) {
-                break;
-            }
-        }
-
-        robot.lopmode.telemetry.addData("MOVING", "STOPPING");
-        robot.lopmode.telemetry.update();
-
-        set_power(0);
-        set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
-        robot.lopmode.telemetry.update();
-
-        if(DEBUG_WAIT > 0) robot.lopmode.sleep(DEBUG_WAIT);
-    }
-
-    public void encoder_drive(double x, double y, double a, double d, double speed) {
-
-        double lf =  (-x - y + a);
-        double rf = (+x - y - a);
-        double lb = (+x - y + a);
-        double rb =  (-x - y - a);
-
-        drive_lf.setTargetPosition(drive_lf.getCurrentPosition()+(int)(lf*TICKS_PER_INCH*d));
-        drive_rf.setTargetPosition(drive_rf.getCurrentPosition()+(int)(rf*TICKS_PER_INCH*d));
-        drive_lb.setTargetPosition(drive_lb.getCurrentPosition()+(int)(lb*TICKS_PER_INCH*d));
-        drive_rb.setTargetPosition(drive_rb.getCurrentPosition()+(int)(rb*TICKS_PER_INCH*d));
-
-
-        set_mode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-        set_power(lf*speed, rf*speed, lb*speed, rb*speed);
-
-        while (is_busy() && robot.lopmode.opModeIsActive()){
-            robot.lopmode.idle();
-            robot.lopmode.telemetry.addData("MOVING", (int)(lf*TICKS_PER_INCH*d)+" "+(int)(rf*TICKS_PER_INCH*d)+" "+(int)(lb*TICKS_PER_INCH*d)+" "+(int)(rb*TICKS_PER_INCH*d));
-            robot.lopmode.telemetry.addData("MOTORS", drive_lf.isBusy()+" "+drive_rf.isBusy()+" "+drive_lb.isBusy()+" "+drive_rb.isBusy());
-            robot.lopmode.telemetry.addData("POSITION", drive_lf.getCurrentPosition()+" "+drive_rf.getCurrentPosition()+" "+drive_lb.getCurrentPosition()+" "+drive_rb.getCurrentPosition());
-            robot.lopmode.telemetry.addData("TARGET", drive_lf.getTargetPosition()+" "+drive_rf.getTargetPosition()+" "+drive_lb.getTargetPosition()+" "+drive_rb.getTargetPosition());
-            robot.lopmode.telemetry.update();
-
-            if (!is_busy()) {
-                break;
-            }
-        }
-
-        robot.lopmode.telemetry.addData("MOVING", "STOPPING");
-        robot.lopmode.telemetry.update();
-
-        set_power(0);
-        set_mode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.lopmode.telemetry.addData("MOVING", "COMPLETE");
-        robot.lopmode.telemetry.update();
-
-        if(DEBUG_WAIT > 0) robot.lopmode.sleep(DEBUG_WAIT);
-    }
-
     public void odo_move(double x, double y, double a, double speed) {
         odo_move(x, y, a, speed, 1, 0.02, 0);
     }
@@ -256,12 +177,6 @@ public class DriveTrain extends Component {
     }
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc, double timeout) {
-
-        final double MOVE_FEEDFORWARD  = 0.1;
-
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dtelemetry = dashboard.getTelemetry();
-
 
         if (color == RED) {
             a = -a;
@@ -283,66 +198,14 @@ public class DriveTrain extends Component {
                 double progress_a = distance_a/original_distance_a;
 
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
-                double drive_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
-                double drive_y = Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
-                double drive_a = Range.clip((a-lcs.a)*3, -1, 1) * speed;
+                double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+                double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+                double mvmt_a = -Range.clip((a-lcs.a)*3, -1, 1) * speed;
 
-                //drive_x = 0;
-                //drive_y = 0;
-
-                robot.lopmode.telemetry.addData("x", lcs.x);
-                robot.lopmode.telemetry.addData("y", lcs.y);
-                robot.lopmode.telemetry.addData("a", lcs.a);
-
-                robot.lopmode.telemetry.addData("le", lcs.prev_le);
-                robot.lopmode.telemetry.addData("re", lcs.prev_re);
-                robot.lopmode.telemetry.addData("ce", lcs.prev_ce);
-
-
-                robot.lopmode.telemetry.addData("drive_x", drive_x);
-                robot.lopmode.telemetry.addData("drive_y", drive_y);
-                robot.lopmode.telemetry.addData("drive_a", drive_a);
-
-                robot.lopmode.telemetry.addData("drive_angle", drive_angle);
-
-                robot.lopmode.telemetry.addData("distance", distance);
-                robot.lopmode.telemetry.addData("distance_a", distance_a);
-
-                robot.lopmode.telemetry.update();
-
-
-                dtelemetry.addData("distance", distance);
-                dtelemetry.addData("orig_distance", original_distance);
-
-                dtelemetry.addData("distance_a", distance_a);
-                dtelemetry.addData("orig_distance_a", original_distance_a);
-
-                dtelemetry.update();
-
-                /*
-                if (drive_x > 0) {
-                    drive_x += MOVE_FEEDFORWARD;
-                } else if (drive_x < 0) {
-                    drive_x -= MOVE_FEEDFORWARD;
-                }
-
-                if (drive_y > 0) {
-                    drive_y += MOVE_FEEDFORWARD;
-                } else if (drive_y < 0) {
-                    drive_y -= MOVE_FEEDFORWARD;
-                }
-
-                if (drive_a > 0) {
-                    drive_a += MOVE_FEEDFORWARD;
-                } else if (drive_a < 0) {
-                    drive_a -= MOVE_FEEDFORWARD;
-                }
-                */
-
-                mechanumDrive(drive_x, -drive_y, -drive_a);
+                mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
 
                 if ((distance < pos_acc && distance_a < angle_acc) || (timeout > 0 && robot.lopmode.getRuntime() > timeout)) {
-                    mechanumDrive(0, 0, 0);
+                    stop();
                     break;
                 }
             }

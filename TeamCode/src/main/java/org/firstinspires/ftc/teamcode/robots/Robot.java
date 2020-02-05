@@ -34,7 +34,7 @@ public class Robot {
     protected long last_update = 0;
     protected int update_freq = 0;
 
-    protected int cycle = 0;
+    public int cycle = 0;
 
     Runnable update_thread;
 
