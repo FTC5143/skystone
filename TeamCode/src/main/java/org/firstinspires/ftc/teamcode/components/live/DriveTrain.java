@@ -47,6 +47,7 @@ public class DriveTrain extends Component {
 
     public int color = RED;
 
+    // Drive train moves according to these
     private double drive_x = 0;
     private double drive_y = 0;
     private double drive_a = 0;
