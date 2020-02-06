@@ -9,7 +9,7 @@ import static org.firstinspires.ftc.teamcode.util.MathUtil.signum;
 
 public class CurvePath {
 
-    ArrayList<CurvePoint> points;
+    ArrayList<CurvePoint> points = new ArrayList<>();
 
     public boolean reverse = true;
 

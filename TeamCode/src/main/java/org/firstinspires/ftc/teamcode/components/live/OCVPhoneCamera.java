@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -62,11 +60,6 @@ public class OCVPhoneCamera extends Component {
         telemetry.addData("RIGHT RECT", stone_pipeline.right_hue + " " + stone_pipeline.right_br);
         telemetry.addData("PATTERN", stone_pipeline.pattern);
 
-    }
-
-    @Override
-    public void update(OpMode opmode) {
-        super.update(opmode);
     }
 
     @Override

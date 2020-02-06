@@ -6,6 +6,10 @@ public class CurvePoint extends Point {
 
     public boolean passed = false;
 
+    public CurvePoint(double x, double y) {
+        super(x, y);
+    }
+
     public CurvePoint speed(double speed) {
         this.speed = speed;
         return this;

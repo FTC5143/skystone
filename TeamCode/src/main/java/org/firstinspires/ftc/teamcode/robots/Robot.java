@@ -31,7 +31,7 @@ public class Robot {
     public RevBulkData bulk_data_1;
     public RevBulkData bulk_data_2;
 
-    protected long last_update = 0;
+    protected long last_update = System.nanoTime();
     protected int update_freq = 0;
 
     public int cycle = 0;
@@ -91,22 +91,35 @@ public class Robot {
 
     public void update() {
 
-        last_update = System.nanoTime();
 
 
         bulk_data_1 = expansion_hub_1.getBulkInputData();
-        bulk_data_2 = expansion_hub_2.getBulkInputData();
+
+        if(cycle % 10 == 0) {
+
+            bulk_data_2 = expansion_hub_2.getBulkInputData();
+
+        }
+
 
         for (Component component : components) {
             component.update(opmode);
         }
 
-        long update_duration = System.nanoTime()-last_update;
-        update_freq = (update_duration/(double)1000000000) != 0 ? (int)(1/(update_duration/(double)1000000000)) : Integer.MAX_VALUE;
 
+        if (cycle % 50 == 0) {
 
-        if (cycle % 10 == 0) {
             updateTelemetry();
+
+        }
+
+        if (cycle % 20 == 0) {
+
+            long update_duration = System.nanoTime()-last_update;
+            update_freq = ((update_duration/(double)1000000000) * 20) != 0 ? (int)((1/(update_duration/(double)1000000000)) * 20) : Integer.MAX_VALUE;
+
+            last_update = System.nanoTime();
+
         }
 
         cycle++;

@@ -49,7 +49,11 @@ public class EncoderReset extends OpMode {
 
         }
 
-        robot.lift.extend(gamepad2.b ? -1 : (gamepad2.a ? 1 : 0));
+        if(gamepad2.a) {
+            robot.lift.extend();
+        } else if (gamepad2.b) {
+            robot.lift.retract();
+        }
 
 
         if(gamepad2.x)  { robot.lift.grab(); }

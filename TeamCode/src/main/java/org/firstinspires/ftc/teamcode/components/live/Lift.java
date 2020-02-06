@@ -104,16 +104,13 @@ public class Lift extends Component {
         super.update(opmode);
 
         if (cached_power != 0) {
-            if (!lift_l.isBusy() && !lift_r.isBusy()) {
+            if (robot.bulk_data_2.isMotorAtTargetPosition(lift_l) && robot.bulk_data_2.isMotorAtTargetPosition(lift_r)) {
                 set_power(0);
                 lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
         }
 
-        //if (!cached_grab && block_detector.isPressed() && robot.opmode != null) {
-        //    grab();
-        //}
     }
 
     @Override
@@ -155,8 +152,9 @@ public class Lift extends Component {
         telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_l)));
         telemetry.addData("RL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_r)));
 
-        telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
-        telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
+
+        //telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
+        //telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
 
         telemetry.addData("LIFT BUSY",robot.bulk_data_2.isMotorAtTargetPosition(lift_l)+" "+robot.bulk_data_2.isMotorAtTargetPosition(lift_r));
 
@@ -212,11 +210,15 @@ public class Lift extends Component {
         set_power(1);
     }
 
-    public void extend(double power) {
+    public void retract() {
 
-        power = ((Math.max(-1, Math.min(power, 1)) / 2) + 0.5);
+        ext.setPosition(0.73);
 
-        ext.setPosition(power);
+    }
+
+    public void extend() {
+
+        ext.setPosition(0.20);
 
     }
 

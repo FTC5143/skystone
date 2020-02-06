@@ -37,6 +37,11 @@ public class DriveTrain extends Component {
     private double drive_y = 0;
     private double drive_a = 0;
 
+    private double cache_lf_power = 0;
+    private double cache_rf_power = 0;
+    private double cache_lb_power = 0;
+    private double cache_rb_power = 0;
+
     public CurvePath current_path;
 
     {
@@ -67,10 +72,22 @@ public class DriveTrain extends Component {
 
         double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);
 
-        if (robot.cycle % 4 == 0) {drive_lf.setPower(motor_powers[0]);}
-        if (robot.cycle % 4 == 1) {drive_rf.setPower(motor_powers[1]);}
-        if (robot.cycle % 4 == 2) {drive_lb.setPower(motor_powers[2]);}
-        if (robot.cycle % 4 == 3) {drive_rb.setPower(motor_powers[3]);}
+        if (robot.cycle % 4 == 0 && motor_powers[0] != cache_lf_power) {
+            drive_lf.setPower(motor_powers[0]);
+            cache_lf_power = motor_powers[0];
+        }
+        if (robot.cycle % 4 == 1 && motor_powers[0] != cache_rf_power) {
+            drive_rf.setPower(motor_powers[1]);
+            cache_rf_power = motor_powers[1];
+        }
+        if (robot.cycle % 4 == 2 && motor_powers[0] != cache_lb_power) {
+            drive_lb.setPower(motor_powers[2]);
+            cache_lb_power = motor_powers[2];
+        }
+        if (robot.cycle % 4 == 3 && motor_powers[0] != cache_rb_power) {
+            drive_rb.setPower(motor_powers[3]);
+            cache_rb_power = motor_powers[3];
+        }
     }
 
     @Override

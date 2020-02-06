@@ -50,7 +50,13 @@ public class DebugOpmodeLive extends OpMode {
             }
         }
 
-        robot.lift.extend(gamepad2.b ? -1 : (gamepad2.a ? 1 : 0));
+
+        if(gamepad2.a) {
+            robot.lift.extend();
+        } else if (gamepad2.b) {
+            robot.lift.retract();
+        }
+
 
         if(gamepad1.left_bumper) {
             robot.drive_train.mechanum_drive(gamepad1.left_stick_x/4, gamepad1.left_stick_y/4, gamepad1.right_stick_x/4);
