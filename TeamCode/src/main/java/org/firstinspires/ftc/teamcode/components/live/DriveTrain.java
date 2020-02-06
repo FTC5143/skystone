@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.components.live;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,10 +13,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
+import org.firstinspires.ftc.teamcode.systems.pathfollowing.CurvePath;
+import org.firstinspires.ftc.teamcode.systems.pathfollowing.CurvePoint;
+import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
 
-import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.DEBUG_WAIT;
-import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.INCHES_PER_ROTATION;
-import static org.firstinspires.ftc.teamcode.components.live.DriveTrain.DriveTrainConfig.TICKS_PER_INCH;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
 // Drive Train component
@@ -23,19 +24,6 @@ import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 // I hate it also
 
 public class DriveTrain extends Component {
-
-    @Config
-    static class DriveTrainConfig {
-        static double WHEEL_DIAMETER = 4.0;
-        static double TICKS_PER_REVOLUTION = 1120;
-        static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
-        static double TICKS_PER_INCH = TICKS_PER_REVOLUTION / WHEEL_CIRCUMFERENCE;
-
-        static double TICKS_PER_ROTATION = 5450;
-        static double INCHES_PER_ROTATION = TICKS_PER_ROTATION / TICKS_PER_INCH;
-
-        static int DEBUG_WAIT = 0; // Time to wait after each move, for debug purposes
-    }
 
     //// MOTORS ////
     private DcMotorEx drive_lf;   // Left-Front drive motor
@@ -212,4 +200,30 @@ public class DriveTrain extends Component {
             }
         }
     }
+
+    public void follow_curve_path(CurvePath path) {
+        while (robot.lopmode.opModeIsActive()) {
+
+            Point lookahead_point = path.get_lookahead_point(lcs.x, lcs.y);
+
+            drive_towards_point(lookahead_point, 1, 1);
+        }
+    }
+
+    public void drive_towards_point(Point point, double drive_speed, double turn_speed) {
+
+        double drive_angle = Math.atan2(point.y-lcs.y, point.x-lcs.x);
+
+        double mvmt_x = Math.cos(drive_angle - lcs.a) * drive_speed;
+        double mvmt_y = -Math.sin(drive_angle - lcs.a) * drive_speed;
+        double mvmt_a = -Range.clip((drive_angle-lcs.a), -1, 1) * turn_speed;
+
+        mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
+
+    }
+
+    public void drive_to_pose(Pose2d pose, double drive_speed, double turn_speed) {
+
+    }
+
 }
