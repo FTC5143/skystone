@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robots;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -51,13 +52,15 @@ public class LiveRobot extends Robot {
 
         TelemetryPacket packet = new TelemetryPacket();
 
-        DashboardUtil.drawRobot(packet.fieldOverlay(), new Pose2d(drive_train.lcs.y, -drive_train.lcs.x, drive_train.lcs.a));
+        Canvas canvas = packet.fieldOverlay();
 
-        packet.fieldOverlay().setStrokeWidth(1);
-        packet.fieldOverlay().setStroke("#0000ff");
+        DashboardUtil.drawRobot(canvas, new Pose2d(drive_train.lcs.y, -drive_train.lcs.x, drive_train.lcs.a));
 
-        packet.fieldOverlay().strokeLine(-72, -drive_train.lcs.x, 72, -drive_train.lcs.x);
-        packet.fieldOverlay().strokeLine(drive_train.lcs.y, -72, drive_train.lcs.y, 72);
+        canvas.setStrokeWidth(1);
+        canvas.setStroke("#0000ff");
+
+        canvas.strokeLine(-72, -drive_train.lcs.x, 72, -drive_train.lcs.x);
+        canvas.strokeLine(drive_train.lcs.y, -72, drive_train.lcs.y, 72);
 
         packet.put("x", drive_train.lcs.x);
         packet.put("y", drive_train.lcs.y);
@@ -66,6 +69,10 @@ public class LiveRobot extends Robot {
         packet.put("re", drive_train.lcs.prev_re);
         packet.put("ce", drive_train.lcs.prev_ce);
         packet.put("freq", update_freq);
+
+        if (drive_train.current_path != null) {
+            drive_train.current_path.dashboard_draw(canvas, drive_train.lcs.x, drive_train.lcs.y);
+        }
 
         dashboard.sendTelemetryPacket(packet);
     }

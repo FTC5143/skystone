@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +12,6 @@ import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.CurvePath;
-import org.firstinspires.ftc.teamcode.systems.pathfollowing.CurvePoint;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
@@ -39,6 +36,8 @@ public class DriveTrain extends Component {
     private double drive_x = 0;
     private double drive_y = 0;
     private double drive_a = 0;
+
+    public CurvePath current_path;
 
     {
         name = "Drive Train";
@@ -202,12 +201,16 @@ public class DriveTrain extends Component {
     }
 
     public void follow_curve_path(CurvePath path) {
+
+        this.current_path = path;
+
         while (robot.lopmode.opModeIsActive()) {
 
             Point lookahead_point = path.get_lookahead_point(lcs.x, lcs.y);
 
             drive_towards_point(lookahead_point, 1, 1);
         }
+
     }
 
     public void drive_towards_point(Point point, double drive_speed, double turn_speed) {
