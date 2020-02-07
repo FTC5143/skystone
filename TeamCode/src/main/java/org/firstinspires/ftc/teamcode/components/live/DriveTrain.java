@@ -236,7 +236,7 @@ public class DriveTrain extends Component {
 
         double mvmt_x = Math.cos(drive_angle - lcs.a) * drive_speed;
         double mvmt_y = -Math.sin(drive_angle - lcs.a) * drive_speed;
-        double mvmt_a = -Range.clip((drive_angle-lcs.a), -1, 1) * turn_speed;
+        double mvmt_a = -Range.clip((drive_angle - lcs.a - (Math.PI/2)), -1, 1) * turn_speed;
 
         mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
 

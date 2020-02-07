@@ -129,15 +129,15 @@ public class CurvePath {
             CurvePoint seg_start = points.get(i);
             CurvePoint seg_end = points.get(i + 1);
 
-            canvas.strokeLine(seg_start.x, seg_start.y, seg_end.x, seg_end.y);
+            canvas.strokeLine(seg_start.y, -seg_start.x, seg_end.y, -seg_end.x);
 
         }
 
         for (CurvePoint point : points) {
             if (point.passed) {
-                canvas.fillCircle(point.x, point.y, 2);
+                canvas.fillCircle(point.y, -point.x, 2);
             } else {
-                canvas.strokeCircle(point.x, point.y, 2);
+                canvas.strokeCircle(point.y, -point.x, 2);
             }
         }
 
@@ -145,11 +145,11 @@ public class CurvePath {
 
 
         canvas.setStroke("#00ff00");
-        canvas.strokeCircle(robot_x, robot_y, radius);
+        canvas.strokeCircle(robot_y, -robot_x, radius);
 
         canvas.setStroke("#ff0000");
-        canvas.strokeLine(robot_x, robot_y, lookahead_point.x, lookahead_point.y);
-        canvas.strokeCircle(lookahead_point.x, lookahead_point.y, 1);
+        canvas.strokeLine(robot_y, -robot_x, lookahead_point.y, -lookahead_point.x);
+        canvas.strokeCircle(lookahead_point.y, -lookahead_point.x, 1);
 
     }
 }
