@@ -21,4 +21,8 @@ public class Point {
     public boolean within_circle(double x, double y, double r) {
         return Math.abs(Math.hypot(this.x-x, this.y-y)) <= r;
     }
+
+    public Pose to_pose(double angle) {
+        return new Pose(x, y, angle);
+    }
 }

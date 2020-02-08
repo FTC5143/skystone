@@ -13,7 +13,7 @@ public class CurvePath {
 
     public boolean reverse = true;
 
-    public double radius = 5;
+    public double radius = 8;
 
     public CurvePoint get_first_unpassed_point() {
 
@@ -28,7 +28,7 @@ public class CurvePath {
 
     }
 
-    public Point get_lookahead_point(double robot_x, double robot_y) {
+    public Pose get_lookahead_pose(double robot_x, double robot_y) {
 
         // Default to going to the last unpassed point if we aren't intersecting any line
         Point lookahead_point = get_first_unpassed_point();
@@ -61,11 +61,24 @@ public class CurvePath {
             boolean valid_intersection_2 = min(p1.x, p2.x) < x2 && x2 < max(p1.x, p2.x) || min(p1.y, p2.y) < y2 && y2 < max(p1.y, p2.y);
 
             if(valid_intersection_1 || valid_intersection_2) {
-                lookahead_point = null;
 
                 // If we are intersecting with a line, mark the start point of that line as passed
                 if (!seg_start.passed) {
-                    seg_start.passed = true;
+
+                    CurvePoint prev_seg = (i - 1) > 0 ? points.get(i - 1) : null;
+
+                    // Only pass this segment if we are the first segment, or the previous segment is passed
+                    if(prev_seg == null || prev_seg.passed) {
+                        seg_start.passed = true;
+                    }
+                }
+
+                // If we have determined we can begin traveling towards this segment, clear the lookahead point to be set to the intersection
+                if(seg_start.passed) {
+                    lookahead_point = null;
+                } else {
+                    // If this intersection is on a line we haven't made it to yet, do nothing
+                    continue;
                 }
 
             }
@@ -82,6 +95,8 @@ public class CurvePath {
             }
         }
 
+        boolean approaching_end = false;
+
         if (points.size() > 0) {
 
             CurvePoint last_point = points.get(points.size() - 1);
@@ -91,12 +106,39 @@ public class CurvePath {
 
             // If we're close enough to the end, use that as our follow point
             if (sqrt((end_x - robot_x) * (end_x - robot_x) + (end_y - robot_y) * (end_y - robot_y)) <= radius) {
-                return new Point(end_x, end_y);
+                lookahead_point = new Point(end_x, end_y);
+                approaching_end = true;
             }
 
         }
 
-        return lookahead_point;
+
+        Pose lookahead_pose;
+
+        // If we are close enough to the end point, make our angle just be the angle of the last
+        // Segment so we don't overshoot and then try to turn around to fix it
+
+        // Otherwise just do the angle between the robot and the next point
+        if (approaching_end) {
+
+            CurvePoint last_seg_end = points.get(points.size()-1);
+            CurvePoint last_seg_start = points.get(points.size()-2);
+
+            double last_segment_angle = Math.atan2(last_seg_end.y-last_seg_start.y, last_seg_end.x-last_seg_start.x);
+            lookahead_pose = lookahead_point.to_pose(last_segment_angle);
+
+        } else {
+            double angle_to_point = Math.atan2(lookahead_point.y-robot_y, lookahead_point.x-robot_x);
+            lookahead_pose = lookahead_point.to_pose(angle_to_point);
+
+        }
+
+        if(lookahead_pose == null) {
+            throw new RuntimeException("For some ungodly reason, we were unable to locate any plausible lookahead pose");
+        }
+
+        return lookahead_pose;
+
     }
 
     public CurvePoint last_point() {
@@ -115,6 +157,19 @@ public class CurvePath {
 
     public CurvePath radius(double radius) {
         this.radius = radius;
+        return this;
+    }
+
+    public CurvePath verify() {
+
+        if(points.size() < 2) {
+            throw new RuntimeException("You idiot, you're trying to run a path that has less than 2 points. How the hell is that supposed to work?");
+        }
+
+        if(radius <= 0) {
+            throw new RuntimeException("You absolute baffoon. You're trying to run a path with a radius of 0 or less. How the hell can a point fall inside a circle zero size???");
+        }
+
         return this;
     }
 
@@ -141,15 +196,15 @@ public class CurvePath {
             }
         }
 
-        Point lookahead_point = get_lookahead_point(robot_x, robot_y);
+        Pose lookahead_pose = get_lookahead_pose(robot_x, robot_y);
 
 
         canvas.setStroke("#00ff00");
         canvas.strokeCircle(robot_y, -robot_x, radius);
 
         canvas.setStroke("#ff0000");
-        canvas.strokeLine(robot_y, -robot_x, lookahead_point.y, -lookahead_point.x);
-        canvas.strokeCircle(lookahead_point.y, -lookahead_point.x, 1);
+        canvas.strokeLine(robot_y, -robot_x, lookahead_pose.y, -lookahead_pose.x);
+        canvas.strokeCircle(lookahead_pose.y, -lookahead_pose.x, 1);
 
     }
 }

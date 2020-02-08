@@ -21,15 +21,22 @@ public class PurePursuitTest extends LinearOpMode {
 
         waitForStart();
 
-        robot.drive_train.follow_curve_path(
-                new CurvePath()
-                .add_point(new CurvePoint(0, 0))
-                .add_point(new CurvePoint(0, 24))
-                .add_point(new CurvePoint(24, 24))
-                .add_point(new CurvePoint(24, 0))
-                .radius(10)
-        );
-
+        while (opModeIsActive()) {
+            robot.drive_train.follow_curve_path(
+                    new CurvePath()
+                            .add_point(new CurvePoint(0, 0))
+                            .add_point(new CurvePoint(0, 24))
+                            .add_point(new CurvePoint(24, 24))
+                            .add_point(new CurvePoint(24, 0))
+                            .add_point(new CurvePoint(3, 3))
+                            .add_point(new CurvePoint(3, 21))
+                            .add_point(new CurvePoint(21, 21))
+                            .add_point(new CurvePoint(21, 3))
+                            .add_point(new CurvePoint(12, 12))
+                            .radius(10)
+                            .verify()
+            );
+        }
 
         robot.shutdown();
     }

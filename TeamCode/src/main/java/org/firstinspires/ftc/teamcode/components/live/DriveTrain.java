@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,7 +11,7 @@ import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.systems.LocalCoordinateSystem;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.CurvePath;
-import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
+import org.firstinspires.ftc.teamcode.systems.pathfollowing.Pose;
 
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.RED;
 
@@ -72,19 +71,19 @@ public class DriveTrain extends Component {
 
         double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);
 
-        if (robot.cycle % 4 == 0 && motor_powers[0] != cache_lf_power) {
+        if (robot.cycle % 4 == 0 /*&& motor_powers[0] != cache_lf_power*/) {
             drive_lf.setPower(motor_powers[0]);
             cache_lf_power = motor_powers[0];
         }
-        if (robot.cycle % 4 == 1 && motor_powers[0] != cache_rf_power) {
+        if (robot.cycle % 4 == 1 /*&& motor_powers[0] != cache_rf_power*/) {
             drive_rf.setPower(motor_powers[1]);
             cache_rf_power = motor_powers[1];
         }
-        if (robot.cycle % 4 == 2 && motor_powers[0] != cache_lb_power) {
+        if (robot.cycle % 4 == 2 /*&& motor_powers[0] != cache_lb_power*/) {
             drive_lb.setPower(motor_powers[2]);
             cache_lb_power = motor_powers[2];
         }
-        if (robot.cycle % 4 == 3 && motor_powers[0] != cache_rb_power) {
+        if (robot.cycle % 4 == 3 /*&& motor_powers[0] != cache_rb_power*/) {
             drive_rb.setPower(motor_powers[3]);
             cache_rb_power = motor_powers[3];
         }
@@ -223,26 +222,34 @@ public class DriveTrain extends Component {
 
         while (robot.lopmode.opModeIsActive()) {
 
-            Point lookahead_point = path.get_lookahead_point(lcs.x, lcs.y);
+            Pose lookahead_pose = path.get_lookahead_pose(lcs.x, lcs.y);
 
-            drive_towards_point(lookahead_point, 1, 1);
+            double distance = Math.hypot(lookahead_pose.x-lcs.x, lookahead_pose.y-lcs.y);
+
+            double speed;
+
+            if (distance < current_path.radius) {
+                speed = Range.clip((distance / 8) + 0.1, 0, 1);
+            } else {
+                speed = 1;
+            }
+
+            double turn_speed = Range.clip(Math.abs(lcs.a-lookahead_pose.a) / (Math.PI/4) + 0.1, 0, 1);
+
+            drive_to_pose(lookahead_pose, speed, 1);
         }
 
     }
 
-    public void drive_towards_point(Point point, double drive_speed, double turn_speed) {
+    public void drive_to_pose(Pose pose, double drive_speed, double turn_speed) {
 
-        double drive_angle = Math.atan2(point.y-lcs.y, point.x-lcs.x);
+        double drive_angle = Math.atan2(pose.y-lcs.y, pose.x-lcs.x);
 
         double mvmt_x = Math.cos(drive_angle - lcs.a) * drive_speed;
         double mvmt_y = -Math.sin(drive_angle - lcs.a) * drive_speed;
-        double mvmt_a = -Range.clip((drive_angle - lcs.a - (Math.PI/2)), -1, 1) * turn_speed;
+        double mvmt_a = -Math.signum(Range.clip((pose.a - lcs.a - (Math.PI/2)), -1, 1)) * turn_speed;
 
         mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
-
-    }
-
-    public void drive_to_pose(Pose2d pose, double drive_speed, double turn_speed) {
 
     }
 
