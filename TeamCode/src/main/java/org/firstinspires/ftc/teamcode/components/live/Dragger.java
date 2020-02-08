@@ -37,6 +37,12 @@ public class Dragger extends Component {
         left_dragger    = hwmap.get(Servo.class, "left_dragger");
         right_dragger   = hwmap.get(Servo.class, "right_dragger");
 
+    }
+
+    @Override
+    public void startup() {
+        super.startup();
+
         release();
     }
 

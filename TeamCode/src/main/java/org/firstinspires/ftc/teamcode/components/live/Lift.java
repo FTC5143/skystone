@@ -134,6 +134,7 @@ public class Lift extends Component {
 
         uncap();
         release();
+        retract();
 
         elevate(0);
 
@@ -199,7 +200,6 @@ public class Lift extends Component {
         elevate(MAX_LEVEL - level);
     }
 
-
     public void elevate_without_stops(int amt) {
         level = level + amt;
         set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
@@ -212,7 +212,7 @@ public class Lift extends Component {
 
     public void retract() {
 
-        ext.setPosition(0.73);
+        ext.setPosition(0.863);
 
     }
 
@@ -239,7 +239,6 @@ public class Lift extends Component {
     public void cap() {
         capstone.setPosition(CAPSTONE_DOWN);
     }
-
 
     public void turn(int direction) {
         grabber_turn = Range.clip(grabber_turn+direction, 0, 2);

@@ -75,6 +75,8 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         while (!robot.lift.block_detector.isPressed() && getRuntime() < 2) {} // Wait for block to be intook, or 2 seconds
 
+        robot.lift.grab();
+
         robot.feeder.spin(0);
 
         robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
@@ -83,19 +85,33 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         if (FOUNDATION == true) {
 
-            robot.drive_train.odo_move(78, 28, 0, 1);
+            robot.lift.elevate(4);
 
-            robot.drive_train.odo_move(78, 34, 0, 0.5);
+            robot.drive_train.odo_move(78, 28, Math.PI, 1);
+
+            robot.lift.extend();
+
+            robot.drive_train.odo_move(78, 34, Math.PI, 0.5);
+
+            robot.lift.turn(2);
 
             robot.dragger.grab();
 
             sleep(500);
 
-            robot.drive_train.odo_move(76, 16, Math.PI/2, 1, 1, 0.03, 3);
+            robot.drive_train.odo_move(76, 16, 3*Math.PI/2, 1, 1, 0.03, 3);
+
+            robot.lift.release();
 
             robot.dragger.release();
 
             sleep(500);
+
+            robot.lift.turn(-2);
+
+            robot.lift.retract();
+
+            robot.lift.min_lift();
 
         }
 

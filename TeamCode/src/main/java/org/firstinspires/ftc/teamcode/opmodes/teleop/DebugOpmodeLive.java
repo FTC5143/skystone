@@ -17,11 +17,19 @@ public class DebugOpmodeLive extends OpMode {
     boolean dpad_left_pressed = false;
     boolean dpad_right_pressed = false;
 
+    long slow_accel_starttime = System.currentTimeMillis();
+
     @Override
     public void init() {
         robot = new LiveRobot(this);
-        robot.startup();
     }
+
+    @Override
+    public void start() {
+        robot.startup();
+        robot.dragger.grab();
+    }
+
 
     @Override
     public void loop() {
@@ -57,16 +65,33 @@ public class DebugOpmodeLive extends OpMode {
             robot.lift.retract();
         }
 
+        double speed_mod = 1;
 
         if(gamepad1.left_bumper) {
-            robot.drive_train.mechanum_drive(gamepad1.left_stick_x/4, gamepad1.left_stick_y/4, gamepad1.right_stick_x/4);
+            speed_mod = 0.25;
         }
         else if(gamepad1.right_bumper) {
-            robot.drive_train.mechanum_drive(gamepad1.left_stick_x/2, gamepad1.left_stick_y/2, gamepad1.right_stick_x/2);
+            speed_mod = 0.5;
         }
-        else {
-            robot.drive_train.mechanum_drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+        robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
+
+
+        long current_time = System.currentTimeMillis();
+        double slow_accel_speed = ((double) current_time - (double) slow_accel_starttime) / 3000.0;
+
+        if (gamepad1.dpad_right) {
+            robot.drive_train.mechanum_drive(0, slow_accel_speed, slow_accel_speed);
+        } else if (gamepad1.dpad_left) {
+            robot.drive_train.mechanum_drive(0, slow_accel_speed, -slow_accel_speed);
+        } else if (gamepad1.dpad_up) {
+            robot.drive_train.mechanum_drive(0, slow_accel_speed, 0);
+        } else if (gamepad1.dpad_down) {
+            robot.drive_train.mechanum_drive(0, -slow_accel_speed, 0);
+        } else {
+            slow_accel_starttime = System.currentTimeMillis();
         }
+
 
         if(gamepad2.x)  { robot.lift.grab(); }
         if(gamepad2.y)    { robot.lift.release(); }
