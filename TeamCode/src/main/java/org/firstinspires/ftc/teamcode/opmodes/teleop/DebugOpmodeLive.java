@@ -54,7 +54,9 @@ public class DebugOpmodeLive extends OpMode {
             }
             else {
                 robot.lift.min_lift();
-                robot.lift.turn(-3);
+                robot.lift.turn(-100);
+                robot.lift.retract();
+                robot.lift.release();
             }
         }
 

@@ -80,17 +80,21 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         robot.feeder.spin(0);
 
-        robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+
 
         if (FOUNDATION == true) {
 
+            robot.drive_train.odo_move(6, 25, -Math.PI/2, 1);
+
+            robot.drive_train.odo_move(52, 25, -Math.PI/2, 1);
+
             robot.lift.elevate(4);
 
-            robot.drive_train.odo_move(78, 28, Math.PI, 1);
+            robot.drive_train.odo_move(78, 28, -Math.PI, 1);
 
             robot.lift.extend();
 
-            robot.drive_train.odo_move(78, 34, Math.PI, 0.5);
+            robot.drive_train.odo_move(78, 34, -Math.PI, 0.5);
 
             robot.lift.turn(2);
 
@@ -98,7 +102,9 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             sleep(500);
 
-            robot.drive_train.odo_move(76, 16, -Math.PI/2, 1, 1, 0.03, 3);
+            robot.lift.elevate(-2);
+
+            robot.drive_train.odo_move(76, 16, -Math.PI/2, 0.75, 1, 0.03, 3);
 
             robot.lift.release();
 
@@ -114,6 +120,8 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         } else {
 
+            robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+
             robot.drive_train.odo_move(52, 25, Math.PI / 2, 0.5);
 
             robot.feeder.spin(-1);
@@ -128,7 +136,11 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         if (pattern == 1) {
 
-            robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+            if (FOUNDATION == true) {
+                robot.drive_train.odo_move(6, 25, -Math.PI/2, 1);
+            } else {
+                robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+            }
 
             robot.drive_train.odo_move(-20, 25, -Math.PI/2, 1);
 
@@ -142,7 +154,11 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         else if (pattern == 2) {
 
-            robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+            if (FOUNDATION == true) {
+                robot.drive_train.odo_move(6, 25, -Math.PI/2, 1);
+            } else {
+                robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+            }
 
             robot.drive_train.odo_move(-12, 25, -Math.PI/2, 1);
 
@@ -156,7 +172,13 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         else if (pattern == 3) {
 
-            robot.drive_train.odo_move(8, 25, Math.PI/2, 1);
+            if (FOUNDATION == true) {
+                robot.drive_train.odo_move(8, 25, -Math.PI/2, 1);
+
+            } else {
+                robot.drive_train.odo_move(8, 25, Math.PI/2, 1);
+
+            }
 
             robot.drive_train.odo_move(-6, 25, Math.PI/2, 1);
 
@@ -170,7 +192,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         resetStartTime();
 
-        while (!robot.lift.block_detector.isPressed() && getRuntime() < 2) {} // Wait for block to be intook, or 2 seconds
+        while (!robot.lift.block_detector.isPressed() && getRuntime() < 2) {} // Wait for block to be intaken, or 2 seconds
 
         robot.feeder.spin(0);
 
@@ -193,6 +215,8 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.lift.turn(2);
 
             sleep(500);
+
+            robot.lift.elevate(-2);
 
             robot.lift.release();
 
@@ -220,7 +244,13 @@ public class TwoStoneAuto extends LiveAutoBase {
 
 
         if (PARK == FAR) {
-            robot.drive_train.odo_move(36, 25, Math.PI / 2, 1);
+
+            if (FOUNDATION == true) {
+                robot.drive_train.odo_move(36, 25, -Math.PI / 2, 1);
+            } else {
+                robot.drive_train.odo_move(36, 25, Math.PI / 2, 1);
+            }
+
         }
 
     }

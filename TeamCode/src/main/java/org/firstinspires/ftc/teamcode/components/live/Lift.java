@@ -135,7 +135,7 @@ public class Lift extends Component {
         uncap();
         release();
         retract();
-
+        turn(-100);
         elevate(0);
 
     }
@@ -212,7 +212,7 @@ public class Lift extends Component {
 
     public void retract() {
 
-        ext.setPosition(0.863);
+        ext.setPosition(0.7518);
 
     }
 
