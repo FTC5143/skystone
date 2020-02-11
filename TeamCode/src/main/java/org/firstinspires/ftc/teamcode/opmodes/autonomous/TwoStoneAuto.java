@@ -18,6 +18,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
     @Override
     public void on_init() {
+
         robot.phone_camera.start_streaming(COLOR);
 
         robot.drive_train.color = COLOR;
@@ -81,8 +82,6 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
 
-        robot.drive_train.odo_move(48, 25, Math.PI/2, 1);
-
         if (FOUNDATION == true) {
 
             robot.lift.elevate(4);
@@ -99,7 +98,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             sleep(500);
 
-            robot.drive_train.odo_move(76, 16, 3*Math.PI/2, 1, 1, 0.03, 3);
+            robot.drive_train.odo_move(76, 16, -Math.PI/2, 1, 1, 0.03, 3);
 
             robot.lift.release();
 
@@ -113,13 +112,18 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             robot.lift.min_lift();
 
+        } else {
+
+            robot.drive_train.odo_move(52, 25, Math.PI / 2, 0.5);
+
+            robot.feeder.spin(-1);
+
+
+            robot.drive_train.odo_move(48, 25, Math.PI/2, 0.5);
+
+            robot.feeder.spin(0);
+
         }
-
-        robot.drive_train.odo_move(52, 25, Math.PI/2, 0.5);
-
-        robot.feeder.spin(-1);
-
-        robot.drive_train.odo_move(48, 25, Math.PI/2, 0.5);
 
 
         if (pattern == 1) {
@@ -170,15 +174,50 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         robot.feeder.spin(0);
 
-        robot.drive_train.odo_move(10, 25, Math.PI/2, 1);
+        robot.lift.grab();
 
-        robot.drive_train.odo_move(48, 25, Math.PI/2, 1);
+        if (FOUNDATION == true) {
 
-        robot.drive_train.odo_move(52, 25, Math.PI/2, 0.5);
+            robot.drive_train.odo_move(10, 25, -Math.PI/2, 1);
 
-        robot.feeder.spin(-1);
+            robot.drive_train.odo_move(52, 25, -Math.PI/2, 1);
 
-        robot.drive_train.odo_move(48, 25, Math.PI/2, 0.5);
+            robot.lift.elevate(4);
+
+            robot.drive_train.odo_move(76, 16, -Math.PI/2, 1, 1, 0.03, 3);
+
+            robot.lift.extend();
+
+            sleep(500);
+
+            robot.lift.turn(2);
+
+            sleep(500);
+
+            robot.lift.release();
+
+            sleep(250);
+
+            robot.lift.retract();
+
+            robot.lift.turn(0);
+
+            robot.lift.min_lift();
+
+        } else {
+
+            robot.drive_train.odo_move(10, 25, Math.PI/2, 1);
+
+            robot.drive_train.odo_move(52, 25, Math.PI/2, 1);
+
+            robot.feeder.spin(-1);
+
+            robot.drive_train.odo_move(48, 25, Math.PI / 2, 0.5);
+
+            robot.feeder.spin(0);
+
+        }
+
 
         if (PARK == FAR) {
             robot.drive_train.odo_move(36, 25, Math.PI / 2, 1);
