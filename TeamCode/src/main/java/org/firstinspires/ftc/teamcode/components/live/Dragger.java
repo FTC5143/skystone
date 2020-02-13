@@ -15,11 +15,11 @@ public class Dragger extends Component {
     Servo left_dragger;
     Servo right_dragger;
 
-    private static final double LEFT_HORIZONTAL = 0.85888;
-    private static final double LEFT_VERTICAL = 0.97;
+    private static final double LEFT_HORIZONTAL = 0.77778666666;
+    private static final double LEFT_VERTICAL = 0.64767666666;
 
-    private static final double RIGHT_HORIZONTAL = 0.16111;
-    private static final double RIGHT_VERTICAL = 0.05;
+    private static final double RIGHT_HORIZONTAL = 0.23222333333;
+    private static final double RIGHT_VERTICAL = 0.35633333333;
 
     {
         name = "Dragger";
