@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -15,11 +16,17 @@ public class Dragger extends Component {
     Servo left_dragger;
     Servo right_dragger;
 
-    private static final double LEFT_HORIZONTAL = 0.77778666666;
+    private static final double LEFT_HORIZONTAL = 0.75778666666;
     private static final double LEFT_VERTICAL = 0.64767666666;
 
-    private static final double RIGHT_HORIZONTAL = 0.23222333333;
+    private static final double RIGHT_HORIZONTAL = 0.25222333333;
     private static final double RIGHT_VERTICAL = 0.35633333333;
+
+    final int DOWN = 0;
+    final int UP = 1;
+
+    double dragger_pos;
+    double dragger_pos_cache;
 
     {
         name = "Dragger";
@@ -47,6 +54,26 @@ public class Dragger extends Component {
     }
 
     @Override
+    public void update(OpMode opmode) {
+        super.update(opmode);
+
+        if(dragger_pos != dragger_pos_cache) {
+
+            if(dragger_pos == UP) {
+                left_dragger.setPosition(LEFT_HORIZONTAL);
+                right_dragger.setPosition(RIGHT_HORIZONTAL);
+            } else if (dragger_pos == DOWN) {
+                left_dragger.setPosition(LEFT_VERTICAL);
+                right_dragger.setPosition(RIGHT_VERTICAL);
+            }
+
+            dragger_pos_cache = dragger_pos;
+
+        }
+
+    }
+
+    @Override
     public void updateTelemetry(Telemetry telemetry) {
         super.updateTelemetry(telemetry);
 
@@ -56,12 +83,10 @@ public class Dragger extends Component {
     }
 
     public void grab() {
-        left_dragger.setPosition(LEFT_VERTICAL);
-        right_dragger.setPosition(RIGHT_VERTICAL);
+        dragger_pos = DOWN;
     }
 
     public void release() {
-        left_dragger.setPosition(LEFT_HORIZONTAL);
-        right_dragger.setPosition(RIGHT_HORIZONTAL);
+        dragger_pos = UP;
     }
 }

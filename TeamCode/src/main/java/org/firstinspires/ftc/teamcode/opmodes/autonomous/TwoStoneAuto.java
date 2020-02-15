@@ -39,7 +39,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             robot.drive_train.odo_move(5, 30, -Math.PI / 2, 1);
 
-            robot.drive_train.odo_move(5, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(5, 40, -Math.PI / 2, 0.75, 0.5, 0.02);
 
             robot.feeder.spin(1);
 
@@ -50,7 +50,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             robot.drive_train.odo_move(13, 30, -Math.PI / 2, 1);
 
-            robot.drive_train.odo_move(13, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(13, 40, -Math.PI / 2, 0.75, 0.5, 0.02);
 
             robot.feeder.spin(1);
 
@@ -59,13 +59,13 @@ public class TwoStoneAuto extends LiveAutoBase {
         } else if (pattern == 3) {
             robot.drive_train.odo_move(2, 30, -Math.PI / 2, 1);
 
-            robot.drive_train.odo_move(4, 41, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(4, 41, -Math.PI / 2, 1);
 
             robot.drive_train.odo_move(4, 27, -Math.PI / 2, 1);
 
-            robot.drive_train.odo_move(-4, 27, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(-4, 27, -Math.PI / 2, 1);
 
-            robot.drive_train.odo_move(-4, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(-4, 40, -Math.PI / 2, 0.75, 0.5, 0.02);
 
             robot.feeder.spin(1);
 
@@ -94,7 +94,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             robot.lift.extend();
 
-            robot.drive_train.odo_move(78, 34, -Math.PI, 0.5);
+            robot.drive_train.odo_move(78, 34, -Math.PI, 0.6);
 
             robot.lift.turn(2);
 
@@ -102,21 +102,25 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             sleep(500);
 
-            robot.lift.elevate(-2);
-
-            robot.drive_train.odo_move(76, 16, -Math.PI/2, 0.75, 1, 0.03, 3);
+            robot.drive_train.odo_move(76, 12, -Math.PI/2, 1, 1, 0.03, 3);
 
             robot.lift.release();
 
-            robot.dragger.release();
-
-            sleep(500);
+            sleep(750);
 
             robot.lift.turn(-2);
 
             robot.lift.retract();
 
+            sleep(500);
+
+            robot.dragger.release();
+
+            robot.drive_train.odo_move(76, 25, -Math.PI/2, 1, 1, 0.03, 1.5);
+
             robot.lift.min_lift();
+
+            sleep(500);
 
         } else {
 
@@ -206,7 +210,7 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             robot.lift.elevate(4);
 
-            robot.drive_train.odo_move(76, 16, -Math.PI/2, 1, 1, 0.03, 3);
+            robot.drive_train.odo_move(76, 20, -Math.PI/2, 1, 1, 0.03, 3);
 
             robot.lift.extend();
 
@@ -216,15 +220,15 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             sleep(500);
 
-            robot.lift.elevate(-2);
-
             robot.lift.release();
 
-            sleep(250);
+            sleep(750);
 
             robot.lift.retract();
 
-            robot.lift.turn(0);
+            robot.lift.turn(-2);
+
+            sleep(500);
 
             robot.lift.min_lift();
 

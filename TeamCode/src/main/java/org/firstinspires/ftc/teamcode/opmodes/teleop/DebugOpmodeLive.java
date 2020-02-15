@@ -125,7 +125,7 @@ public class DebugOpmodeLive extends OpMode {
 
         if (gamepad2.left_bumper || gamepad2.right_bumper) {
             robot.feeder.spin(gamepad2.left_bumper ? -1 : 0, gamepad2.right_bumper ? -1 : 0);
-        } else if (robot.bulk_data_1.getDigitalInputState(1)){
+        } else if (robot.bulk_data_1 != null && robot.bulk_data_1.getDigitalInputState(1)){
             robot.feeder.spin(gamepad2.left_trigger, gamepad2.right_trigger);
         } else {
             robot.feeder.spin(0, 0);

@@ -44,6 +44,11 @@ public class Lift extends Component {
 
     private int grabber_turn = 0;
 
+
+    private boolean starting_move = false;
+    private int lift_l_target = 0;
+    private int lift_r_target = 0;
+
     @Config
     static class LiftConfig {
 
@@ -103,11 +108,26 @@ public class Lift extends Component {
     public void update(OpMode opmode) {
         super.update(opmode);
 
+        if (starting_move == true) {
+
+            lift_l.setTargetPosition(lift_l_target);
+            lift_r.setTargetPosition(lift_r_target);
+
+            lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            set_power(1);
+
+            starting_move = false;
+        }
+
         if (cached_power != 0) {
             if (robot.bulk_data_2.isMotorAtTargetPosition(lift_l) && robot.bulk_data_2.isMotorAtTargetPosition(lift_r)) {
                 set_power(0);
+
                 lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
             }
         }
 
@@ -178,18 +198,14 @@ public class Lift extends Component {
     }
 
     private void set_target_position(int pos) {
-        lift_l.setTargetPosition(pos);
-        lift_r.setTargetPosition(pos);
+        lift_l_target = pos;
+        lift_r_target = pos;
     }
 
     public void elevate(int amt) {
         level = Math.max(Math.min(level + amt, MAX_LEVEL), MIN_LEVEL);
         set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
-
-        lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        set_power(1);
+        starting_move = true;
     }
 
     public void min_lift() {
@@ -203,11 +219,7 @@ public class Lift extends Component {
     public void elevate_without_stops(int amt) {
         level = level + amt;
         set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
-
-        lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        set_power(1);
+        starting_move = true;
     }
 
     public void retract() {
