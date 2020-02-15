@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.robots.LiveRobot;
+import org.firstinspires.ftc.teamcode.opmodes.LiveTeleopBase;
 
 @TeleOp(name="Encoder Reset", group="driver control")
 //@Disabled
-public class EncoderReset extends OpMode {
-
-    LiveRobot robot;
+public class EncoderReset extends LiveTeleopBase {
 
     boolean dpad_up_pressed = false;
     boolean dpad_down_pressed = false;
@@ -18,14 +15,17 @@ public class EncoderReset extends OpMode {
     boolean dpad_right_pressed = false;
 
     @Override
-    public void init() {
-        robot = new LiveRobot(this);
-        robot.startup();
+    public void on_init() {
+
     }
 
     @Override
-    public void loop() {
-        robot.update();
+    public void on_start() {
+
+    }
+
+    @Override
+    public void on_loop() {
 
         if(gamepad2.dpad_up && !dpad_up_pressed) {
 
@@ -81,8 +81,7 @@ public class EncoderReset extends OpMode {
     }
 
     @Override
-    public void stop() {
-        super.stop();
-        robot.shutdown();
+    public void on_stop() {
+
     }
 }

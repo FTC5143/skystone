@@ -40,14 +40,24 @@ public class Lift extends Component {
 
     private double cached_power = 0;
 
-    private boolean cached_grab = false;
-
     private int grabber_turn = 0;
 
 
     private boolean starting_move = false;
     private int lift_l_target = 0;
     private int lift_r_target = 0;
+
+    static double ext_pos = 0;
+    static double ext_pos_cache = 0;
+
+    static double grab_pos = 0;
+    static double grab_pos_cache = 0;
+
+    static double turn_pos = 0;
+    static double turn_pos_cache = 0;
+
+    static double cap_pos = 0;
+    static double cap_pos_cache = 0;
 
     @Config
     static class LiftConfig {
@@ -70,6 +80,11 @@ public class Lift extends Component {
 
         static double CAPSTONE_UP = 0.9;
         static double CAPSTONE_DOWN = 0.7;
+
+        static double EXTENSION_OUT = 0.20;
+        static double EXTENSION_IN = 0.7518;
+
+        static double LIFT_ENCODER_TOLERANCE = 5;
 
     }
 
@@ -122,13 +137,33 @@ public class Lift extends Component {
         }
 
         if (cached_power != 0) {
-            if (robot.bulk_data_2.isMotorAtTargetPosition(lift_l) && robot.bulk_data_2.isMotorAtTargetPosition(lift_r)) {
+            if (Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_l) - lift_l_target) <= LIFT_ENCODER_TOLERANCE && Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_r) - lift_r_target) <= LIFT_ENCODER_TOLERANCE) {
                 set_power(0);
 
                 lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             }
+        }
+
+        if(ext_pos != ext_pos_cache) {
+            ext.setPosition(ext_pos);
+            ext_pos = ext_pos_cache;
+        }
+
+        if(grab_pos != grab_pos_cache) {
+            grb_g.setPosition(grab_pos);
+            grab_pos = grab_pos_cache;
+        }
+
+        if(turn_pos != turn_pos_cache) {
+            grb_t.setPosition(turn_pos);
+            turn_pos = turn_pos_cache;
+        }
+
+        if(cap_pos != cap_pos_cache) {
+            capstone.setPosition(cap_pos);
+            cap_pos = cap_pos_cache;
         }
 
     }
@@ -188,7 +223,6 @@ public class Lift extends Component {
 
         telemetry.addData("BD", robot.bulk_data_1.getDigitalInputState(1));
 
-        telemetry.addData("C GRAB", cached_grab);
     }
 
     public void set_power(double speed) {
@@ -223,37 +257,31 @@ public class Lift extends Component {
     }
 
     public void retract() {
-
-        ext.setPosition(0.7518);
-
+        ext_pos = EXTENSION_IN;
     }
 
     public void extend() {
-
-        ext.setPosition(0.20);
-
+        ext_pos = EXTENSION_OUT;
     }
 
     public void grab() {
-        grb_g.setPosition(GRABBER_CLOSED);
-        cached_grab = true;
+        grab_pos = GRABBER_CLOSED;
     }
 
     public void release() {
-        grb_g.setPosition(GRABBER_OPEN);
-        cached_grab = false;
+        grab_pos = GRABBER_OPEN;
     }
 
     public void uncap() {
-        capstone.setPosition(CAPSTONE_UP);
+        cap_pos = CAPSTONE_UP;
     }
 
     public void cap() {
-        capstone.setPosition(CAPSTONE_DOWN);
+        cap_pos = CAPSTONE_DOWN;
     }
 
     public void turn(int direction) {
         grabber_turn = Range.clip(grabber_turn+direction, 0, 2);
-        grb_t.setPosition(0.995-(grabber_turn*0.33));
+        turn_pos = (0.995-(grabber_turn*0.33333));
     }
 }

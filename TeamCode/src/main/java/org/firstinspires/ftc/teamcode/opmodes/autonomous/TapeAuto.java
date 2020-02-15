@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.opmodes.LiveAutoBase;
+
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.FAR;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.NEAR;

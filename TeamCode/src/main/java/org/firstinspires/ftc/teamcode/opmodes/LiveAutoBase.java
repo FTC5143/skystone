@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.autonomous;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -15,11 +15,9 @@ public abstract class LiveAutoBase extends LinearOpMode {
         on_init();
         waitForStart();
         on_start();
-        while(opModeIsActive() && !isStopRequested()) {
-            idle();
-        }
         on_stop();
         robot.shutdown();
+        stop();
     }
 
     public abstract void on_init();

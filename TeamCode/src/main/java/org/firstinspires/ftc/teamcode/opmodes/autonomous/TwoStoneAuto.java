@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.opmodes.LiveAutoBase;
+
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.BLUE;
 import static org.firstinspires.ftc.teamcode.constants.AutonomousConst.FAR;
 
@@ -72,9 +74,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.drive_train.odo_move(-12, 40, -Math.PI / 2, 0.5);
         }
 
-        resetStartTime();
-
-        while (!robot.lift.block_detector.isPressed() && getRuntime() < 2) {} // Wait for block to be intook, or 2 seconds
+        resetStartTime(); while (!robot.lift.block_detector.isPressed() && getRuntime() < 1) {} // Wait for block to be intook, or 2 seconds
 
         robot.lift.grab();
 
@@ -102,25 +102,23 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             sleep(500);
 
-            robot.drive_train.odo_move(76, 12, -Math.PI/2, 1, 1, 0.03, 3);
+            robot.lift.elevate(-1);
+
+            robot.drive_train.odo_move(76, 12, -Math.PI/2, 1, 1, 0.03, 2.5);
 
             robot.lift.release();
 
-            sleep(750);
+            sleep(500);
 
             robot.lift.turn(-2);
 
             robot.lift.retract();
-
-            sleep(500);
 
             robot.dragger.release();
 
             robot.drive_train.odo_move(76, 25, -Math.PI/2, 1, 1, 0.03, 1.5);
 
             robot.lift.min_lift();
-
-            sleep(500);
 
         } else {
 
@@ -140,27 +138,23 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         if (pattern == 1) {
 
-            if (FOUNDATION == true) {
-                robot.drive_train.odo_move(6, 25, -Math.PI/2, 1);
-            } else {
+            if (FOUNDATION != true) {
                 robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
             }
 
-            robot.drive_train.odo_move(-20, 25, -Math.PI/2, 1);
+            robot.drive_train.odo_move(-16, 25, -Math.PI/2, 1);
 
             robot.feeder.spin(1);
 
-            robot.drive_train.odo_move(-20, 40, -Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(-18, 40, -Math.PI / 2, 0.5);
 
-            robot.drive_train.odo_move(-28, 40, -Math.PI / 2, 1);
+            robot.drive_train.odo_move(-26, 40, -Math.PI / 2, 1);
 
         }
 
         else if (pattern == 2) {
 
-            if (FOUNDATION == true) {
-                robot.drive_train.odo_move(6, 25, -Math.PI/2, 1);
-            } else {
+            if (FOUNDATION != true) {
                 robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
             }
 
@@ -178,10 +172,8 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             if (FOUNDATION == true) {
                 robot.drive_train.odo_move(8, 25, -Math.PI/2, 1);
-
             } else {
                 robot.drive_train.odo_move(8, 25, Math.PI/2, 1);
-
             }
 
             robot.drive_train.odo_move(-6, 25, Math.PI/2, 1);
@@ -190,13 +182,11 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             robot.drive_train.odo_move(-6, 50, Math.PI / 2, 0.5);
 
-            robot.drive_train.odo_move(4, 50, Math.PI / 2, 1);
+            robot.drive_train.odo_move(6, 50, Math.PI / 2, 1);
 
         }
 
-        resetStartTime();
-
-        while (!robot.lift.block_detector.isPressed() && getRuntime() < 2) {} // Wait for block to be intaken, or 2 seconds
+        resetStartTime(); while (!robot.lift.block_detector.isPressed() && getRuntime() < 1) {} // Wait for block to be intaken, or 2 seconds
 
         robot.feeder.spin(0);
 
@@ -220,15 +210,19 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             sleep(500);
 
+            robot.lift.elevate(-1);
+
+            sleep(500);
+
             robot.lift.release();
 
-            sleep(750);
+            sleep(500);
 
             robot.lift.retract();
 
             robot.lift.turn(-2);
 
-            sleep(500);
+            //sleep(500);
 
             robot.lift.min_lift();
 

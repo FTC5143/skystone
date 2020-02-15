@@ -1,13 +1,5 @@
 package org.firstinspires.ftc.teamcode.systems;
 
-/*  Three Wheel Odometry
- *  Local Coordinate System
- *
- *  Copyright 2019 qwertyquerty
- *
- *  Licensed under MIT
- */
-
 public class LocalCoordinateSystem {
     public double x = 0;    // The approximated x position of the robot relative to where it started
     public double y = 0;    // The approximated y position of the robot relative to where it started
@@ -17,10 +9,10 @@ public class LocalCoordinateSystem {
     public double prev_re;
     public double prev_ce;
 
-    private double WHEEL_DIAMETER       = 1.48982939421;    // Diameter of the omniwheels
+    private double WHEEL_DIAMETER       = 1.49420962888;    //1.48982939421;    // Diameter of the omniwheels
     private double ENCODER_CPR          = 1440;             // Counts per full rotation of an encoder
-    private double ROBOT_DIAMETER       = 15.7075609922;    //15.74735 //15.53           // Distance between the left and right encoder (diameter) in inches
-    private double CENTER_WHEEL_OFFSET  = 7.702;            //7.719 //7.375 Distance of the center encoder to the line made between the left and right encoders (radius) in inches
+    private double ROBOT_DIAMETER       = 15.78666888;      //15.7075609922;    //15.74735 //15.53           // Distance between the left and right encoder (diameter) in inches
+    private double CENTER_WHEEL_OFFSET  = 7.594180357;      //7.725136416;      //7.719 //7.375 Distance of the center encoder to the line made between the left and right encoders (radius) in inches
 
     private double WHEEL_CIRCUMFERENCE  = WHEEL_DIAMETER * Math.PI;
     private double INCHES_PER_COUNT     = WHEEL_CIRCUMFERENCE / ENCODER_CPR;
