@@ -11,10 +11,13 @@ public class CurvePath {
 
     ArrayList<CurvePoint> points = new ArrayList<>();
 
+    // Whether we follow the path driving backwards or not
     public boolean reverse = true;
 
+    // The follow radius of the path
     public double radius = 8;
 
+    // This returns the first point in the path that isn't marked as passed
     public CurvePoint get_first_unpassed_point() {
 
         for(CurvePoint point : points) {
@@ -38,9 +41,12 @@ public class CurvePath {
             CurvePoint seg_start    = points.get(i);
             CurvePoint seg_end      = points.get(i + 1);
 
+            // Get the start point and end point of the segment, translated to the origin of the robot
             Point p1 = new Point(seg_start.x - robot_x, seg_start.y - robot_y);
             Point p2 = new Point(seg_end.x - robot_x, seg_end.y - robot_y);
 
+            
+            // All of the following code is stuff for finding circle intersections until I say stop
             double dx = p2.x - p1.x;
             double dy = p2.y - p1.y;
 
@@ -57,9 +63,12 @@ public class CurvePath {
             double y1 = (-D * dx + abs(dy) * sqrt(discriminant)) / (d * d);
             double y2 = (-D * dx - abs(dy) * sqrt(discriminant)) / (d * d);
 
+            // Check if the intersections are valid
             boolean valid_intersection_1 = min(p1.x, p2.x) < x1 && x1 < max(p1.x, p2.x) || min(p1.y, p2.y) < y1 && y1 < max(p1.y, p2.y);
             boolean valid_intersection_2 = min(p1.x, p2.x) < x2 && x2 < max(p1.x, p2.x) || min(p1.y, p2.y) < y2 && y2 < max(p1.y, p2.y);
 
+            // Ok this is where we stop finding circle intersections, and we begin to decide how we want to use them
+            
             if(valid_intersection_1 || valid_intersection_2) {
 
                 // If we are intersecting with a line, mark the start point of that line as passed
@@ -95,6 +104,7 @@ public class CurvePath {
             }
         }
 
+        // This should turn true if we are close enough to the end of the path that the last point is within our follow radius
         boolean approaching_end = false;
 
         if (points.size() > 0) {
@@ -104,7 +114,7 @@ public class CurvePath {
             double end_x = last_point.x;
             double end_y = last_point.y;
 
-            // If we're close enough to the end, use that as our follow point
+            // If we're close enough to the end, use that as our lookahead pose
             if (sqrt((end_x - robot_x) * (end_x - robot_x) + (end_y - robot_y) * (end_y - robot_y)) <= radius) {
                 lookahead_point = new Point(end_x, end_y);
                 approaching_end = true;
@@ -128,6 +138,7 @@ public class CurvePath {
             lookahead_pose = lookahead_point.to_pose(last_segment_angle);
 
         } else {
+            // If we have a valid intersection point, use it as our lookahead pose
             double angle_to_point = Math.atan2(lookahead_point.y-robot_y, lookahead_point.x-robot_x);
             lookahead_pose = lookahead_point.to_pose(angle_to_point);
 
@@ -141,25 +152,30 @@ public class CurvePath {
 
     }
 
+    // Get the last point in the path
     public CurvePoint last_point() {
         return points.get(points.size()-1);
     }
 
+    // Add a point to the path
     public CurvePath add_point(CurvePoint point) {
         points.add(point);
         return this;
     }
 
+    // Set the path to be driven in reverse
     public CurvePath reverse() {
         this.reverse = true;
         return this;
     }
 
+    // Set the follow radius of the path
     public CurvePath radius(double radius) {
         this.radius = radius;
         return this;
     }
 
+    // Validate the path, verifying that it is possible to run
     public CurvePath verify() {
 
         if(points.size() < 2) {
@@ -173,12 +189,14 @@ public class CurvePath {
         return this;
     }
 
+    // Draw the path and other debug information about it on a dashboard canvas
     public void dashboard_draw(Canvas canvas, double robot_x, double robot_y) {
 
         canvas.setStrokeWidth(1);
 
         canvas.setStroke("#0000ff");
 
+        // Draw all the line segments in the curve path in blue
         for(int i = 0; i < points.size() - 1; i++) {
 
             CurvePoint seg_start = points.get(i);
@@ -188,6 +206,7 @@ public class CurvePath {
 
         }
 
+        // Draw all the curve points, fill them in if they are passed
         for (CurvePoint point : points) {
             if (point.passed) {
                 canvas.fillCircle(point.y, -point.x, 2);
@@ -195,13 +214,13 @@ public class CurvePath {
                 canvas.strokeCircle(point.y, -point.x, 2);
             }
         }
-
+        
+        // Get our lookahead pose so we can draw it as a green circle
         Pose lookahead_pose = get_lookahead_pose(robot_x, robot_y);
-
-
         canvas.setStroke("#00ff00");
         canvas.strokeCircle(robot_y, -robot_x, radius);
 
+        // Draw a line from our robot position to the lookahead pose in red
         canvas.setStroke("#ff0000");
         canvas.strokeLine(robot_y, -robot_x, lookahead_pose.y, -lookahead_pose.x);
         canvas.strokeCircle(lookahead_pose.y, -lookahead_pose.x, 1);
