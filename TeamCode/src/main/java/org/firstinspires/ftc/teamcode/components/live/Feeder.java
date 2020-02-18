@@ -8,14 +8,14 @@ import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
 // Feeder Component
-// Feeds in blocks using the spinner wheels, and uses a touch sensor to detect the blocks
+// Feeds in blocks using quick spinning compliant wheels
 
 public class Feeder extends Component {
     //// MOTORS ////
-    DcMotor left_spinner;    // The left feeder wheel on the take-in device
-    DcMotor right_spinner;   // The right feeder wheel on the take-in device
+    DcMotor left_spinner;    // The left feeder wheel on the intake device
+    DcMotor right_spinner;   // The right feeder wheel on the intake device
 
-
+    // For caching motor powers so we only write once every update loop
     private double lp_speed;
     private double rp_speed;
 
@@ -56,10 +56,12 @@ public class Feeder extends Component {
 
     }
 
+    // Spin both wheels at the specified power
     public void spin(double power) {
         spin(power, power);
     }
 
+    // Spin each wheel independently
     public void spin(double lp, double rp) {
         lp_speed = lp;
         rp_speed = rp;
