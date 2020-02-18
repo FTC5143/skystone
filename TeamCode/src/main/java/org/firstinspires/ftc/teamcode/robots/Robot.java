@@ -111,6 +111,12 @@ public class Robot {
 
             updateTelemetry();
 
+            for (Component component : components) {
+                component.updateTelemetry(telemetry);
+            }
+
+            telemetry.update();
+
         }
 
         if (cycle % 20 == 0) {
@@ -128,12 +134,6 @@ public class Robot {
     public void updateTelemetry() {
         telemetry.addData("[RBT "+name+"]", components.size()+" components");
         telemetry.addData("FREQ", update_freq);
-
-        for (Component component : components) {
-            component.updateTelemetry(telemetry);
-        }
-
-        telemetry.update();
     }
 
     public void registerComponent(Component component) {
