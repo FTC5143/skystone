@@ -26,15 +26,13 @@ public class Lift extends Component {
     private DcMotorEx lift_l;
     private DcMotorEx lift_r;
 
-    private Servo ext;
-    private Servo grb_t;
-    private Servo grb_g;
-    private Servo capstone;
+    private Servo ext;      // Servo that runs the linkage horizontal slide extension
+    private Servo grb_t;    // Servo that turns the stone gripper
+    private Servo grb_g;    // Servo that grips the stone
+    private Servo capstone; // Servo that drops the capstone on the stone
 
     //// SENSORS ////
-
-    public RevTouchSensor block_detector;
-
+    public RevTouchSensor block_detector; // Used to detect when a stone has entered the intake
 
     public int level;
 
@@ -42,11 +40,11 @@ public class Lift extends Component {
 
     private int grabber_turn = 0;
 
-
     private boolean starting_move = false;
     private int lift_l_target = 0;
     private int lift_r_target = 0;
 
+    // Variables for servo position caches. Servo values are cahced and written on the next loop update. This is to prevent the control thread figthing for lock access with the update thread
     static double ext_pos = 0;
     static double ext_pos_cache = 0;
 
@@ -62,28 +60,31 @@ public class Lift extends Component {
     @Config
     static class LiftConfig {
 
-        static int BLOCK_HEIGHT = 640; //In encoder counts
+        static int BLOCK_HEIGHT = 640; // How many encoder counts we move up for each level
         static int LIFT_OFFSET = 0;
-        static int MAX_LEVEL = 16;
-        static int MIN_LEVEL = 0;
+        static int MAX_LEVEL = 16; // The maximum level of the lift, we cannot lift higher than this
+        static int MIN_LEVEL = 0; // The minimum level of the lift, we cannot retract lower than this
 
         static int MAX_ENCODER_COUNT = 6400;
 
         static double GRABBER_CLOSED = 1;
         static double GRABBER_OPEN = 0.33;
 
+        // The PID coeffs for the lift motors
         static double PID_P = 5;
         static double PID_I = 1;
         static double PID_D = 0;
-
         static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
+        // The up and down positions of the capstone servo; up means the capstone is dropped
         static double CAPSTONE_UP = 0.9;
         static double CAPSTONE_DOWN = 0.7;
 
+        // The in and out positions of the extension servo; out means the extension is fully extended
         static double EXTENSION_OUT = 0.20;
         static double EXTENSION_IN = 0.7518;
 
+        // How close we need to be to the target position to cut power to the lift
         static double LIFT_ENCODER_TOLERANCE = 5;
 
     }
@@ -124,19 +125,22 @@ public class Lift extends Component {
         super.update(opmode);
 
         if (starting_move == true) {
-
+            // When we are starting a move, set the new target positions of the motors. We have to do it like this because we only want writes in our update loop
             lift_l.setTargetPosition(lift_l_target);
             lift_r.setTargetPosition(lift_r_target);
-
+            
+            // Set the motors to run to position mode, and begin running the lift
             lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             set_power(1);
 
+            // Set this to false so we don't begin a move again until we are starting the next one
             starting_move = false;
         }
 
+        // If the lift is running, we should be constantly checking if it has reached its target position
         if (cached_power != 0) {
+            // If both motors are within the position tolerance, stop the lift
             if (Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_l) - lift_l_target) <= LIFT_ENCODER_TOLERANCE && Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_r) - lift_r_target) <= LIFT_ENCODER_TOLERANCE) {
                 set_power(0);
 
@@ -146,6 +150,7 @@ public class Lift extends Component {
             }
         }
 
+        // Servo caching stuff, we need this so we only update servos within the write loop. I should really just write a new servo class that handles this to be honest
         if(ext_pos != ext_pos_cache) {
             ext.setPosition(ext_pos);
             ext_pos = ext_pos_cache;
@@ -187,6 +192,7 @@ public class Lift extends Component {
         lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        // Upon initialization we reset all servos to their default position
         uncap();
         release();
         retract();
@@ -196,6 +202,7 @@ public class Lift extends Component {
     }
 
     public void shutdown() {
+        // When the robot is stopped, we cut all power and stop all motors
         set_power(0);
         lift_l.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_r.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -235,51 +242,62 @@ public class Lift extends Component {
         lift_l_target = pos;
         lift_r_target = pos;
     }
-
+    
+    // Change the height of the lift by amt levels
     public void elevate(int amt) {
         level = Math.max(Math.min(level + amt, MAX_LEVEL), MIN_LEVEL);
         set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
         starting_move = true;
     }
 
+    // Bring the lift to its minimum level
     public void min_lift() {
         elevate(MIN_LEVEL - level);
     }
 
+    // Bring the lift to its maximum level
     public void max_lift() {
         elevate(MAX_LEVEL - level);
     }
 
+    // Elevate the lift without worrying about encoder stops, used for encoder reset stuff
     public void elevate_without_stops(int amt) {
         level = level + amt;
         set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
         starting_move = true;
     }
-
+    
+    // Retract the extension
     public void retract() {
         ext_pos = EXTENSION_IN;
     }
 
+    // Extend the extension
     public void extend() {
         ext_pos = EXTENSION_OUT;
     }
 
+    // Close the gripper
     public void grab() {
         grab_pos = GRABBER_CLOSED;
     }
 
+    // Open the gripper
     public void release() {
         grab_pos = GRABBER_OPEN;
     }
 
+    // Move the capstone servo to its default position
     public void uncap() {
         cap_pos = CAPSTONE_UP;
     }
-
+    
+    // Drop the capstone
     public void cap() {
         cap_pos = CAPSTONE_DOWN;
     }
 
+    // Turn the gripper servo by an amount
     public void turn(int direction) {
         grabber_turn = Range.clip(grabber_turn+direction, 0, 2);
         turn_pos = (0.995-(grabber_turn*0.33333));
