@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.util;
 
 
-
 import com.acmerobotics.dashboard.canvas.Canvas;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-
 import com.acmerobotics.roadrunner.path.Path;
 
+import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
+
+import java.util.ArrayList;
 
 
 /**
@@ -71,6 +70,17 @@ public class DashboardUtil {
         double x2 = pose.getX() + v.getX(), y2 = pose.getY() + v.getY();
 
         canvas.strokeLine(x1, y1, x2, y2);
+
+    }
+
+    public static void drawPointList(Canvas canvas, ArrayList<Point> point_list) {
+
+        canvas.setStroke("#00ff00");
+        canvas.setStrokeWidth(1);
+
+        for(int i = 0; i < point_list.size()-1; i++) {
+            canvas.strokeLine(point_list.get(i).x, point_list.get(i).y, point_list.get(i+1).x, point_list.get(i+1).y);
+        }
 
     }
 
