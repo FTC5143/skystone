@@ -267,12 +267,16 @@ public class DriveTrain extends Component {
     // Set motor powers to drive to a position and angle
     public void drive_to_pose(Pose pose, double drive_speed, double turn_speed) {
 
+        // Find the angle to the pose
         double drive_angle = Math.atan2(pose.y-lcs.y, pose.x-lcs.x);
 
+        // Find movement vector to drive towards that point
         double mvmt_x = Math.cos(drive_angle - lcs.a) * drive_speed;
         double mvmt_y = -Math.sin(drive_angle - lcs.a) * drive_speed;
+        // Find angle speed to turn towards the desired angle
         double mvmt_a = -Math.signum(Range.clip((pose.a - lcs.a - (Math.PI/2)), -1, 1)) * turn_speed;
 
+        // Update actual motor powers with our movement vector
         mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
 
     }
