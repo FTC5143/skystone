@@ -111,6 +111,12 @@ public class Robot {
         // Update telemetry on the dashboard and on the phones
         if (cycle % 50 == 0) {
             updateTelemetry();
+
+            for (Component component : components) {
+                component.updateTelemetry(telemetry);
+            }
+
+            telemetry.update();
         }
 
         // Recalculate our update thread frequency
@@ -129,13 +135,6 @@ public class Robot {
     public void updateTelemetry() {
         telemetry.addData("[RBT "+name+"]", components.size()+" components");
         telemetry.addData("FREQ", update_freq);
-
-        // Allow each component to give their own telemetry
-        for (Component component : components) {
-            component.updateTelemetry(telemetry);
-        }
-
-        telemetry.update();
     }
 
     // This should automatically be called whenever you make a new component attached to a robot instance

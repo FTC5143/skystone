@@ -62,10 +62,9 @@ public class Lift extends Component {
 
         static int BLOCK_HEIGHT = 640; // How many encoder counts we move up for each level
         static int LIFT_OFFSET = 0;
-        static int MAX_LEVEL = 16; // The maximum level of the lift, we cannot lift higher than this
+      
+        static int MAX_LEVEL = 43; // The maximum level of the lift, we cannot lift higher than this
         static int MIN_LEVEL = 0; // The minimum level of the lift, we cannot retract lower than this
-
-        static int MAX_ENCODER_COUNT = 6400;
 
         static double GRABBER_CLOSED = 1;
         static double GRABBER_OPEN = 0.33;
