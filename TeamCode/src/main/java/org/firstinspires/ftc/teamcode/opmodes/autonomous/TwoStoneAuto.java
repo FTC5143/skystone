@@ -41,39 +41,53 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         if (pattern == 1) {
             
-            
+            // Move up next to the first two stones
             robot.drive_train.odo_move(5, 30, -Math.PI / 2, 1);
 
+            // Push them to the side and line up with the skystone
             robot.drive_train.odo_move(5, 40, -Math.PI / 2, 0.75, 0.5, 0.02);
 
+            // Start spinning the intake
             robot.feeder.spin(1);
 
+            // Move forward to take in the skystone
             robot.drive_train.odo_move(-4, 40, -Math.PI / 2, 0.5);
 
         }
         else if (pattern == 2) {
 
+            // Move up next to the first stone
             robot.drive_train.odo_move(13, 30, -Math.PI / 2, 1);
 
+            // Push it aside and line up with the skystone
             robot.drive_train.odo_move(13, 40, -Math.PI / 2, 0.75, 0.5, 0.02);
 
+            // Begin spinning the intake
             robot.feeder.spin(1);
 
+            // Move forward to take in the stone
             robot.drive_train.odo_move(4, 40, -Math.PI / 2, 0.5);
 
         } else if (pattern == 3) {
+            // Move up next to the first stone and the first skystone
             robot.drive_train.odo_move(2, 30, -Math.PI / 2, 1);
 
+            // Push them both to the side
             robot.drive_train.odo_move(4, 41, -Math.PI / 2, 1);
 
+            // Move back to where we were before
             robot.drive_train.odo_move(4, 27, -Math.PI / 2, 1);
 
+            // Go foward to line the front of the robot up with the next stone
             robot.drive_train.odo_move(-4, 27, -Math.PI / 2, 1);
 
+            // Move right to knock the next stone out of the way
             robot.drive_train.odo_move(-4, 40, -Math.PI / 2, 0.75, 0.5, 0.02);
 
+            // Start spinning the intake
             robot.feeder.spin(1);
 
+            // Move forward to intake the stone
             robot.drive_train.odo_move(-12, 40, -Math.PI / 2, 0.5);
         }
 
@@ -144,15 +158,19 @@ public class TwoStoneAuto extends LiveAutoBase {
 
         } else {
 
+            // Line up with the bridge and turn around
             robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
 
+            // Go under the bridge
             robot.drive_train.odo_move(52, 25, Math.PI / 2, 0.5);
 
+            // Spin the intake in reverse to spit the stone
             robot.feeder.spin(-1);
-
-
+            
+            // Move backwards so the stone hits the intake wheels
             robot.drive_train.odo_move(48, 25, Math.PI/2, 0.5);
 
+            // Once we have spit the stone stop spinning the wheels
             robot.feeder.spin(0);
 
         }
@@ -164,13 +182,17 @@ public class TwoStoneAuto extends LiveAutoBase {
             if (FOUNDATION != true) {
                 robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
             }
-
+            
+            // Move up near the next skystone
             robot.drive_train.odo_move(-16, 25, -Math.PI/2, 1);
 
+            // Start spinning the intake
             robot.feeder.spin(1);
 
+            // Line up with the stone
             robot.drive_train.odo_move(-18, 40, -Math.PI / 2, 0.5);
 
+            // Move forward to intake it
             robot.drive_train.odo_move(-26, 40, -Math.PI / 2, 1);
 
         }
@@ -181,13 +203,17 @@ public class TwoStoneAuto extends LiveAutoBase {
             if (FOUNDATION != true) {
                 robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
             }
-
+            
+            // Move up near the next skystone
             robot.drive_train.odo_move(-12, 25, -Math.PI/2, 1);
 
+            // Start spinning the intake
             robot.feeder.spin(1);
 
+            // Hit the next stone to the side and line up with the skystone
             robot.drive_train.odo_move(-12, 40, -Math.PI / 2, 0.5);
 
+            // Move forward to intake the skystone
             robot.drive_train.odo_move(-20, 40, -Math.PI / 2, 1);
 
         }
@@ -201,12 +227,16 @@ public class TwoStoneAuto extends LiveAutoBase {
                 robot.drive_train.odo_move(8, 25, Math.PI/2, 1);
             }
 
+            // Line up with the next skystone, where we pushed it to earlier
             robot.drive_train.odo_move(-6, 25, Math.PI/2, 1);
 
+            // Begin spinning the intake
             robot.feeder.spin(1);
 
+            // Move forward slowly to intake the skystone
             robot.drive_train.odo_move(-6, 50, Math.PI / 2, 0.5);
 
+            // Back up to get inline with the bridge again
             robot.drive_train.odo_move(6, 50, Math.PI / 2, 1);
 
         }
