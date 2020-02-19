@@ -1,22 +1,8 @@
 # Welcome!
-This is the 2019-2020 repository for FTC team 5143. This readme, once completed, should contain: a formatting guide, a TODO, and whatever we should put in here for judges (I don't know).
 
----
+This is the 2019-2020 repository for FTC team 5143. All of our code is available for use by any team.
 
-## TODO
-
-### General
-
-- [ ] Drive correction
-- [ ] Build-an-Autonomous
-- [ ] autoStacking
-- [ ] Output component (when designed)
-- [x] Skystone recognition
-- [ ] Auto foundation pushing
-
-### Readme:
-- [ ] Add guide to telemetry
-- [ ] Create OpMode formatting guide.
+There are also multiple other respositories in this organization such as tools and simulators.
 
 ---
 
@@ -76,3 +62,6 @@ public class Extender extends Component {
 }
 ```
 
+## Contributing
+
+Contributions are welcome in the form of pull requests
