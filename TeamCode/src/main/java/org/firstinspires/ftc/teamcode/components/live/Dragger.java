@@ -9,18 +9,20 @@ import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
 // Dragger Component
-// For dragging the baseplate.
+// For dragging the foundation
 
 public class Dragger extends Component {
     //// SERVOS ////
     Servo left_dragger;
     Servo right_dragger;
 
+    // The up positions of the dragger servos, for when not dragging the foundation
     private static final double LEFT_HORIZONTAL = 0.75278666666;
-    private static final double LEFT_VERTICAL = 0.64767666666;
-
     private static final double RIGHT_HORIZONTAL = 0.25222333333;
+    
+    // The down positions of the dragger servos, for when dragging the foundation
     private static final double RIGHT_VERTICAL = 0.35633333333;
+    private static final double LEFT_VERTICAL = 0.64767666666;
 
     final int DOWN = 0;
     final int UP = 1;
@@ -50,6 +52,7 @@ public class Dragger extends Component {
     public void startup() {
         super.startup();
 
+        // Upon initialization, set the servos in the up position
         release();
     }
 
@@ -57,6 +60,7 @@ public class Dragger extends Component {
     public void update(OpMode opmode) {
         super.update(opmode);
 
+        // Caching servo positions so we only write to them every update loop when they have changed
         if(dragger_pos != dragger_pos_cache) {
 
             if(dragger_pos == UP) {
@@ -82,10 +86,12 @@ public class Dragger extends Component {
 
     }
 
+    // Put the foundation draggers down to drag the foundation
     public void grab() {
         dragger_pos = DOWN;
     }
 
+    // Bring the foundation draggers up to release the foundation
     public void release() {
         dragger_pos = UP;
     }

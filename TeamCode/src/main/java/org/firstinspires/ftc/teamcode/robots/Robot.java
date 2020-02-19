@@ -38,6 +38,8 @@ public class Robot {
 
     Runnable update_thread;
 
+    // The Update Thread
+    // Should be called as fast as possible. Does all reads and writes to the rev hub
     class UpdateThread implements Runnable {
 
         Robot robot;
@@ -51,7 +53,6 @@ public class Robot {
         public void run() {
             while(robot.running) {
                 robot.update();
-                //robot.updateTelemetry();
             }
         }
     }
@@ -89,26 +90,26 @@ public class Robot {
         }
     }
 
+    // This method is called as fast as possible by the update thread
     public void update() {
 
-
-
+        // Bulk read from rev hub 1
         bulk_data_1 = expansion_hub_1.getBulkInputData();
 
+        // Bulk read from rev hub 2
         if(cycle % 10 == 0) {
-
             bulk_data_2 = expansion_hub_2.getBulkInputData();
-
         }
 
 
+        // Call update on every single component
         for (Component component : components) {
             component.update(opmode);
         }
 
 
+        // Update telemetry on the dashboard and on the phones
         if (cycle % 50 == 0) {
-
             updateTelemetry();
 
             for (Component component : components) {
@@ -116,31 +117,34 @@ public class Robot {
             }
 
             telemetry.update();
-
         }
 
+        // Recalculate our update thread frequency
         if (cycle % 20 == 0) {
-
             long update_duration = System.nanoTime()-last_update;
             update_freq = ((update_duration/(double)1000000000) * 20) != 0 ? (int)((1/(update_duration/(double)1000000000)) * 20) : Integer.MAX_VALUE;
 
             last_update = System.nanoTime();
-
         }
 
+        // This robot cycle is complete, increment our cycle counter by one
         cycle++;
     }
 
+    // For updating the telemetry on the phones
     public void updateTelemetry() {
         telemetry.addData("[RBT "+name+"]", components.size()+" components");
         telemetry.addData("FREQ", update_freq);
     }
 
+    // This should automatically be called whenever you make a new component attached to a robot instance
+    // Basically just adds the component to a list of registered components, and attaches all hardware the component needs from the configuration
     public void registerComponent(Component component) {
         component.registerHardware(hwmap);
         components.add(component);
     }
 
+    // Called on robot startup, registers all hardware the robot instance needs to use, in this case both the rev hubs
     public void registerHardware(HardwareMap hwmap) {
         expansion_hub_1 = hwmap.get(ExpansionHubEx.class, "Expansion Hub 1");
         expansion_hub_2 = hwmap.get(ExpansionHubEx.class, "Expansion Hub 2");
