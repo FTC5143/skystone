@@ -103,6 +103,11 @@ public class LiveRobot extends Robot {
         packet.put("ce", drive_train.lcs.prev_ce);
         packet.put("freq", update_freq);
 
+        packet.put("lift_l_target", lift.lift_l_target);
+        packet.put("lift_r_target", lift.lift_r_target);
+        packet.put("lift_l_pos", bulk_data_2.getMotorCurrentPosition(lift.lift_l));
+        packet.put("lift_r_pos", bulk_data_2.getMotorCurrentPosition(lift.lift_r));
+
 
         if (drive_train.current_path != null) {
             drive_train.current_path.dashboard_draw(canvas, drive_train.lcs.x, drive_train.lcs.y);

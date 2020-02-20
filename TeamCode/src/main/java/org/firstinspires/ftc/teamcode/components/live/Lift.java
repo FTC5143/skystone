@@ -23,8 +23,8 @@ import static org.firstinspires.ftc.teamcode.components.live.Lift.LiftConfig.*;
 public class Lift extends Component {
 
     //// MOTORS ////
-    private DcMotorEx lift_l;
-    private DcMotorEx lift_r;
+    public DcMotorEx lift_l;
+    public DcMotorEx lift_r;
 
     private Servo ext;
     private Servo grb_t;
@@ -44,8 +44,9 @@ public class Lift extends Component {
 
 
     private boolean starting_move = false;
-    private int lift_l_target = 0;
-    private int lift_r_target = 0;
+
+    public int lift_l_target = 0;
+    public int lift_r_target = 0;
 
     static double ext_pos = 0;
     static double ext_pos_cache = 0;
@@ -62,17 +63,17 @@ public class Lift extends Component {
     @Config
     static class LiftConfig {
 
-        static int BLOCK_HEIGHT = 640; //In encoder counts
+        static int BLOCK_HEIGHT = 72; //In encoder counts
         static int LIFT_OFFSET = 0;
-        static int MAX_LEVEL = 43;
+        static int MAX_LEVEL = 39;
         static int MIN_LEVEL = 0;
 
         static double GRABBER_CLOSED = 1;
         static double GRABBER_OPEN = 0.33;
 
-        static double PID_P = 5;
-        static double PID_I = 1;
-        static double PID_D = 0;
+        static double PID_P = 8;
+        static double PID_I = 0;
+        static double PID_D = 2;
 
         static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
 
@@ -80,9 +81,9 @@ public class Lift extends Component {
         static double CAPSTONE_DOWN = 0.7;
 
         static double EXTENSION_OUT = 0.20;
-        static double EXTENSION_IN = 0.7518;
+        static double EXTENSION_IN = 0.7698;
 
-        static double LIFT_ENCODER_TOLERANCE = 5;
+        static double LIFT_ENCODER_TOLERANCE = 1;
 
     }
 
@@ -134,7 +135,7 @@ public class Lift extends Component {
             starting_move = false;
         }
 
-        if (cached_power != 0) {
+        if (cached_power != 0 && level == 0) {
             if (Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_l) - lift_l_target) <= LIFT_ENCODER_TOLERANCE && Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_r) - lift_r_target) <= LIFT_ENCODER_TOLERANCE) {
                 set_power(0);
 
@@ -235,7 +236,11 @@ public class Lift extends Component {
     }
 
     public void elevate(int amt) {
-        level = Math.max(Math.min(level + amt, MAX_LEVEL), MIN_LEVEL);
+        elevate_to(level + amt);
+    }
+
+    public void elevate_to(int target) {
+        level = Math.max(Math.min(target, MAX_LEVEL), MIN_LEVEL);
         set_target_position((level * BLOCK_HEIGHT) + LIFT_OFFSET);
         starting_move = true;
     }

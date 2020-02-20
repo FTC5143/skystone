@@ -16,6 +16,8 @@ public class DebugOpmodeLive extends LiveTeleopBase {
 
     long slow_accel_starttime = System.currentTimeMillis();
 
+    int prepared_level = 0;
+
     @Override
     public void on_init() {
 
@@ -29,15 +31,23 @@ public class DebugOpmodeLive extends LiveTeleopBase {
     @Override
     public void on_loop() {
 
+        int elevate_amt = 1;
+
+        if(gamepad2.left_bumper) {
+            elevate_amt = 3;
+        } if (gamepad2.right_bumper) {
+            elevate_amt = 10;
+        }
+
         if(gamepad2.dpad_up && !dpad_up_pressed) {
-            robot.lift.elevate(1);
+            robot.lift.elevate(elevate_amt);
             dpad_up_pressed = true;
         } else if (!gamepad2.dpad_up) {
             dpad_up_pressed = false;
         }
 
         if(gamepad2.dpad_down && !dpad_down_pressed) {
-            robot.lift.elevate(-1);
+            robot.lift.elevate(-elevate_amt);
             dpad_down_pressed = true;
         } else if (!gamepad2.dpad_down) {
             dpad_down_pressed = false;
@@ -109,7 +119,6 @@ public class DebugOpmodeLive extends LiveTeleopBase {
         }
 
 
-
         if(gamepad1.a) {
             robot.dragger.grab();
         }
@@ -118,12 +127,12 @@ public class DebugOpmodeLive extends LiveTeleopBase {
             robot.dragger.release();
         }
 
-        if (gamepad2.left_bumper || gamepad2.right_bumper) {
-            robot.feeder.spin(gamepad2.left_bumper ? -1 : 0, gamepad2.right_bumper ? -1 : 0);
-        } else if (robot.bulk_data_1 != null && robot.bulk_data_1.getDigitalInputState(1)){
-            robot.feeder.spin(gamepad2.left_trigger, gamepad2.right_trigger);
+        double intake_movement = gamepad1.left_trigger-gamepad1.right_trigger;
+
+        if (intake_movement < 0 || (intake_movement > 0 && robot.bulk_data_1 != null && robot.bulk_data_1.getDigitalInputState(1))) {
+            robot.feeder.spin(intake_movement);
         } else {
-            robot.feeder.spin(0, 0);
+            robot.feeder.spin(0);
         }
 
         if (gamepad2.right_stick_button) {
