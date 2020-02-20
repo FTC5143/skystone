@@ -31,11 +31,12 @@ public class DriveTrain extends Component {
 
     public int color = RED;
 
-    // Drive train moves according to these
+    // Drive train moves according to these. Update them, it moves
     private double drive_x = 0;
     private double drive_y = 0;
     private double drive_a = 0;
 
+    // Cached motor powers so we only write when we need to
     private double cache_lf_power = 0;
     private double cache_rf_power = 0;
     private double cache_lb_power = 0;
@@ -67,10 +68,14 @@ public class DriveTrain extends Component {
     public void update(OpMode opmode) {
         super.update(opmode);
 
+        // Updating the localizer with the new odometry encoder counts
         lcs.update(robot.bulk_data_1.getMotorCurrentPosition(drive_lf), robot.bulk_data_1.getMotorCurrentPosition(drive_rf), robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
 
+        // Finding new motors powers from the drive variables
         double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);
 
+        // Set one motor power per cycle. We do this to maintain a good odometry update speed
+        // We should be doing a full drive train update at about 40hz with this configuration, which is more than enough
         if (robot.cycle % 4 == 0 /*&& motor_powers[0] != cache_lf_power*/) {
             drive_lf.setPower(motor_powers[0]);
             cache_lf_power = motor_powers[0];
@@ -108,15 +113,18 @@ public class DriveTrain extends Component {
     public void startup() {
         super.startup();
 
+        // Set all the zero power behaviors to brake on startup, to prevent slippage as much as possible
         drive_lf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive_rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive_lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drive_rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // Reverse the left motors, because they have a different orientation on the robot
         drive_lf.setDirection(DcMotor.Direction.REVERSE);
         drive_lb.setDirection(DcMotor.Direction.REVERSE);
-
+        
         set_mode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // We run without encoder because we do not have motor encoders, we have odometry instead
         set_mode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
@@ -124,10 +132,11 @@ public class DriveTrain extends Component {
     @Override
     public void shutdown() {
         super.shutdown();
-
+        // Cut all motor powers on robot shutdown
         stop();
     }
 
+    // Return the motor powers needed to move in the given travel vector. Should give optimal speeds
     private double[] mecanum_math(double x, double y, double a) {
         double[] power = new double[]{-x + y + a, +x + y - a, +x + y + a, -x + y - a};
 
@@ -143,17 +152,20 @@ public class DriveTrain extends Component {
         return power;
     }
 
+    // An easy public setter for the drive variables
     public void mechanum_drive(double x, double y, double a) {
         drive_x = x;
         drive_y = y;
         drive_a = a;
     }
 
+    // Stop all motors, and reset drive variables
     public void stop() {
         mechanum_drive(0, 0, 0);
         set_power(0);
     }
-
+    
+    // Bulk motor set mode
     private void set_mode(DcMotor.RunMode mode) {
         drive_lf.setMode(mode);
         drive_rf.setMode(mode);
@@ -161,6 +173,7 @@ public class DriveTrain extends Component {
         drive_rb.setMode(mode);
     }
 
+    // Bulk motor set power
     private void set_power(double lf, double rf, double lb, double rb) {
         drive_lf.setPower(lf);
         drive_rf.setPower(rf);
@@ -168,10 +181,13 @@ public class DriveTrain extends Component {
         drive_rb.setPower(rb);
     }
 
+    // For setting all motors to the same power
     private void set_power(double power) {
         set_power(power, power, power ,power);
     }
 
+    
+    // Basic run to pose with odometry
     public void odo_move(double x, double y, double a, double speed) {
         odo_move(x, y, a, speed, 1, 0.02, 0);
     }
@@ -216,39 +232,51 @@ public class DriveTrain extends Component {
         }
     }
 
+    
+    // Following a pure pursuit path with odometry
     public void follow_curve_path(CurvePath path) {
-
+        
+        // Update our current path, for telemetry
         this.current_path = path;
 
         while (robot.lopmode.opModeIsActive()) {
-
+            
+            // Get our lookahead point
             Pose lookahead_pose = path.get_lookahead_pose(lcs.x, lcs.y);
 
+            // Get the distance to our lookahead point
             double distance = Math.hypot(lookahead_pose.x-lcs.x, lookahead_pose.y-lcs.y);
 
             double speed;
-
+            // Find our drive speed based on distance
             if (distance < current_path.radius) {
                 speed = Range.clip((distance / 8) + 0.1, 0, 1);
             } else {
                 speed = 1;
             }
 
+            // Find our turn speed based on angle difference
             double turn_speed = Range.clip(Math.abs(lcs.a-lookahead_pose.a) / (Math.PI/4) + 0.1, 0, 1);
 
+            // Drive towards the lookahead point
             drive_to_pose(lookahead_pose, speed, 1);
         }
 
     }
 
+    // Set motor powers to drive to a position and angle
     public void drive_to_pose(Pose pose, double drive_speed, double turn_speed) {
 
+        // Find the angle to the pose
         double drive_angle = Math.atan2(pose.y-lcs.y, pose.x-lcs.x);
 
+        // Find movement vector to drive towards that point
         double mvmt_x = Math.cos(drive_angle - lcs.a) * drive_speed;
         double mvmt_y = -Math.sin(drive_angle - lcs.a) * drive_speed;
+        // Find angle speed to turn towards the desired angle
         double mvmt_a = -Math.signum(Range.clip((pose.a - lcs.a - (Math.PI/2)), -1, 1)) * turn_speed;
 
+        // Update actual motor powers with our movement vector
         mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
 
     }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.systems.pathfollowing;
 
+// A Pose is a point with an angle
+
 public class Pose extends Point {
 
     public double a;

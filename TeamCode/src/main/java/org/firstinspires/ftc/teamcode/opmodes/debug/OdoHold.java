@@ -27,6 +27,7 @@ public class OdoHold extends LinearOpMode {
 
         waitForStart();
 
+        // Hold position at 0, 0 forever
         robot.drive_train.odo_move(0.01, 0, 0, 1, -1, -1);
 
         robot.shutdown();
