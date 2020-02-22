@@ -126,7 +126,7 @@ public class Lift extends Component {
         if (starting_move) {
 
             if (level == 0) {
-                if(robot.bulk_data_2.getDigitalInputState(3) && robot.bulk_data_2.getDigitalInputState(5)) {
+                if(robot.bulk_data_1.getDigitalInputState(3) && robot.bulk_data_1.getDigitalInputState(5)) {
                     lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     set_power(-1);
@@ -143,11 +143,11 @@ public class Lift extends Component {
         }
 
         if (level == 0 && (lift_l.getPower() == -1 || lift_r.getPower() == -1)) {
-            if ((!robot.bulk_data_2.getDigitalInputState(5)) && (lift_l.getPower() != 0)) {
+            if ((!robot.bulk_data_1.getDigitalInputState(5)) && (lift_l.getPower() != 0)) {
                 lift_l_offset = robot.bulk_data_2.getMotorCurrentPosition(lift_l);
                 lift_l.setPower(0);
             }
-            if ((!robot.bulk_data_2.getDigitalInputState(3)) && (lift_r.getPower() != 0)) {
+            if ((!robot.bulk_data_1.getDigitalInputState(3)) && (lift_r.getPower() != 0)) {
                 lift_r_offset = robot.bulk_data_2.getMotorCurrentPosition(lift_r);
                 lift_r.setPower(0);
             }
