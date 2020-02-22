@@ -69,7 +69,11 @@ public class DriveTrain extends Component {
         super.update(opmode);
 
         // Updating the localizer with the new odometry encoder counts
-        lcs.update(robot.bulk_data_1.getMotorCurrentPosition(drive_lf), robot.bulk_data_1.getMotorCurrentPosition(drive_rf), robot.bulk_data_1.getMotorCurrentPosition(drive_lb));
+        lcs.update(
+                robot.bulk_data_1.getMotorCurrentPosition(drive_lf),
+                robot.bulk_data_1.getMotorCurrentPosition(drive_rf),
+                robot.bulk_data_1.getMotorCurrentPosition(drive_lb)
+        );
 
         // Finding new motors powers from the drive variables
         double[] motor_powers = mecanum_math(drive_x, drive_y, drive_a);

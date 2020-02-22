@@ -15,10 +15,36 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 import org.firstinspires.ftc.teamcode.components.Component;
 
-import static org.firstinspires.ftc.teamcode.components.live.Lift.LiftConfig.*;
+import static org.firstinspires.ftc.teamcode.components.live.LiftConfig.*;
 
 // Elevator lifts the stone and extender up
 // Extender extends over the tower, and the grabber releases the stone
+
+
+@Config
+class LiftConfig {
+
+    public static int BLOCK_HEIGHT = 72; //In encoder counts
+    public static int LIFT_OFFSET = 0;
+    public static int MAX_LEVEL = 39;
+    public static int MIN_LEVEL = 0;
+
+    public static double GRABBER_CLOSED = 1;
+    public static double GRABBER_OPEN = 0.33;
+
+    public static double PID_P = 15;
+    public static double PID_I = 0;
+    public static double PID_D = 3;
+
+    public static double CAPSTONE_UP = 0.9;
+    public static double CAPSTONE_DOWN = 0.7;
+
+    public static double EXTENSION_OUT = 0.20;
+    public static double EXTENSION_IN = 0.7698;
+
+    public static int LIFT_DOWN_OVERSHOOT = 100;
+
+}
 
 public class Lift extends Component {
 
@@ -38,15 +64,15 @@ public class Lift extends Component {
 
     public int level;
 
-    private double cached_power = 0;
-
     private int grabber_turn = 0;
-
 
     private boolean starting_move = false;
 
     public int lift_l_target = 0;
     public int lift_r_target = 0;
+
+    public int lift_l_offset = 0;
+    public int lift_r_offset = 0;
 
     static double ext_pos = 0;
     static double ext_pos_cache = 0;
@@ -60,32 +86,7 @@ public class Lift extends Component {
     static double cap_pos = 0;
     static double cap_pos_cache = 0;
 
-    @Config
-    static class LiftConfig {
 
-        static int BLOCK_HEIGHT = 72; //In encoder counts
-        static int LIFT_OFFSET = 0;
-        static int MAX_LEVEL = 39;
-        static int MIN_LEVEL = 0;
-
-        static double GRABBER_CLOSED = 1;
-        static double GRABBER_OPEN = 0.33;
-
-        static double PID_P = 8;
-        static double PID_I = 0;
-        static double PID_D = 2;
-
-        static final PIDCoefficients PID_COEFFS = new PIDCoefficients(PID_P, PID_I, PID_D);
-
-        static double CAPSTONE_UP = 0.9;
-        static double CAPSTONE_DOWN = 0.7;
-
-        static double EXTENSION_OUT = 0.20;
-        static double EXTENSION_IN = 0.7698;
-
-        static double LIFT_ENCODER_TOLERANCE = 1;
-
-    }
 
     {
         name = "Lift";
@@ -122,28 +123,36 @@ public class Lift extends Component {
     public void update(OpMode opmode) {
         super.update(opmode);
 
-        if (starting_move == true) {
+        if (starting_move) {
 
-            lift_l.setTargetPosition(lift_l_target);
-            lift_r.setTargetPosition(lift_r_target);
-
-            lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            set_power(1);
+            if (level == 0) {
+                if(robot.bulk_data_2.getDigitalInputState(3) && robot.bulk_data_2.getDigitalInputState(5)) {
+                    lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    set_power(-1);
+                }
+            } else {
+                lift_l.setTargetPosition(lift_l_target+lift_l_offset);
+                lift_r.setTargetPosition(lift_r_target+lift_r_offset);
+                lift_l.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                lift_r.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                set_power(1);
+            }
 
             starting_move = false;
         }
 
-        if (cached_power != 0 && level == 0) {
-            if (Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_l) - lift_l_target) <= LIFT_ENCODER_TOLERANCE && Math.abs(robot.bulk_data_2.getMotorCurrentPosition(lift_r) - lift_r_target) <= LIFT_ENCODER_TOLERANCE) {
-                set_power(0);
-
-                lift_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                lift_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        if (level == 0 && (lift_l.getPower() == -1 || lift_r.getPower() == -1)) {
+            if ((!robot.bulk_data_2.getDigitalInputState(5)) && (lift_l.getPower() != 0)) {
+                lift_l_offset = robot.bulk_data_2.getMotorCurrentPosition(lift_l);
+                lift_l.setPower(0);
+            }
+            if ((!robot.bulk_data_2.getDigitalInputState(3)) && (lift_r.getPower() != 0)) {
+                lift_r_offset = robot.bulk_data_2.getMotorCurrentPosition(lift_r);
+                lift_r.setPower(0);
             }
         }
+
 
         if(ext_pos != ext_pos_cache) {
             ext.setPosition(ext_pos);
@@ -174,9 +183,10 @@ public class Lift extends Component {
         lift_l.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift_r.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        PIDCoefficients pid_coeffs = new PIDCoefficients(PID_P, PID_I, PID_D);
 
-        lift_l.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
-        lift_r.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, PID_COEFFS);
+        lift_l.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pid_coeffs);
+        lift_r.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pid_coeffs);
 
         lift_r.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -190,7 +200,6 @@ public class Lift extends Component {
         release();
         retract();
         turn(-100);
-        elevate(0);
 
     }
 
@@ -207,11 +216,15 @@ public class Lift extends Component {
         telemetry.addData("LL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_l)));
         telemetry.addData("RL TURNS",TELEMETRY_DECIMAL.format(robot.bulk_data_2.getMotorCurrentPosition(lift_r)));
 
+        telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l_target));
+        telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r_target));
 
-        //telemetry.addData("LL TARGET",TELEMETRY_DECIMAL.format(lift_l.getTargetPosition()));
-        //telemetry.addData("RL TARGET",TELEMETRY_DECIMAL.format(lift_r.getTargetPosition()));
+        telemetry.addData("LL OFFSET", TELEMETRY_DECIMAL.format(lift_l_offset));
+        telemetry.addData("RL OFFSET", TELEMETRY_DECIMAL.format(lift_r_offset));
 
         telemetry.addData("LIFT BUSY",robot.bulk_data_2.isMotorAtTargetPosition(lift_l)+" "+robot.bulk_data_2.isMotorAtTargetPosition(lift_r));
+
+        telemetry.addData("LIFT RUNNING", running_lift());
 
         telemetry.addData("EXT POS",TELEMETRY_DECIMAL.format(ext.getPosition()));
 
@@ -227,7 +240,10 @@ public class Lift extends Component {
     public void set_power(double speed) {
         lift_l.setPower(speed);
         lift_r.setPower(speed);
-        cached_power = speed;
+    }
+
+    public boolean running_lift() {
+        return lift_l.getPower() != 0 || lift_r.getPower() != 0;
     }
 
     private void set_target_position(int pos) {
@@ -286,5 +302,9 @@ public class Lift extends Component {
     public void turn(int direction) {
         grabber_turn = Range.clip(grabber_turn+direction, 0, 2);
         turn_pos = (0.995-(grabber_turn*0.33333));
+    }
+
+    public boolean extended() {
+        return ext_pos == EXTENSION_OUT;
     }
 }

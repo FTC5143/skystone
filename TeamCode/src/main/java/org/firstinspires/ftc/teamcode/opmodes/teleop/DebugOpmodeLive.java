@@ -18,6 +18,7 @@ public class DebugOpmodeLive extends LiveTeleopBase {
 
     int prepared_level = 0;
 
+
     @Override
     public void on_init() {
 
@@ -25,7 +26,7 @@ public class DebugOpmodeLive extends LiveTeleopBase {
 
     @Override
     public void on_start() {
-        robot.dragger.grab();
+        this.getRuntime();
     }
 
     @Override
@@ -58,10 +59,26 @@ public class DebugOpmodeLive extends LiveTeleopBase {
                 robot.lift.max_lift();
             }
             else {
-                robot.lift.min_lift();
+
+                final boolean extended = robot.lift.extended();
+
                 robot.lift.turn(-100);
-                robot.lift.retract();
                 robot.lift.release();
+                //robot.lift.min_lift();
+                //robot.lift.retract();
+
+                run_in(new Runnable() {
+                    @Override
+                    public void run() {
+                        robot.lift.min_lift();
+                        run_in(new Runnable() {
+                            @Override
+                            public void run() {
+                                robot.lift.retract();
+                            }
+                        }, extended ? 250 : 0);
+                    }
+                }, extended ? 500 : 0);
             }
         }
 
@@ -76,8 +93,7 @@ public class DebugOpmodeLive extends LiveTeleopBase {
 
         if(gamepad1.left_bumper) {
             speed_mod = 0.25;
-        }
-        else if(gamepad1.right_bumper) {
+        } else if(gamepad1.right_bumper) {
             speed_mod = 0.5;
         }
 
@@ -88,9 +104,9 @@ public class DebugOpmodeLive extends LiveTeleopBase {
         double slow_accel_speed = ((double) current_time - (double) slow_accel_starttime) / 3000.0;
 
         if (gamepad1.dpad_right) {
-            robot.drive_train.mechanum_drive(0, slow_accel_speed, slow_accel_speed);
+            robot.drive_train.mechanum_drive(0, -slow_accel_speed, slow_accel_speed);
         } else if (gamepad1.dpad_left) {
-            robot.drive_train.mechanum_drive(0, slow_accel_speed, -slow_accel_speed);
+            robot.drive_train.mechanum_drive(0, -slow_accel_speed, -slow_accel_speed);
         } else if (gamepad1.dpad_up) {
             robot.drive_train.mechanum_drive(0, slow_accel_speed, 0);
         } else if (gamepad1.dpad_down) {
@@ -101,7 +117,7 @@ public class DebugOpmodeLive extends LiveTeleopBase {
 
 
         if(gamepad2.x)  { robot.lift.grab(); }
-        if(gamepad2.y)    { robot.lift.release(); }
+        if(gamepad2.y)  { robot.lift.release(); }
 
 
         if(gamepad2.dpad_left && !dpad_left_pressed) {
@@ -118,7 +134,6 @@ public class DebugOpmodeLive extends LiveTeleopBase {
             dpad_right_pressed = false;
         }
 
-
         if(gamepad1.a) {
             robot.dragger.grab();
         }
@@ -127,7 +142,7 @@ public class DebugOpmodeLive extends LiveTeleopBase {
             robot.dragger.release();
         }
 
-        double intake_movement = gamepad1.left_trigger-gamepad1.right_trigger;
+        double intake_movement = gamepad1.left_trigger - gamepad1.right_trigger;
 
         if (intake_movement < 0 || (intake_movement > 0 && robot.bulk_data_1 != null && robot.bulk_data_1.getDigitalInputState(1))) {
             robot.feeder.spin(intake_movement);

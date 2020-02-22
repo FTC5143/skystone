@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robots;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,6 +11,17 @@ import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 
 import java.util.ArrayList;
+
+import static org.firstinspires.ftc.teamcode.robots.RobotConfig.*;
+
+@Config
+class RobotConfig {
+    public static int COMPONENT_UPDATE_CYCLE = 1;
+    public static int BULK_READ_1_CYCLE = 1;
+    public static int BULK_READ_2_CYCLE = 5;
+    public static int TELEMETRY_CYCLE = 20;
+    public static int FREQ_CHECK_CYCLE = 20;
+}
 
 public class Robot {
 
@@ -94,22 +106,24 @@ public class Robot {
     public void update() {
 
         // Bulk read from rev hub 1
-        bulk_data_1 = expansion_hub_1.getBulkInputData();
+        if(cycle % BULK_READ_1_CYCLE == 0) {
+            bulk_data_1 = expansion_hub_1.getBulkInputData();
+        }
 
         // Bulk read from rev hub 2
-        if(cycle % 10 == 0) {
+        if(cycle % BULK_READ_2_CYCLE == 0) {
             bulk_data_2 = expansion_hub_2.getBulkInputData();
         }
 
-
         // Call update on every single component
-        for (Component component : components) {
-            component.update(opmode);
+        if(cycle % COMPONENT_UPDATE_CYCLE == 0) {
+            for (Component component : components) {
+                component.update(opmode);
+            }
         }
 
-
         // Update telemetry on the dashboard and on the phones
-        if (cycle % 50 == 0) {
+        if (cycle % TELEMETRY_CYCLE == 0) {
             updateTelemetry();
 
             for (Component component : components) {
@@ -120,7 +134,7 @@ public class Robot {
         }
 
         // Recalculate our update thread frequency
-        if (cycle % 20 == 0) {
+        if (cycle % FREQ_CHECK_CYCLE == 0) {
             long update_duration = System.nanoTime()-last_update;
             update_freq = ((update_duration/(double)1000000000) * 20) != 0 ? (int)((1/(update_duration/(double)1000000000)) * 20) : Integer.MAX_VALUE;
 

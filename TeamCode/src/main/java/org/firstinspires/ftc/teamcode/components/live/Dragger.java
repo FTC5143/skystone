@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -8,21 +9,27 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.robots.Robot;
 
+import static org.firstinspires.ftc.teamcode.components.live.DraggerConfig.*;
+
 // Dragger Component
 // For dragging the foundation
+
+@Config
+class DraggerConfig {
+    // The up positions of the dragger servos, for when not dragging the foundation
+    public static double LEFT_HORIZONTAL = 0.75278666666;
+    public static double RIGHT_HORIZONTAL = 0.25222333333;
+
+    // The down positions of the dragger servos, for when dragging the foundation
+    public static double RIGHT_VERTICAL = 0.35633333333;
+    public static double LEFT_VERTICAL = 0.64767666666;
+}
 
 public class Dragger extends Component {
     //// SERVOS ////
     Servo left_dragger;
     Servo right_dragger;
 
-    // The up positions of the dragger servos, for when not dragging the foundation
-    private static final double LEFT_HORIZONTAL = 0.75278666666;
-    private static final double RIGHT_HORIZONTAL = 0.25222333333;
-    
-    // The down positions of the dragger servos, for when dragging the foundation
-    private static final double RIGHT_VERTICAL = 0.35633333333;
-    private static final double LEFT_VERTICAL = 0.64767666666;
 
     final int DOWN = 0;
     final int UP = 1;
