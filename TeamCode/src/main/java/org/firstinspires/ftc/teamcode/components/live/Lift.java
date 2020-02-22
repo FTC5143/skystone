@@ -32,7 +32,7 @@ class LiftConfig {
     public static double GRABBER_CLOSED = 1;
     public static double GRABBER_OPEN = 0.33;
 
-    public static double PID_P = 15;
+    public static double PID_P = 8;
     public static double PID_I = 0;
     public static double PID_D = 3;
 
