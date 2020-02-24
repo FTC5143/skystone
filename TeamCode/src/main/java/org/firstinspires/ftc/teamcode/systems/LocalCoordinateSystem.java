@@ -24,7 +24,6 @@ public class LocalCoordinateSystem {
         double rd = re - prev_re;
         double cd = ce - prev_ce;
 
-
         // Calculate phi, or the delta of our angle
         double ph = (rd * INCHES_PER_COUNT - ld * INCHES_PER_COUNT) / ROBOT_DIAMETER;
 
@@ -34,12 +33,37 @@ public class LocalCoordinateSystem {
         // The arclength of movement left/right
         double sc = (cd * INCHES_PER_COUNT) + (ph * CENTER_WHEEL_OFFSET);
 
-        // Calculate the new position of the robot by adding the arc vector to the absolute pos
-        y += (dc * Math.cos(a + (ph / 2))) - (sc * Math.sin(a + (ph / 2)));
-        x -= (dc * Math.sin(a + (ph / 2))) + (sc * Math.cos(a + (ph / 2)));
-
         // Calculate the new angle of the robot using the difference between the left and right encoder
         a = (re * INCHES_PER_COUNT - le * INCHES_PER_COUNT) / ROBOT_DIAMETER;
+
+        // Calculate the new position of the robot by adding the arc vector to the absolute pos
+        double sinph = Math.sin(ph);
+        double cosph = Math.cos(ph);
+
+        double s;
+        double c;
+
+        // If the arc turn is small enough, do this instead to avoid a div by zero error
+        if(Math.abs(ph) < 1E-9) {
+            s = 1.0 - 1.0 / 6.0 * ph * ph;
+            c = 0.5 * ph;
+        } else {
+            s = sinph / ph;
+            c = (1 - cosph) / ph;
+        }
+
+        // Find our x and y translations relative to the origin pose (0,0,0)
+        double rel_x = sc * s - dc * c;
+        double rel_y = sc * c - dc * s;
+
+        // Transform those x and y translations to the actual rotation of our robot, and translate our robots positions to the new spot
+        x += rel_x * Math.cos(a) - rel_y * Math.sin(a);
+        y += rel_x * Math.sin(a) + rel_y * Math.cos(a);
+
+        /* OLD BAD BAD BAD CODE THAT DOESN'T REALLY WORK AT ALL REALLY
+        y += (dc * Math.cos(a + (ph / 2))) - (sc * Math.sin(a + (ph / 2)));
+        x -= (dc * Math.sin(a + (ph / 2))) + (sc * Math.cos(a + (ph / 2)));
+        */
 
         // Used to calculate deltas for next loop
         prev_le = le;
