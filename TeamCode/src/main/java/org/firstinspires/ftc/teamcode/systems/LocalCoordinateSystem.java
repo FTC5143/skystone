@@ -24,7 +24,6 @@ public class LocalCoordinateSystem {
         double rd = re - prev_re;
         double cd = ce - prev_ce;
 
-
         // Calculate phi, or the delta of our angle
         double ph = (rd * INCHES_PER_COUNT - ld * INCHES_PER_COUNT) / ROBOT_DIAMETER;
 
@@ -35,8 +34,29 @@ public class LocalCoordinateSystem {
         double sc = (cd * INCHES_PER_COUNT) + (ph * CENTER_WHEEL_OFFSET);
 
         // Calculate the new position of the robot by adding the arc vector to the absolute pos
+
+        double sinph = Math.sin(ph);
+        double cosph = Math.cos(ph);
+
+        double s;
+        double c;
+
+        // If the arc turn is small enough, do this instead to avoid a div by zero error
+        if(Math.abs(ph) < 1E-9) {
+            s = 1.0 - 1.0 / 6.0 * ph * ph;
+            c = 0.5 * ph;
+        } else {
+            s = sinph / ph;
+            c = (1 - cosph) / ph;
+        }
+
+        x += sc * s - dc * c;
+        y += sc * c - dc * s;
+
+        /* OLD BAD BAD BAD CODE THAT DOESN'T REALLY WORK AT ALL REALLY
         y += (dc * Math.cos(a + (ph / 2))) - (sc * Math.sin(a + (ph / 2)));
         x -= (dc * Math.sin(a + (ph / 2))) + (sc * Math.cos(a + (ph / 2)));
+        */
 
         // Calculate the new angle of the robot using the difference between the left and right encoder
         a = (re * INCHES_PER_COUNT - le * INCHES_PER_COUNT) / ROBOT_DIAMETER;
