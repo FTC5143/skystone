@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.opmodes.LiveTeleopBase;
 
@@ -14,10 +15,11 @@ public class DebugOpmodeLive extends LiveTeleopBase {
     boolean dpad_left_pressed = false;
     boolean dpad_right_pressed = false;
 
+    boolean a2_pressed = false;
+
     long slow_accel_starttime = System.currentTimeMillis();
 
-    int prepared_level = 0;
-
+    int prepared_level = 1;
 
     @Override
     public void on_init() {
@@ -32,26 +34,26 @@ public class DebugOpmodeLive extends LiveTeleopBase {
     @Override
     public void on_loop() {
 
-        int elevate_amt = 1;
-
         if(gamepad2.left_bumper) {
-            elevate_amt = 3;
-        } if (gamepad2.right_bumper) {
-            elevate_amt = 10;
+            robot.lift.elevate_to(prepared_level);
         }
 
         if(gamepad2.dpad_up && !dpad_up_pressed) {
-            robot.lift.elevate(elevate_amt);
+            prepared_level = Range.clip(prepared_level + 1, 0, 12);
             dpad_up_pressed = true;
         } else if (!gamepad2.dpad_up) {
             dpad_up_pressed = false;
         }
 
         if(gamepad2.dpad_down && !dpad_down_pressed) {
-            robot.lift.elevate(-elevate_amt);
+            prepared_level = Range.clip(prepared_level - 1, 0, 12);
             dpad_down_pressed = true;
         } else if (!gamepad2.dpad_down) {
             dpad_down_pressed = false;
+        }
+
+        if(gamepad2.right_bumper) {
+            prepared_level = 0;
         }
 
         if(gamepad2.back) {
@@ -64,30 +66,26 @@ public class DebugOpmodeLive extends LiveTeleopBase {
 
                 robot.lift.turn(-100);
                 robot.lift.release();
+                robot.lift.min_lift();
+                robot.lift.retract();
+                robot.lift.uncap();
                 //robot.lift.min_lift();
                 //robot.lift.retract();
-
-                run_in(new Runnable() {
-                    @Override
-                    public void run() {
-                        robot.lift.min_lift();
-                        run_in(new Runnable() {
-                            @Override
-                            public void run() {
-                                robot.lift.retract();
-                            }
-                        }, extended ? 250 : 0);
-                    }
-                }, extended ? 500 : 0);
             }
         }
 
 
         if(gamepad2.a) {
             robot.lift.extend();
-        } else if (gamepad2.b) {
+        }
+        if (gamepad2.b) {
             robot.lift.retract();
         }
+
+        robot.lift.tweak(-gamepad2.left_stick_y);
+
+        if(gamepad2.x)  { robot.lift.grab(); }
+        if(gamepad2.y)  { robot.lift.release(); }
 
         double speed_mod = 1;
 
@@ -114,11 +112,6 @@ public class DebugOpmodeLive extends LiveTeleopBase {
         } else {
             slow_accel_starttime = System.currentTimeMillis();
         }
-
-
-        if(gamepad2.x)  { robot.lift.grab(); }
-        if(gamepad2.y)  { robot.lift.release(); }
-
 
         if(gamepad2.dpad_left && !dpad_left_pressed) {
             robot.lift.turn(1);

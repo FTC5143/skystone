@@ -49,7 +49,7 @@ public class LocalCoordinateSystem {
             c = 0.5 * ph;
         } else {
             s = sinph / ph;
-            c = (1 - cosph) / ph;
+            c = (1.0 - cosph) / ph;
         }
 
         // Find our x and y translations relative to the origin pose (0,0,0)
@@ -57,8 +57,8 @@ public class LocalCoordinateSystem {
         double rel_y = sc * c - dc * s;
 
         // Transform those x and y translations to the actual rotation of our robot, and translate our robots positions to the new spot
-        x += rel_x * Math.cos(a) - rel_y * Math.sin(a);
-        y += rel_x * Math.sin(a) + rel_y * Math.cos(a);
+        x -= rel_x * Math.cos(a) - rel_y * Math.sin(a);
+        y -= rel_x * Math.sin(a) + rel_y * Math.cos(a);
 
         /* OLD BAD BAD BAD CODE THAT DOESN'T REALLY WORK AT ALL REALLY
         y += (dc * Math.cos(a + (ph / 2))) - (sc * Math.sin(a + (ph / 2)));

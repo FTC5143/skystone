@@ -51,7 +51,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.feeder.spin(1);
 
             // Move forward to take in the skystone
-            robot.drive_train.odo_move(-4, 40, -Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(-4, 40, -Math.PI / 2, 0.5, 1, 0.02, 1.5);
 
         }
         else if (pattern == 2) {
@@ -66,7 +66,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.feeder.spin(1);
 
             // Move forward to take in the stone
-            robot.drive_train.odo_move(4, 40, -Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(4, 40, -Math.PI / 2, 0.5, 1, 0.02, 1.5);
 
         } else if (pattern == 3) {
             // Move up next to the first stone and the first skystone
@@ -88,14 +88,12 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.feeder.spin(1);
 
             // Move forward to intake the stone
-            robot.drive_train.odo_move(-12, 40, -Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(-12, 40, -Math.PI / 2, 0.5, 1, 0.02, 1.5);
         }
 
         // Wait for block to be intook, or 1 second
         resetStartTime(); while (!robot.lift.block_detector.isPressed() && getRuntime() < 1) {} 
-        
-        // Grab the stone after we intake it so it doesn't fall out
-        robot.lift.grab();
+
 
         // Stop spinning the intake since we have the stone
         robot.feeder.spin(0);
@@ -103,6 +101,8 @@ public class TwoStoneAuto extends LiveAutoBase {
         
         // Only do this if we are dragging the foundation
         if (FOUNDATION == true) {
+            // Grab the stone after we intake it so it doesn't fall out
+            robot.lift.grab();
 
             // Start driving under the bridge
             robot.drive_train.odo_move(6, 25, -Math.PI/2, 1);
@@ -111,7 +111,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.drive_train.odo_move(52, 25, -Math.PI/2, 1);
 
             // Start bringing up the lift
-            robot.lift.elevate(4);
+            robot.lift.elevate_to(3);
 
             // While the lift goes up, drive up to the foundation
             robot.drive_train.odo_move(78, 28, -Math.PI, 1);
@@ -132,7 +132,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             sleep(500);
 
             // Bring the lift down a little bit so the stone doesn't bounce
-            robot.lift.elevate(-1);
+            robot.lift.elevate_to(2);
 
             // As we are bringing the lift down, turn and drag the foundation into the corner
             robot.drive_train.odo_move(76, 12, -Math.PI/2, 1, 1, 0.03, 2.5);
@@ -193,7 +193,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.drive_train.odo_move(-18, 40, -Math.PI / 2, 0.5);
 
             // Move forward to intake it
-            robot.drive_train.odo_move(-26, 40, -Math.PI / 2, 1);
+            robot.drive_train.odo_move(-26, 40, -Math.PI / 2, 1, 1, 0.02, 1.5);
 
         }
 
@@ -214,7 +214,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.drive_train.odo_move(-12, 40, -Math.PI / 2, 0.5);
 
             // Move forward to intake the skystone
-            robot.drive_train.odo_move(-20, 40, -Math.PI / 2, 1);
+            robot.drive_train.odo_move(-20, 40, -Math.PI / 2, 1, 1, 0.02, 1.5);
 
         }
 
@@ -247,11 +247,10 @@ public class TwoStoneAuto extends LiveAutoBase {
         // Once we have the stone stop spinning the intake
         robot.feeder.spin(0);
 
-        // Grab the stone so it doesn't come out of the robot while we drive
-        robot.lift.grab();
-
         // Only do the following if we have previously moved the foundation
         if (FOUNDATION == true) {
+            // Grab the stone so it doesn't come out of the robot while we drive
+            robot.lift.grab();
 
             // Move under bridge
             robot.drive_train.odo_move(10, 25, -Math.PI/2, 1);
@@ -260,7 +259,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.drive_train.odo_move(52, 25, -Math.PI/2, 1);
 
             // Start raising the lift
-            robot.lift.elevate(4);
+            robot.lift.elevate_to(3);
 
             // As we raise finish driving to the foundation
             robot.drive_train.odo_move(76, 20, -Math.PI/2, 1, 1, 0.03, 3);
@@ -278,7 +277,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             sleep(500);
 
             // Bring the lift down a little bit so it doesn't bounce when we drop it
-            robot.lift.elevate(-1);
+            robot.lift.elevate_to(2);
 
             // Give the lift a little time to come down
             sleep(500);

@@ -24,17 +24,17 @@ import static org.firstinspires.ftc.teamcode.components.live.LiftConfig.*;
 @Config
 class LiftConfig {
 
-    public static int BLOCK_HEIGHT = 72; //In encoder counts
+    public static int BLOCK_HEIGHT = 238; //In encoder counts
     public static int LIFT_OFFSET = 0;
-    public static int MAX_LEVEL = 39;
+    public static int MAX_LEVEL = 12;
     public static int MIN_LEVEL = 0;
 
     public static double GRABBER_CLOSED = 1;
     public static double GRABBER_OPEN = 0.33;
 
-    public static double PID_P = 8;
-    public static double PID_I = 0;
-    public static double PID_D = 3;
+    public static double PID_P = 15;
+    public static double PID_I = 0.1;
+    public static double PID_D = 4;
 
     public static double CAPSTONE_UP = 0.9;
     public static double CAPSTONE_DOWN = 0.7;
@@ -86,7 +86,7 @@ public class Lift extends Component {
     static double cap_pos = 0;
     static double cap_pos_cache = 0;
 
-
+    static double tweak_cache = 0;
 
     {
         name = "Lift";
@@ -306,5 +306,25 @@ public class Lift extends Component {
 
     public boolean extended() {
         return ext_pos == EXTENSION_OUT;
+    }
+
+    public void tweak(double tweak) {
+        if (tweak != tweak_cache) {
+            tweak_cache = tweak;
+            lift_l.setTargetPosition(
+                    Range.clip(
+                            lift_l_target + lift_l_offset + (int) (tweak * BLOCK_HEIGHT),
+                            MIN_LEVEL*BLOCK_HEIGHT,
+                            MAX_LEVEL*BLOCK_HEIGHT
+                    )
+            );
+            lift_r.setTargetPosition(
+                    Range.clip(
+                            lift_r_target + lift_r_offset + (int) (tweak * BLOCK_HEIGHT),
+                            MIN_LEVEL*BLOCK_HEIGHT,
+                            MAX_LEVEL*BLOCK_HEIGHT
+                    )
+            );
+        }
     }
 }
