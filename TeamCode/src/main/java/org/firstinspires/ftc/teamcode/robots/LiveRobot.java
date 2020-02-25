@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.components.live.DriveTrain;
 import org.firstinspires.ftc.teamcode.components.live.Feeder;
 import org.firstinspires.ftc.teamcode.components.live.Lift;
 import org.firstinspires.ftc.teamcode.components.live.OCVPhoneCamera;
+import org.firstinspires.ftc.teamcode.components.live.Parker;
 import org.firstinspires.ftc.teamcode.systems.pathfollowing.Point;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
@@ -23,6 +24,7 @@ public class LiveRobot extends Robot {
     public OCVPhoneCamera   phone_camera;
     public Dragger          dragger;
     public Feeder           feeder;
+    public Parker           parker;
 
     FtcDashboard            dashboard;
 
@@ -41,7 +43,7 @@ public class LiveRobot extends Robot {
         phone_camera    = new OCVPhoneCamera(this);
         dragger         = new Dragger(this);
         feeder          = new Feeder(this);
-
+        parker          = new Parker(this);
 
         dashboard = FtcDashboard.getInstance();
     }
