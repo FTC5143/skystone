@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.components.live;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -43,6 +45,12 @@ public class DriveTrain extends Component {
     private double cache_rb_power = 0;
 
     public CurvePath current_path;
+
+    private PIDCoefficients drive_pos_coeffs = new PIDCoefficients(10, 0.5, 2);
+    private PIDCoefficients drive_ang_coeffs = new PIDCoefficients(5, 0.5, 2);
+
+    private PIDFController drive_pos_controller = new PIDFController(drive_pos_coeffs);
+    private PIDFController drive_ang_controller = new PIDFController(drive_ang_coeffs);
 
     {
         name = "Drive Train";
@@ -213,18 +221,21 @@ public class DriveTrain extends Component {
 
         robot.lopmode.resetStartTime();
 
+        drive_pos_controller.setTargetPosition(0);
+        drive_ang_controller.setTargetPosition(0);
+
         if (original_distance > 0 || original_distance_a > 0) {
             while (robot.lopmode.opModeIsActive()) {
                 double distance = Math.hypot(x - lcs.x, y - lcs.y);
                 double distance_a = Math.abs(a - lcs.a);
 
-                double progress = distance/original_distance;
-                double progress_a = distance_a/original_distance_a;
+                double pos_correction = drive_pos_controller.update(distance);
+                double ang_correction = drive_ang_controller.update(distance_a);
 
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
-                double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
-                double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
-                double mvmt_a = -Range.clip((a-lcs.a)*3, -1, 1) * speed;
+                double mvmt_x = Math.cos(drive_angle - lcs.a) * Range.clip(Math.abs(pos_correction), 0, 1) * speed;
+                double mvmt_y = -Math.sin(drive_angle - lcs.a) * Range.clip(Math.abs(pos_correction), 0, 1) * speed;
+                double mvmt_a = -Range.clip(Math.signum(a-lcs.a) * Math.abs(ang_correction), -1, 1) * speed;
 
                 mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
 

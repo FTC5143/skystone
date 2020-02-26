@@ -11,7 +11,7 @@ public class LocalCoordinateSystem {
 
 
     private double ENCODER_CPR          = 1440;             // Counts per full rotation of an encoder
-    private double ROBOT_DIAMETER       = 15.78666888;      //15.7075609922;    //15.74735 //15.53           // Distance between the left and right encoder (diameter) in inches
+    private double ROBOT_DIAMETER       = 15.75716126;      //15.7075609922;    //15.74735 //15.53           // Distance between the left and right encoder (diameter) in inches
     private double CENTER_WHEEL_OFFSET  = 7.594180357;      //7.725136416;      //7.719 //7.375 Distance of the center encoder to the line made between the left and right encoders (radius) in inches
 
     private double WHEEL_DIAMETER_L     = 1.487592046; //1.49420962888;
