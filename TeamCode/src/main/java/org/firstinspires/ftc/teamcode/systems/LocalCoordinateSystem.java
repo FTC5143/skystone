@@ -14,9 +14,9 @@ public class LocalCoordinateSystem {
     private double ROBOT_DIAMETER       = 15.78666888;      //15.7075609922;    //15.74735 //15.53           // Distance between the left and right encoder (diameter) in inches
     private double CENTER_WHEEL_OFFSET  = 7.594180357;      //7.725136416;      //7.719 //7.375 Distance of the center encoder to the line made between the left and right encoders (radius) in inches
 
-    private double WHEEL_DIAMETER_L     = 1.49420962888;
-    private double WHEEL_DIAMETER_R     = 1.49420962888;
-    private double WHEEL_DIAMETER_C     = 1.49420962888;
+    private double WHEEL_DIAMETER_L     = 1.487592046; //1.49420962888;
+    private double WHEEL_DIAMETER_R     = 1.495218487; //1.49420962888;
+    private double WHEEL_DIAMETER_C     = 1.484900111; //1.49420962888;
 
     private double INCHES_PER_COUNT_L   = WHEEL_DIAMETER_L * Math.PI / ENCODER_CPR;
     private double INCHES_PER_COUNT_R   = WHEEL_DIAMETER_R * Math.PI / ENCODER_CPR;

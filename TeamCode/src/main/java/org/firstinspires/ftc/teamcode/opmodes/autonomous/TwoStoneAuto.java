@@ -292,6 +292,8 @@ public class TwoStoneAuto extends LiveAutoBase {
             // Retract the extension, turn the grabber back in, and drop the lift all at the same time
             robot.lift.retract();
 
+            sleep(500);
+
             robot.lift.turn(-2);
 
             robot.lift.min_lift();

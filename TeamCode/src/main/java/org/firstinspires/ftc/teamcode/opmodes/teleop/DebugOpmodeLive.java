@@ -38,6 +38,11 @@ public class DebugOpmodeLive extends LiveTeleopBase {
             robot.lift.elevate_to(prepared_level);
         }
 
+
+        if(gamepad2.right_bumper) {
+            robot.lift.elevate_to(2);
+        }
+
         if(gamepad2.dpad_up && !dpad_up_pressed) {
             prepared_level = Range.clip(prepared_level + 1, 0, 12);
             dpad_up_pressed = true;
@@ -52,9 +57,6 @@ public class DebugOpmodeLive extends LiveTeleopBase {
             dpad_down_pressed = false;
         }
 
-        if(gamepad2.right_bumper) {
-            prepared_level = 0;
-        }
 
         if(gamepad2.back) {
             if(gamepad2.dpad_up) {
@@ -95,6 +97,8 @@ public class DebugOpmodeLive extends LiveTeleopBase {
             speed_mod = 0.5;
         }
 
+        robot.parker.park(gamepad2.left_trigger - gamepad2.right_trigger);
+
         robot.drive_train.mechanum_drive(gamepad1.left_stick_x * speed_mod, gamepad1.left_stick_y * speed_mod, gamepad1.right_stick_x * speed_mod);
 
 
@@ -127,11 +131,11 @@ public class DebugOpmodeLive extends LiveTeleopBase {
             dpad_right_pressed = false;
         }
 
-        if(gamepad1.a) {
+        if(gamepad1.b) {
             robot.dragger.grab();
         }
 
-        if(gamepad1.b) {
+        if(gamepad1.a) {
             robot.dragger.release();
         }
 
