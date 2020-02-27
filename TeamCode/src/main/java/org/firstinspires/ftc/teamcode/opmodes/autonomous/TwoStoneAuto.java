@@ -105,10 +105,10 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.lift.grab();
 
             // Start driving under the bridge
-            robot.drive_train.odo_move(6, 25, -Math.PI/2, 1);
+            robot.drive_train.odo_move(6, 24, -Math.PI/2, 1);
 
             // Drive past under the bridge
-            robot.drive_train.odo_move(52, 25, -Math.PI/2, 1);
+            robot.drive_train.odo_move(52, 24, -Math.PI/2, 1);
 
             // Start bringing up the lift
             robot.lift.elevate_to(3);
@@ -120,7 +120,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.lift.extend();
 
             // Drive a little bit farther, so we make sure we're up against the foundation
-            robot.drive_train.odo_move(78, 34, -Math.PI, 0.6);
+            robot.drive_train.odo_move(78, 34, -Math.PI, 0.75);
 
             // Turn the stone in the grabber 180 degrees
             robot.lift.turn(2);
@@ -151,7 +151,7 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.dragger.release();
 
             // Move left a bit
-            robot.drive_train.odo_move(76, 25, -Math.PI/2, 1, 1, 0.03, 1.5);
+            robot.drive_train.odo_move(76, 24, -Math.PI/2, 1, 1, 0.03, 1.5);
 
             // As we move left bring the lift down
             robot.lift.min_lift();
@@ -159,18 +159,18 @@ public class TwoStoneAuto extends LiveAutoBase {
         } else {
 
             // Line up with the bridge and turn around
-            robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+            robot.drive_train.odo_move(6, 24, Math.PI/2, 1);
 
             robot.lift.release();
 
             // Go under the bridge
-            robot.drive_train.odo_move(52, 25, Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(52, 24, Math.PI / 2, 0.5);
 
             // Spin the intake in reverse to spit the stone
             robot.feeder.spin(-1);
             
             // Move backwards so the stone hits the intake wheels
-            robot.drive_train.odo_move(48, 25, Math.PI/2, 0.5);
+            robot.drive_train.odo_move(48, 24, Math.PI/2, 0.5);
 
             // Once we have spit the stone stop spinning the wheels
             robot.feeder.spin(0);
@@ -182,17 +182,17 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             // If we are doing the foundation we're already turned the right way so don't turn around just to turn around again
             if (FOUNDATION != true) {
-                robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+                robot.drive_train.odo_move(6, 24, Math.PI/2, 1);
             }
             
             // Move up near the next skystone
-            robot.drive_train.odo_move(-16, 25, -Math.PI/2, 1, 0.5, 0.02);
+            robot.drive_train.odo_move(-18, 24, -Math.PI/2, 1, 0.5, 0.02);
 
             // Start spinning the intake
             robot.feeder.spin(1);
 
             // Line up with the stone
-            robot.drive_train.odo_move(-18, 40, -Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(-18, 40, -Math.PI / 2, 0.5, 1, 0.02, 2, 0.2);
 
             // Move forward to intake it
             robot.drive_train.odo_move(-26, 40, -Math.PI / 2, 1, 1, 0.02, 1.5);
@@ -203,20 +203,20 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             // If we are doing the foundation we're already turned the right way so don't turn around just to turn around again
             if (FOUNDATION != true) {
-                robot.drive_train.odo_move(6, 25, Math.PI/2, 1);
+                robot.drive_train.odo_move(6, 24, Math.PI/2, 1);
             }
             
             // Move up near the next skystone
-            robot.drive_train.odo_move(-12, 25, -Math.PI/2, 1, 0.5, 0.02);
+            robot.drive_train.odo_move(-10, 24, -Math.PI/2, 1, 0.5, 0.02);
 
             // Start spinning the intake
             robot.feeder.spin(1);
 
             // Hit the next stone to the side and line up with the skystone
-            robot.drive_train.odo_move(-12, 40, -Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(-10, 40, -Math.PI / 2, 0.5, 1, 0.02, 2, 0.2);
 
             // Move forward to intake the skystone
-            robot.drive_train.odo_move(-20, 40, -Math.PI / 2, 1, 1, 0.02, 1.5);
+            robot.drive_train.odo_move(-18, 40, -Math.PI / 2, 1, 1, 0.02, 1.5);
 
         }
 
@@ -224,19 +224,19 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             // If we are doing the foundation we're already turned the right way so don't turn around just to turn around again
             if (FOUNDATION == true) {
-                robot.drive_train.odo_move(8, 25, -Math.PI/2, 1);
+                robot.drive_train.odo_move(8, 24, -Math.PI/2, 1);
             } else {
-                robot.drive_train.odo_move(8, 25, Math.PI/2, 1);
+                robot.drive_train.odo_move(8, 24, Math.PI/2, 1);
             }
 
             // Line up with the next skystone, where we pushed it to earlier
-            robot.drive_train.odo_move(-6, 25, Math.PI/2, 1);
+            robot.drive_train.odo_move(-6, 24, Math.PI/2, 1);
 
             // Begin spinning the intake
             robot.feeder.spin(1);
 
             // Move forward slowly to intake the skystone
-            robot.drive_train.odo_move(-6, 54, Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(-6, 54, Math.PI / 2, 0.5, 0.5, 0.02, 2, 0.2);
 
             // Back up to get inline with the bridge again
             robot.drive_train.odo_move(6, 54, Math.PI / 2, 1, 1, 0.02, 1.5);
@@ -255,10 +255,10 @@ public class TwoStoneAuto extends LiveAutoBase {
             robot.lift.grab();
 
             // Move under bridge
-            robot.drive_train.odo_move(10, 25, -Math.PI/2, 1);
+            robot.drive_train.odo_move(10, 24, -Math.PI/2, 1);
 
             // Begin driving to the foundation
-            robot.drive_train.odo_move(52, 25, -Math.PI/2, 1);
+            robot.drive_train.odo_move(52, 24, -Math.PI/2, 1);
 
             // Start raising the lift
             robot.lift.elevate_to(3);
@@ -304,17 +304,17 @@ public class TwoStoneAuto extends LiveAutoBase {
 
             // If the foundation wasn't moved earlier we are just doing to deliver the stone, not place it
             
-            robot.drive_train.odo_move(10, 25, Math.PI/2, 1);
+            robot.drive_train.odo_move(10, 24, Math.PI/2, 1);
 
             robot.lift.release();
 
-            robot.drive_train.odo_move(52, 25, Math.PI/2, 1);
+            robot.drive_train.odo_move(52, 24, Math.PI/2, 1);
 
             // Run the intake backwards to spit it out
             robot.feeder.spin(-1);
 
             // Drive backwards a bit so the stone hits the intake wheels
-            robot.drive_train.odo_move(48, 25, Math.PI / 2, 0.5);
+            robot.drive_train.odo_move(48, 24, Math.PI / 2, 0.5);
 
             // Once the stone is out stop spinning
             robot.feeder.spin(0);
@@ -326,9 +326,9 @@ public class TwoStoneAuto extends LiveAutoBase {
         if (PARK == FAR) {
 
             if (FOUNDATION == true) {
-                robot.drive_train.odo_move(36, 25, -Math.PI / 2, 1);
+                robot.drive_train.odo_move(36, 24, -Math.PI / 2, 1);
             } else {
-                robot.drive_train.odo_move(36, 25, Math.PI / 2, 1);
+                robot.drive_train.odo_move(36, 24, Math.PI / 2, 1);
             }
 
         }

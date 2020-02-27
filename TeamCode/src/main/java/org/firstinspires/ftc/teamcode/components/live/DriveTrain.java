@@ -46,8 +46,8 @@ public class DriveTrain extends Component {
 
     public CurvePath current_path;
 
-    private PIDCoefficients drive_pos_coeffs = new PIDCoefficients(10, 0.5, 2);
-    private PIDCoefficients drive_ang_coeffs = new PIDCoefficients(5, 0.5, 2);
+    private PIDCoefficients drive_pos_coeffs = new PIDCoefficients(10, 0.1, 2);
+    private PIDCoefficients drive_ang_coeffs = new PIDCoefficients(10, 0.1, 2);
 
     private PIDFController drive_pos_controller = new PIDFController(drive_pos_coeffs);
     private PIDFController drive_ang_controller = new PIDFController(drive_ang_coeffs);
@@ -201,14 +201,19 @@ public class DriveTrain extends Component {
     
     // Basic run to pose with odometry
     public void odo_move(double x, double y, double a, double speed) {
-        odo_move(x, y, a, speed, 1, 0.02, 0);
+        odo_move(x, y, a, speed, 1, 0.02, 0, 0);
     }
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc) {
-        odo_move(x, y, a, speed, pos_acc, angle_acc, 0);
+        odo_move(x, y, a, speed, pos_acc, angle_acc, 0, 0);
     }
 
     public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc, double timeout) {
+        odo_move(x, y, a, speed, pos_acc, angle_acc, timeout, 0);
+    }
+
+
+    public void odo_move(double x, double y, double a, double speed, double pos_acc, double angle_acc, double timeout, double time_at_target) {
 
         if (color == RED) {
             a = -a;
@@ -221,32 +226,36 @@ public class DriveTrain extends Component {
 
         robot.lopmode.resetStartTime();
 
-        drive_pos_controller.setTargetPosition(0);
-        drive_ang_controller.setTargetPosition(0);
+        double time_at_goal = 0;
 
         if (original_distance > 0 || original_distance_a > 0) {
             while (robot.lopmode.opModeIsActive()) {
                 double distance = Math.hypot(x - lcs.x, y - lcs.y);
                 double distance_a = Math.abs(a - lcs.a);
 
-                double pos_correction = drive_pos_controller.update(distance);
-                double ang_correction = drive_ang_controller.update(distance_a);
+                double progress = distance/original_distance;
+                double progress_a = distance_a/original_distance_a;
 
                 double drive_angle = Math.atan2(y-lcs.y, x-lcs.x);
-                double mvmt_x = Math.cos(drive_angle - lcs.a) * Range.clip(Math.abs(pos_correction), 0, 1) * speed;
-                double mvmt_y = -Math.sin(drive_angle - lcs.a) * Range.clip(Math.abs(pos_correction), 0, 1) * speed;
-                double mvmt_a = -Range.clip(Math.signum(a-lcs.a) * Math.abs(ang_correction), -1, 1) * speed;
+                double mvmt_x = Math.cos(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+                double mvmt_y = -Math.sin(drive_angle - lcs.a) * ((Range.clip(distance, 0, (8*speed)))/(8*speed)) * speed;
+                double mvmt_a = -Range.clip((a-lcs.a)*3, -1, 1) * speed;
 
                 mechanum_drive(mvmt_x, mvmt_y, mvmt_a);
 
+
+
                 if ((distance < pos_acc && distance_a < angle_acc) || (timeout > 0 && robot.lopmode.getRuntime() > timeout)) {
-                    stop();
-                    break;
+                    if (robot.lopmode.getRuntime()-time_at_goal >= time_at_target) {
+                        stop();
+                        break;
+                    }
+                } else {
+                    time_at_goal = robot.lopmode.getRuntime();
                 }
             }
         }
     }
-
     
     // Following a pure pursuit path with odometry
     public void follow_curve_path(CurvePath path) {
