@@ -57,10 +57,10 @@ public class TwoStoneAuto extends LiveAutoBase {
         else if (pattern == 2) {
 
             // Move up next to the first stone
-            robot.drive_train.odo_move(13, 30, -Math.PI / 2, 1);
+            robot.drive_train.odo_move(12, 30, -Math.PI / 2, 1);
 
             // Push it aside and line up with the skystone
-            robot.drive_train.odo_move(13, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
+            robot.drive_train.odo_move(12, 40, -Math.PI / 2, 0.5, 0.5, 0.02);
 
             // Begin spinning the intake
             robot.feeder.spin(1);

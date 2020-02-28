@@ -44,6 +44,8 @@ class LiftConfig {
 
     public static int LIFT_DOWN_OVERSHOOT = 100;
 
+    public static int TWEAK_MAX_ADD = 100;
+
 }
 
 public class Lift extends Component {
@@ -159,9 +161,9 @@ public class Lift extends Component {
             tweak_cache = tweak;
             lift_l.setTargetPosition(
                     Range.clip(
-                            lift_l_target + lift_l_offset + (int) (tweak * BLOCK_HEIGHT),
+                            lift_l_target + lift_l_offset + (int) (tweak * BLOCK_HEIGHT / 2),
                             MIN_LEVEL*BLOCK_HEIGHT,
-                            MAX_LEVEL*BLOCK_HEIGHT
+                            MAX_LEVEL*BLOCK_HEIGHT+TWEAK_MAX_ADD
                     )
             );
             lift_r.setTargetPosition(
